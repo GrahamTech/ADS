@@ -13,8 +13,8 @@ public class BaseController {
   @RequestMapping(method = RequestMethod.GET)
   public String index(ModelMap model) {
  
-    model.addAttribute("message", "Welcome to the Executive Information System (EIS) enterprise application!");
- 
+    model.addAttribute("message", "Welcome to the Executive Information System (EIS) enterprise application");
+    model.addAttribute("message2", "Hope you like it");
     //Spring uses the InternalResourceViewResolver defined in 
     // mvc-dispatcher-servlet.xml to prepend and append onto 
     // the view name which returns index.jsp for this scenario
