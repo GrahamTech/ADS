@@ -12,8 +12,15 @@
         http://www.springframework.org/schema/mvc 
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
  	
+    <!-- Use @Component annotations for bean definitions -->
 	<context:component-scan base-package="com.grahamtech.eis.controllers" />
+	
+	<!-- Use @Controller annotations for MVC controller definitions -->
 	<mvc:annotation-driven/>
+	
+	<!-- Specifies the location of resources like images, js, css -->
+	<mvc:resources location="/resources/" mapping="/resources/**"/>
+	
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
