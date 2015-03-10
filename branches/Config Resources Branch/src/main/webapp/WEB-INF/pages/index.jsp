@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <script src="${context}/resources/js/test.js"></script>
-<link rel="stylesheet" type="text/css" href="${context}/resources/css/test.css">
+<link rel="stylesheet" type="text/css" href="${context}/resources/css/test_styles.css">
 </head>
 
 <body>
