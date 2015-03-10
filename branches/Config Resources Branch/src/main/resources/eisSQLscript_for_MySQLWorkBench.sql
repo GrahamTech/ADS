@@ -34,6 +34,14 @@ CREATE TABLE IF NOT EXISTS eisdb.roles (
 	PRIMARY KEY (role_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+INSERT INtO eisdb.roles (role_name, role_description, role_status)
+VALUES ('administrator', 'can do anything in the system', 'active'),
+('executive', 'can modify all projects', 'active'),
+('manager', 'can modify projects for which they are associated', 'active'),
+('internal_system', 'similar to manager except actions are that of an internal system', 'active'),
+('external_system', 'similar to a manager except actions are that of an external system', 'active'),
+('read_only', 'can only view content within the system', 'active');
+
 DROP TABLE IF EXISTS eisdb.risk_preferences;
 CREATE TABLE IF NOT EXISTS eisdb.risk_preferences (
 	risk_preference_id int (11) NOT NULL AUTO_INCREMENT,
