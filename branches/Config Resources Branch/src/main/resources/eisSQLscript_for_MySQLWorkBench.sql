@@ -127,6 +127,21 @@ CREATE TABLE IF NOT EXISTS eisdb.project_products (
 	PRIMARY KEY (project_product_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS eisdb.project_vulnerabilities;
+CREATE TABLE IF NOT EXISTS eisdb.project_vulnerabilities (
+	project_vulnerability_id int (11) NOT NULL AUTO_INCREMENT,
+	project_vulnerability_name varchar (75) NOT NULL,
+	project_vulnerability_type varchar (45),
+	description varchar (255),
+	lessons_learned varchar (516),
+	last_modified_date date NOT NULL,
+	vulnerability_severity decimal(6,2),
+	vulnerability__score decimal(6,2),
+	vulnerability_exploit_sub_score decimal(6,2),
+	vulnerability_impact_sub_score decimal(6,2),
+	PRIMARY KEY (project_vulnerability_id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS eisdb.user_profiles;
 CREATE TABLE IF NOT EXISTS eisdb.user_profiles (
 	user_profile_id int (11) NOT NULL AUTO_INCREMENT,
@@ -204,4 +219,12 @@ ALTER TABLE eisdb.project_products
 	ADD CONSTRAINT last_modified_by_fk_products FOREIGN KEY (last_modified_by_fk_products) REFERENCES user_profiles (user_profile_id),
 	ADD CONSTRAINT project_fk_products FOREIGN KEY (project_fk_products) REFERENCES projects (project_id);
 
+ALTER TABLE eisdb.project_vulnerabilities 
+	ADD last_modified_by_fk_vulnerabilities int (11) NOT NULL, 
+	ADD project_fk_vulnerabilities int (11) NOT NULL;
+
+ALTER TABLE eisdb.project_vulnerabilities
+	ADD CONSTRAINT last_modified_by_fk_vulnerabilities FOREIGN KEY (last_modified_by_fk_vulnerabilities) REFERENCES user_profiles (user_profile_id),
+	ADD CONSTRAINT project_fk_vulnerabilities FOREIGN KEY (project_fk_vulnerabilities) REFERENCES projects (project_id);
+	
 SET FOREIGN_KEY_CHECKS = 1;
