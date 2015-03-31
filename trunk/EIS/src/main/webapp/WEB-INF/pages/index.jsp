@@ -12,8 +12,8 @@
 
 <body>
 <img src="${context}/resources/images/GrahamTechLogo_png.png" width="70" height="70"/>
-<h1>${message}</h1>
-<input type="submit" name="Test JS" onClick="testFunction()">
+</br></br>
+<input type="submit" value="Test JS" onClick="testFunction()"/>
 
 </br></br>
 
@@ -31,6 +31,10 @@
         </c:forEach>             
     </table>
 </div>
+
+</br></br>
+
+<h3>${message}</h3>
 
 </body>
 </html>

@@ -109,6 +109,7 @@ public class BaseController {
 
     List<UserProfile> listUserProfiles = getUserProfiles();
     model.addObject("userProfileList", listUserProfiles);
+    model.addObject("message", overviewStr);
 
     return model;
   }
@@ -436,21 +437,21 @@ public class BaseController {
       + "</ul>"
       
       + "<p>"
-          + "At a High-level: A UserProfile has a Role, Risk Preferences, and one or more Project associations. Projects "
+          + "At a high-level, a UserProfile has a Role, Risk Preferences, and one or more Project associations. Projects "
           + "have Systems, Partners, and Project Risk (Schedule/Budget/FTE Utilization) as risk assets. Systems have Products "
           + "and Vulnerabilities. These risk assets may be Flagged for escalation review: Projects, Partners, System Products "
           + "and System Vulnerabilities."
           + "</p>"
 
-      + "The EIS Workflow will roll-up risk analysis for products and project vulnerabilities (Project Risks) either entered into"
-      + " EIS manually or ingested via an EIS utility or web service. "
+          + "<p>The EIS Workflow will roll-up risk analysis for products and project vulnerabilities (Project Risks) either entered into"
+          + " EIS manually or ingested via an EIS utility or web service.</p> "
 
-      + "Workflow Summary - Executives monitor & initiate events for EIS at-risk projects, in addition to managing Manager"
+          + "<p>Workflow Summary - Executives monitor & initiate events for EIS at-risk projects, in addition to managing Manager"
       + " profiles-to-project associations; Managers monitor & enter Project Risk data, in addition to flagging at-risk projects"
       + " for Executives; and Administrators have the capability to perform Executive and Manager functions as needed, as well as,"
-      + " manage all EIS user profiles. "
+          + " manage all EIS user profiles.</p>"
       
-      + "Workflow Details - 1) Users with the Manager role will be assigned projects by an Executive and are responsible for managing"
+          + "<p>Workflow Details - 1) Users with the Manager role will be assigned projects by an Executive and are responsible for managing"
       + " EIS projects and their associated Project Risks. A Manager has the ability to manage projects for which they are associated."
       + " Managers may set custom preferences for Project Risk vulnerability tolerance. A Manager may use their customized dashboard"
       + " or EIS notifications to monitor and/or address risk areas of interest. A Manager may use EIS to flag Project Risks to indicate"
@@ -461,7 +462,7 @@ public class BaseController {
       + " customized dashboard or EIS notifications to monitor and/or address project risk areas of interest. An Executive may use EIS"
       + " to flag Projects to indicate that Managers must monitor or perform mitigation tasks.  3) Administrators have the ability to"
       + " execute Executive and Manager role capabilities, manage EIS profiles, and start/stop EIS services such as user system access,"
-      + " EIS outgoing notifications, etc."
+          + " EIS outgoing notifications, etc.</p>"
       
       + "</br>Key Building blocks of the EIS system include:"
       + "</p>"
