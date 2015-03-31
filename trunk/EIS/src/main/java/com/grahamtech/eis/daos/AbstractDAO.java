@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Transactional;
 
 public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   protected final Log log = LogFactory.getLog(getClass());
@@ -23,6 +24,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   }
 
   /** {@inheritDoc} */
+  @Transactional
   public void save(final T transientInstance) {
     log.debug("About to save object of type " + entityClass);
     try {
@@ -35,6 +37,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   }
 
   /** {@inheritDoc} */
+  @Transactional
   public void delete(final T persistentInstance) {
     log.debug("About to delete instance of " + entityClass);
     try {
@@ -94,6 +97,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   }
 
   /** {@inheritDoc} */
+  @Transactional
   public T merge(final T detachedInstance) {
     log.debug("Merging instance of type " + entityClass);
     try {
@@ -107,6 +111,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   }
 
   /** {@inheritDoc} */
+  @Transactional
   public void deleteAll() {
     log.debug("About to delete all records from the " + tableName);
     try {
@@ -144,6 +149,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   }
 
   /** {@inheritDoc} */
+  @Transactional
   public T update(final T instance) {
     return merge(instance);
   }

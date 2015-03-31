@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS eisdb.contact_us (
 	PRIMARY KEY (contact_us_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS eisdb.role;
-CREATE TABLE IF NOT EXISTS eisdb.role (
+DROP TABLE IF EXISTS eisdb.roles;
+CREATE TABLE IF NOT EXISTS eisdb.roles (
 	role_id int (11) NOT NULL AUTO_INCREMENT,
 	role_name enum ('administrator', 'executive', 'manager', 'internal_system', 'external_system', 'read_only', 'restricted') NOT NULL,
 	role_description varchar (255) NOT NULL,
@@ -38,15 +38,15 @@ DROP TABLE IF EXISTS eisdb.user_profiles;
 CREATE TABLE IF NOT EXISTS eisdb.user_profiles (
 	user_profile_id int (11) NOT NULL AUTO_INCREMENT,
 	email varchar(100) NOT NULL UNIQUE,
+	primary_role varchar(45) NOT NULL,
 	login_status enum ('pending', 'preliminary_login', 'active', 'inactive'),
-	first_name varchar (45) NOT NULL,
+	first_name varchar (45),
 	middle_name varchar (45),
-	last_name varchar (45) NOT NULL,
+	last_name varchar (45),
 	job_title varchar (45),
-	org_details varchar (255) NOT NULL,
-	phone varchar (45) NOT NULL,
-	registration_project_association_request varchar (255) NOT NULL,
-	system_access_justification varchar (255) NOT NULL,
+	org_details varchar (255),
+	phone varchar (45),
+	system_access_justification varchar (255),
 	profile_expires_on date,
 	lock_account_until date,
 	pwd_hash varchar (516) NOT NULL,
@@ -62,6 +62,13 @@ CREATE TABLE IF NOT EXISTS eisdb.user_profiles (
 	notification_frequency enum ('opt_out', 'daily', 'weekly', 'bi_weekly', 'monthly', 'quarterly', 'yearly'),
 	PRIMARY KEY (user_profile_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS eisdb.user_profiles_roles;
+CREATE TABLE  eisdb.user_profiles_roles (
+  user_profile_id int(11) UNSIGNED NOT NULL,
+  role_id int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (user_profile_id,role_id)
+) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS eisdb.risk_preferences;
 CREATE TABLE IF NOT EXISTS eisdb.risk_preferences (
@@ -202,13 +209,27 @@ CREATE TABLE IF NOT EXISTS eisdb.flagged_assets (
 	PRIMARY KEY (flagged_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-ALTER TABLE eisdb.user_profiles
-	ADD role_fk_profile int (11) NOT NULL,
-	ADD risk_preference_fk int (11) NOT NULL, 
-	ADD project_fk_profiles int (11) NOT NULL;
+##ALTER TABLE eisdb.roles
+##	ADD user_profile_fk_roles int (11) NOT NULL;
+	
+##ALTER TABLE eisdb.roles
+##	ADD CONSTRAINT user_profile_fk_roles FOREIGN KEY (user_profile_fk_roles) REFERENCES user_profiles (user_profile_id);
+
+ALTER TABLE eisdb.user_profiles_roles
+	ADD role_id_fk int (11) NOT NULL,
+	ADD user_profile_id_fk int (11) NOT NULL;
+	
+ALTER TABLE eisdb.user_profiles_roles
+	ADD CONSTRAINT role_id_fk FOREIGN KEY (role_id_fk) REFERENCES roles (role_id),
+  	ADD CONSTRAINT user_profile_id_fk FOREIGN KEY (user_profile_id_fk) REFERENCES user_profiles (user_profile_id);
 	
 ALTER TABLE eisdb.user_profiles
-	ADD CONSTRAINT role_fk_profile FOREIGN KEY (role_fk_profile) REFERENCES role (role_id),
+##	ADD role_fk_profile int (11) NOT NULL,
+	ADD risk_preference_fk int (11), 
+	ADD project_fk_profiles int (11);
+	
+ALTER TABLE eisdb.user_profiles
+##	ADD CONSTRAINT role_fk_profile FOREIGN KEY (role_fk_profile) REFERENCES role (role_id),
     ADD CONSTRAINT project_fk_profiles FOREIGN KEY (project_fk_profiles) REFERENCES projects (project_id),
 	ADD CONSTRAINT risk_preference_fk FOREIGN KEY (risk_preference_fk) REFERENCES risk_preferences (risk_preference_id)  ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -291,7 +312,7 @@ ALTER TABLE eisdb.flagged_assets
 	ADD CONSTRAINT unflagged_by_fk_assets FOREIGN KEY (unflagged_by_fk_assets) REFERENCES user_profiles (user_profile_id);
 
 	
-INSERT INtO eisdb.role (role_name, role_description, role_status)
+INSERT INtO eisdb.roles (role_name, role_description, role_status)
 VALUES ('administrator', 'can do anything in the system', 'active'),
 ('executive', 'can modify all projects', 'active'),
 ('manager', 'can modify projects for which they are associated', 'active'),
@@ -303,6 +324,7 @@ VALUES ('administrator', 'can do anything in the system', 'active'),
 INSERT INTO `eisdb`.`user_profiles`
 (`user_profile_id`,
 `email`,
+`primary_role`,
 `login_status`,
 `first_name`,
 `middle_name`,
@@ -310,7 +332,6 @@ INSERT INTO `eisdb`.`user_profiles`
 `job_title`,
 `org_details`,
 `phone`,
-`registration_project_association_request`,
 `system_access_justification`,
 `profile_expires_on`,
 `lock_account_until`,
@@ -325,11 +346,13 @@ INSERT INTO `eisdb`.`user_profiles`
 `challenge_question_three`,
 `challenge_question_three_answer`,
 `notification_frequency`,
-`role_fk_profile`,
+##`role_fk_profile`,
 `risk_preference_fk`,
 `project_fk_profiles`)
 VALUES
-('1', 'email001@email.com',
+('1',
+'email001@email.com',
+'administrator',
 'active',
 'TesterFirst01',
 'TesterMiddle01',
@@ -337,7 +360,6 @@ VALUES
 'My Job Title',
 'My Org Details',
 '555-555-5555',
-'Project XYZ',
 'I would like to be associated with project XYZ as I am the project manager',
 '20200101',
 '20150101',
@@ -352,7 +374,7 @@ VALUES
 'challenge_question_three',
 'challenge_question_three_answer',
 'weekly',
-'1',
+##'1',
 '1',
 '1');
 

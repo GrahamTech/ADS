@@ -46,11 +46,11 @@ public class Project implements java.io.Serializable {
   @JsonBackReference
   private UserProfile userProfileAttribute;
 
-  @OneToMany(mappedBy = "projectAttribute", fetch = FetchType.EAGER, targetEntity = ProjectSystem.class)
+  @OneToMany(mappedBy = "projectAttribute", fetch = FetchType.EAGER)
   @JsonManagedReference
   private Set<ProjectSystem> projectSystemSet;
 
-  @OneToMany(mappedBy = "projectAttribute", fetch = FetchType.EAGER, targetEntity = ProjectPartner.class)
+  @OneToMany(mappedBy = "projectAttribute", fetch = FetchType.EAGER)
   @JsonManagedReference
   private Set<ProjectPartner> projectPartnerSet;
 

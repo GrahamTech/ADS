@@ -11,6 +11,8 @@ public class RestURIConstants {
   // User Profile
   public static final String GET_ALL_EMP = "/users";
   public static final String GET_EMP = "/user/{id}";
-  public static final String CREATE_EMP = "/user/create";
+  public static final String CREATE_EMP =
+      "/user/create/{userEmail}/{primaryRole}";
   public static final String DELETE_EMP = "/user/delete/{id}";
+  public static final String UPDATE_EMP_EMAIL = "/user/update/{id}/{userEmail}";
 }

@@ -1,6 +1,7 @@
 package com.grahamtech.eis.pojos;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Access;
@@ -14,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 //import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -22,13 +25,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+//import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.grahamtech.eis.pojos.Role;
 
+import javax.persistence.UniqueConstraint;
+
 @Entity
-@Table(name = "user_profiles")
+// @Table(name = "user_profiles")
+@Table(name = "user_profiles", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "email"),
+    @UniqueConstraint(columnNames = "primary_role") })
 @Access(AccessType.FIELD)
 public class UserProfile implements java.io.Serializable {
 
@@ -37,7 +46,7 @@ public class UserProfile implements java.io.Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_profile_id", updatable = false, nullable = false)
   private long user_profile_id;
-  @Column(name = "email")
+  @Column(name = "email", unique = true, nullable = false)
   private String email;
   @Column(name = "login_status")
   private String login_status;
@@ -53,8 +62,6 @@ public class UserProfile implements java.io.Serializable {
   private String org_details;
   @Column(name = "phone")
   private String phone;
-  @Column(name = "registration_project_association_request")
-  private String registration_project_association_request;
   @Column(name = "system_access_justification")
   private String system_access_justification;
   @Column(name = "profile_expires_on", columnDefinition = "DATETIME")
@@ -87,41 +94,64 @@ public class UserProfile implements java.io.Serializable {
   private String challenge_question_three_answer;
   @Column(name = "notification_frequency")
   @Enumerated(EnumType.STRING)
+  // @JsonIdentityInfo(generator =
+  // NotificationFrequencyEnumObjectGenerator.class)
   // @JsonSerialize(using = NotificationFrequencyEnumJsonSerializer.class)
+  // use this if there's a need to format the output of multiple attribute in an
+  // Enum
   private NotificationFrequencyEnum notification_frequency;
 
-  @ManyToOne
-  @JoinColumn(name = "role_fk_profile")
-  private Role role;
+  @Column(name = "primary_role")
+  @Enumerated(EnumType.STRING)
+  private RolesEnum primary_role;
 
-  // @ManyToMany
-  // @JoinTable(name="users_roles",joinColumns=@JoinColumn(name =
-  // "user_profile_fk"),
-  // inverseJoinColumns=@JoinColumn(name = "role_fk"))
-  // @JsonManagedReference
-  // private Set<Role> roles = new HashSet<Role>();
+  // One Role p/User
+  // @ManyToOne
+  // @JoinColumn(name = "role_fk_profile")
+  // private Role role;
+
+  // This end is the owner of the association
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "user_profiles_roles", joinColumns = { @JoinColumn(name = "user_profile_id_fk", referencedColumnName = "user_profile_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "role_id_fk", referencedColumnName = "role_id", nullable = false, updatable = false) })
+  @JsonManagedReference
+  private Set<Role> roleSet = new HashSet<Role>();
 
   @ManyToOne
-  @JoinColumn(name = "risk_preference_fk")
+  @JoinColumn(name = "risk_preference_fk", nullable = false, columnDefinition = "int default 1")
   private RiskPreference riskPreference;
 
-  @OneToMany(mappedBy = "userProfileAttribute", fetch = FetchType.EAGER, targetEntity = Project.class)
+  @OneToMany(mappedBy = "userProfileAttribute", fetch = FetchType.EAGER)
   @JsonManagedReference
   private Set<Project> userProjectSet;
+
+  // @Column(name = "project_fk_profiles", columnDefinition = "int default 1")
+  // private int project_fk_profiles;
 
   public UserProfile() {
     // default constructor
   }
 
-  public UserProfile(String email) {
+  private UserProfile(String email) {
     this.email = email;
   }
 
-  // public UserProfile(String email, Set<Role> roleSet) {
-  // // this.user_profile_id = 0; // DB generated
-  // this.email = email;
-  // this.roleSet = roleSet;
-  // }
+  public UserProfile(String email, RolesEnum primary_role) {
+    this(email);
+    this.primary_role = primary_role;
+  }
+
+  public UserProfile(String email, RolesEnum primary_role,
+      Set<Project> userProjectSet, RiskPreference riskPreference) {
+    this(email, primary_role);
+    this.userProjectSet = userProjectSet;
+    this.riskPreference = riskPreference;
+  }
+  
+  public UserProfile(String email, RolesEnum primary_role, Set<Role> myRoleSet) {
+    // this.user_profile_id = 0; // DB generated
+    this(email, primary_role);
+    this.roleSet = myRoleSet;
+  }
 
   // public GrantedAuthority[] getAuthorities() {
   // List<GrantedAuthorityImpl> list = new ArrayList<GrantedAuthorityImpl>(0);
@@ -178,16 +208,6 @@ public class UserProfile implements java.io.Serializable {
 
   public void setPhone(String phone) {
     this.phone = phone;
-  }
-
-  public String getRegistration_project_association_request() {
-    return registration_project_association_request;
-  }
-
-  public void setRegistration_project_association_request(
-      String registration_project_association_request) {
-    this.registration_project_association_request =
-        registration_project_association_request;
   }
 
   public String getSystem_access_justification() {
@@ -363,6 +383,22 @@ public class UserProfile implements java.io.Serializable {
     this.login_status = login_status.name();
   }
 
+  public Set<Role> getRoleSet() {
+    return roleSet;
+  }
+
+  public void setRoleSet(Set<Role> roleSet) {
+    this.roleSet = roleSet;
+  }
+
+  public RolesEnum getPrimary_role() {
+    return primary_role;
+  }
+
+  public void setPrimary_role(RolesEnum primary_role) {
+    this.primary_role = primary_role;
+  }
+
   // public Set<Role> getRoleSet() {
   // return roleSet;
   // }
@@ -379,11 +415,12 @@ public class UserProfile implements java.io.Serializable {
   // this.role_fk_profile = role_fk_profile;
   // }
 
-  public Role getRole() {
-    return role;
-  }
+  // public Role getRole() {
+  // return role;
+  // }
+  //
+  // public void setRole(Role role) {
+  // this.role = role;
+  // }
 
-  public void setRole(Role role) {
-    this.role = role;
-  }
 }

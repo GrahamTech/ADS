@@ -1,6 +1,5 @@
 package com.grahamtech.eis.controllers;
 
-//import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.grahamtech.eis.pojos.Project;
+import com.grahamtech.eis.daos.MyProjectDAO;
+import com.grahamtech.eis.daos.MyRiskPreferenceDAO;
 //import com.grahamtech.eis.daos.MyFlaggedAssetsDAO;
 //import com.grahamtech.eis.daos.MyProjectSystemDAO;
 //import com.grahamtech.eis.daos.MySystemVulnerabilitiesDAO;
@@ -23,6 +24,9 @@ import com.grahamtech.eis.daos.MyUserProfileDAO;
 //import com.grahamtech.eis.pojos.FlaggedAsset;
 import com.grahamtech.eis.pojos.ProjectPartner;
 import com.grahamtech.eis.pojos.ProjectSystem;
+import com.grahamtech.eis.pojos.RiskPreference;
+import com.grahamtech.eis.pojos.Role;
+import com.grahamtech.eis.pojos.RolesEnum;
 import com.grahamtech.eis.pojos.SystemProduct;
 import com.grahamtech.eis.pojos.SystemVulnerability;
 //import com.grahamtech.eis.pojos.DaoTypesEnum;
@@ -32,6 +36,14 @@ import com.grahamtech.eis.pojos.SystemVulnerability;
 //import com.grahamtech.eis.pojos.StatusEnum;
 import com.grahamtech.eis.pojos.UserProfile;
 
+
+
+
+
+import com.grahamtech.eis.utilities.StringUtil;
+
+import java.security.GeneralSecurityException;
+import java.util.HashSet;
 //import java.util.HashMap;
 //import java.util.HashSet;
 //import java.util.HashSet;
@@ -48,6 +60,15 @@ import java.util.Set;
 //import org.hibernate.service.ServiceRegistry;
 //import org.hibernate.service.ServiceRegistryBuilder;
 
+
+
+
+
+
+
+
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,13 +81,10 @@ public class BaseController {
 
   @Autowired
   private MyUserProfileDAO myUserProfileDAO;
-
-  // @Autowired
-  // private MyRolesDAO myRolesDAO;
-  // @Autowired
-  // private MyRiskPreferenceDAO myRiskPreferenceDAO;
-  // @Autowired
-  // private MyProjectDAO myProjectDAO;
+  @Autowired
+  private MyRiskPreferenceDAO myRiskPreferenceDAO;
+  @Autowired
+  private MyProjectDAO myProjectDAO;
   // @Autowired
   // private MyProjectDetailDAO myProjectDetailDAO;
   // @Autowired
@@ -75,6 +93,8 @@ public class BaseController {
   // private MySystemVulnerabilitiesDAO mySystemVulnerabilitiesDAO;
   // @Autowired
   // private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
+  // @Autowired
+  // private MyRolesDAO myRolesDAO;
 
   /*
    * A UserProfile has a Role, Risk Preferences, and one or more Project
@@ -96,24 +116,58 @@ public class BaseController {
   @RequestMapping(value = RestURIConstants.GET_ALL_EMP, method = RequestMethod.GET)
   public @ResponseBody
   List<UserProfile> getAllUserProfiles() {
-    logger.info("START getAllUserProfiles.");
-    ModelAndView model = new ModelAndView("json");
+    ModelAndView model = new ModelAndView("index");
 
     List<UserProfile> listUserProfiles = getUserProfiles();
     model.addObject("userProfileList", listUserProfiles);
 
-    logger.info("FINISH getAllUserProfiles.");
-
     return listUserProfiles;
   }
-  public List<UserProfile> getUserProfiles() {
-    List<UserProfile> listUserProfiles = myUserProfileDAO.findAll();
 
+  @RequestMapping(value = RestURIConstants.GET_EMP, method = RequestMethod.GET)
+  public @ResponseBody
+  UserProfile getUserProfileById(@PathVariable String id) {
+    //
+    return getUserProfile(id);
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_EMP, method = RequestMethod.POST)
+  public @ResponseBody
+  void createUserProfile(@PathVariable String userEmail,
+      @PathVariable String primaryRole) {
+
+    createUserProfile(userEmail, RolesEnum.fromString(primaryRole));
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_EMP_EMAIL, method = RequestMethod.POST)
+  public @ResponseBody
+  void updateUserProfile(@PathVariable String id, @PathVariable String userEmail) {
+
+    updateUser(id, userEmail);
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_EMP, method = RequestMethod.PUT)
+  public @ResponseBody
+  void createUserProfile(@PathVariable String id) {
+
+    deleteUserProfile(getUserProfile(id));
+
+  }
+
+  public List<UserProfile> getUserProfiles() {
+    logger.info("############### START getUserProfiles.");
+
+    List<UserProfile> listUserProfiles = myUserProfileDAO.findAll();
     for (UserProfile userProfile : listUserProfiles) {
 
       logger.info("User Profile: " + userProfile.getEmail());
-      logger.info("\n** User Profile Has Role: "
-          + userProfile.getRole().getRole_name());
+
+      // Roles
+      for (Role role : userProfile.getRoleSet()) {
+        logger.info("\n** User Profile Has Role: "
+            + role.getRole_name().getEnumString());
+      }
+
       logger.info("\n** User Profile Has Risk Preference Named: "
           + userProfile.getRiskPreference().getRisk_preference_name());
 
@@ -181,8 +235,6 @@ public class BaseController {
         }// end project system
       }// end project
 
-      // TODO implement and capture which risk assets have been flagged
-
     }// end user profile
     // Below are just for testing selects of all database tables.
 
@@ -197,73 +249,139 @@ public class BaseController {
     // mySystemVulnerabilitiesDAO.findAll();
     // List<FlaggedAsset> listFlaggedAssets = myFlaggedAssetsDAO.findAll();
 
+    logger.info("############### FINISH getUserProfiles.");
     return listUserProfiles;
   }
 
-  // @RequestMapping(value = "constructUserProfile", method = RequestMethod.GET)
-  // public ModelAndView constructUserProfile() {
-  // ModelAndView model = new ModelAndView("index");
-  //
-  // Map<String, AbstractDAO> daoMap = new HashMap<String, AbstractDAO>();
-  // daoMap.put(DaoTypesEnum.myRolesDAO.getEnumString(), myRolesDAO);
-  // daoMap.put(DaoTypesEnum.myUserProfileDAO.getEnumString(),
-  // myUserProfileDAO);
-  // EISProfileManager eisProfileManager = new EISProfileManager(daoMap);
-  //
-  // // Get all users and the build their complete profile
-  // List<UserProfile> listUserProfiles = myUserProfileDAO.findAll();
-  // for (UserProfile userProfile : listUserProfiles) {
-  // eisProfileManager.construct(userProfile);
-  // }
-  //
-  // // INSERT
-  // // myUserProfileDAO.save(transientInstance);
-  //
-  //
-  // return model;
-  // // // model.addAttribute("message", " The databse test " +
-  // // // myRolesDAO.findAll());
-  // //
-  // // // loads configuration and mappings
-  // // Configuration configuration = new Configuration().configure();
-  // // ServiceRegistryBuilder registry = new ServiceRegistryBuilder();
-  // // registry.applySettings(configuration.getProperties());
-  // // ServiceRegistry serviceRegistry =
-  // registry.getBootstrapServiceRegistry();
-  // //
-  // // // builds a session factory from the service registry
-  // // SessionFactory sessionFactory =
-  // // configuration.buildSessionFactory(serviceRegistry);
-  // //
-  // // // obtains the session
-  // // Session session = sessionFactory.openSession();
-  // // session.beginTransaction();
-  // //
-  // // Role myRole =
-  // // new Role(RolesEnum.Admin, StatusEnum.Active);
-  // //
-  // // UserProfile userProfile = new UserProfile("myeamil@xyz.com", myRole);
-  // //
-  // // Set<UserProfile> userProfileSet = new HashSet<UserProfile>();
-  // // userProfileSet.add(userProfile);
-  // //
-  // // myRole.setUserProfileSet(userProfileSet);
-  // //
-  // // session.save(myRole);
-  // //
-  // // session.getTransaction().commit();
-  // // session.close();
-  //
-  // // List<Role> listRoles = myRolesDAO.findAll();
-  // // model.put("myRolesList", listRoles);
-  // // model.addAttribute("message", listRoles);
-  //
-  // // List<UserProfile> listUserProfiles = myUserProfileDAO.findAll();
-  // // model.put("userProfileList", listUserProfiles);
-  // // model.addAttribute("message", listUserProfiles);
-  // // model.addAttribute("message", "Check the DB commit");
-  // }
+  private void updateUser(String id, String userEmail) {
 
+    UserProfile userProfile = getUserProfile(id);
+    userProfile.setEmail(userEmail);
+    myUserProfileDAO.update(userProfile);
+  }
+
+  public UserProfile getUserProfile(String id) {
+    logger.info("############### START getUserProfile.");
+
+    UserProfile userProfile =
+        myUserProfileDAO.findById(new Long(id).longValue());
+    logger.info("############### FINISH getUserProfile.");
+
+    return userProfile;
+  }
+
+  public void deleteUserProfile(UserProfile userProfile) {
+    logger.info("############### START deleteUserProfile.");
+
+    myUserProfileDAO.delete(userProfile);
+
+    logger.info("############### FINISH deleteUserProfile.");
+  }
+
+  public void createUserProfile(String userEmail, RolesEnum primaryRole) {
+    logger.info("############### START createUserProfile.");
+
+    Set<Project> projectSet = new HashSet<Project>();
+    Project project = getDefaultProject();
+    projectSet.add(project);
+    UserProfile userProfile1 = new UserProfile(userEmail, primaryRole, projectSet, getDefaultRiskPreference());
+
+    String userPassword = "12345678";
+    char[] password = userPassword.toCharArray();
+    byte[] salt = StringUtil.nextSalt();
+    byte[] passwordAndSaltHash = null;
+    try {
+      passwordAndSaltHash = StringUtil.hashPassword(password, salt);
+    } catch (GeneralSecurityException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // assertTrue(Passwords.matches(password, passwordHash, salt));
+    // byte[] otherSaltBytes = Arrays.copyOf(salt, salt.length);
+    // otherSaltBytes[0] ^= otherSaltBytes[0];
+    // assertFalse(Passwords.matches(password, passwordHash, otherSaltBytes));
+    // assertFalse(Passwords.matches("wrong".toCharArray(), passwordHash,
+    // salt));
+
+    String encodedSalt = StringUtil.encode(salt);
+    String encryptedSalt = null;
+    try {
+      encryptedSalt = StringUtil.encrypt(encodedSalt);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    String encodedPasswordAndSalt = StringUtil.encode(passwordAndSaltHash);
+
+    userProfile1.setPwd_salt(encryptedSalt);
+    userProfile1.setPwd_hash(encodedPasswordAndSalt);
+    // assertEquals(encodedSalt.length(), 24);
+    // assertEquals(encodedSalt.substring(22, 24), "==");
+
+    logger.info("\n** User Profile Pwd Salt encoded: " + encodedSalt);
+    logger.info("\n** User Profile Pwd Salt encrypted: " + encryptedSalt);
+    logger.info("\n** User Profile Password with Salt encoded: "
+        + encodedPasswordAndSalt);
+
+    // TODO get Pwd and Salt from DB for this User using email and remove the
+    // variables from the method signature and calls
+    String encodedPasswordAndSaltFromDB = encodedPasswordAndSalt;
+    String encodedSaltFromDB = null;
+    try {
+      encodedSaltFromDB = StringUtil.decrypt(encryptedSalt);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    boolean isAuthenticated =
+        authenticateUser(userEmail, userPassword, encodedPasswordAndSaltFromDB,
+            encodedSaltFromDB);
+    logger.info("\n*IS USER AUTHENTICATED?: "
+        + ((isAuthenticated == false) ? "No" : "Yes"));
+
+    // Set User
+    Set<UserProfile> userProfileSet = new java.util.HashSet<UserProfile>();
+    userProfileSet.add(userProfile1);
+
+    // for (Role role : roleSet) {
+    // Role myRole = new Role(role.getRole_name(), StatusEnum.active);
+    // myRole.setUserProfileSet(userProfileSet);
+    // }
+
+    myUserProfileDAO.save(userProfile1);
+
+    logger.info("############### FINISH createUserProfile.");
+  }
+
+  public boolean authenticateUser(String userEmail, String userPassword,
+      String encodedPasswordFromDB, String encodedSaltFromDB) {
+    logger.info("############### START authenticateUser.");
+
+    // Authenticate User
+    char[] newPassword = userPassword.toCharArray();
+    byte[] passwordHashFromDB = StringUtil.decode(encodedPasswordFromDB);
+    byte[] saltFromDB = StringUtil.decode(encodedSaltFromDB);
+    boolean isAuthenticated = false;
+    try {
+      isAuthenticated =
+          StringUtil.matches(newPassword, passwordHashFromDB, saltFromDB);
+    } catch (GeneralSecurityException e) {
+      e.printStackTrace();
+    }
+
+    logger.info("############### FINISH authenticateUser.");
+    return isAuthenticated;
+  }
+
+  //Default
+   private RiskPreference getDefaultRiskPreference() {
+     return myRiskPreferenceDAO.findById(new Long(1).longValue());
+   }
+  
+   // Default
+   private Project getDefaultProject() {
+     return myProjectDAO.findById(new Long(1).longValue());
+   }
+ 
   // @RequestMapping(method = RequestMethod.GET)
   // public String index(ModelMap model) {
   //
@@ -277,14 +395,6 @@ public class BaseController {
   // return "index";
   //
   // }
-  
-  @RequestMapping(value="welcome/{name}", method = RequestMethod.GET)
-  public String welcomeName(@PathVariable String name, ModelMap model) {
- 
-    model.addAttribute("message", "Welcome to the Executive Information System: " + name);
-    return "index";
- 
-  }
   
   @RequestMapping(value="overview", method = RequestMethod.GET)
   public String welcome(ModelMap model) {

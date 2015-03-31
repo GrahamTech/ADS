@@ -1,21 +1,28 @@
 package com.grahamtech.eis.pojos;
 
-//import java.util.Set;
+import java.util.HashSet;
+import java.util.Set;
+
 
 //import javax.persistence.CascadeType;
 //import javax.persistence.ElementCollection;
 //import javax.persistence.Embeddable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 //import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 //import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role implements java.io.Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -24,22 +31,25 @@ public class Role implements java.io.Serializable {
   @Column(name = "role_id")
   private long role_id;
   @Column(name = "role_name")
-  private String role_name;
+  @Enumerated(EnumType.STRING)
+  private RolesEnum role_name;
   @Column(name = "role_description")
   private String role_description;
   @Column(name = "role_status")
   private String role_status;
 
-  // @ManyToMany(mappedBy="roles")
-  // @JsonBackReference
-  // private Set<UserProfile> users = new HashSet<UserProfile>();
+  // This end is not the owner. It's the inverse of the UserProfile.roleSet
+  // association
+  @ManyToMany(mappedBy = "roleSet")
+  @JsonBackReference
+  private Set<UserProfile> userProfileSet = new HashSet<UserProfile>();
 
   public Role() {
     // default constructor
   }
 
   public Role(RolesEnum role_name, StatusEnum status) {
-    this.role_name = role_name.getEnumString();
+    this.role_name = role_name;
     this.role_status = status.getEnumString();
   }
 
@@ -49,14 +59,6 @@ public class Role implements java.io.Serializable {
 
   public void setRole_id(long role_id) {
     this.role_id = role_id;
-  }
-
-  public String getRole_name() {
-    return this.role_name;
-  }
-
-  public void setRole_name(RolesEnum role_name) {
-    this.role_name = role_name.name();
   }
 
   public String getRole_description() {
@@ -75,12 +77,28 @@ public class Role implements java.io.Serializable {
     this.role_status = role_status.name();
   }
 
-  // public Set<UserProfile> getUserProfileSet() {
-  // return userProfileSet;
-  // }
-  //
-  // public void setUserProfileSet(Set<UserProfile> userProfileSet) {
-  // this.userProfileSet = userProfileSet;
-  // }
+  public RolesEnum getRole_name() {
+    return role_name;
+  }
+
+  public void setRole_name(RolesEnum role_name) {
+    this.role_name = role_name;
+  }
+
+  public static long getSerialversionuid() {
+    return serialVersionUID;
+  }
+
+  public void setRole_status(String role_status) {
+    this.role_status = role_status;
+  }
+
+  public Set<UserProfile> getUserProfileSet() {
+    return userProfileSet;
+  }
+
+  public void setUserProfileSet(Set<UserProfile> userProfileSet) {
+    this.userProfileSet = userProfileSet;
+  }
 
 }

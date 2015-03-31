@@ -57,17 +57,17 @@
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
 	</bean>
-	<!-- <bean id="myRolesDAO" class="com.grahamtech.eis.daos.MyRolesDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
 	<bean id="myRiskPreferenceDAO" class="com.grahamtech.eis.daos.MyRiskPreferenceDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
 	</bean>
 	<bean id="myProjectDAO" class="com.grahamtech.eis.daos.MyProjectDAO">
+	    <constructor-arg>
+	        <ref bean="sessionFactory" />
+	    </constructor-arg>
+	</bean>
+	<!-- <bean id="myRolesDAO" class="com.grahamtech.eis.daos.MyRolesDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
