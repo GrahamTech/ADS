@@ -209,12 +209,6 @@ CREATE TABLE IF NOT EXISTS eisdb.flagged_assets (
 	PRIMARY KEY (flagged_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-##ALTER TABLE eisdb.roles
-##	ADD user_profile_fk_roles int (11) NOT NULL;
-	
-##ALTER TABLE eisdb.roles
-##	ADD CONSTRAINT user_profile_fk_roles FOREIGN KEY (user_profile_fk_roles) REFERENCES user_profiles (user_profile_id);
-
 ALTER TABLE eisdb.user_profiles_roles
 	ADD role_id_fk int (11) NOT NULL,
 	ADD user_profile_id_fk int (11) NOT NULL;
@@ -224,12 +218,10 @@ ALTER TABLE eisdb.user_profiles_roles
   	ADD CONSTRAINT user_profile_id_fk FOREIGN KEY (user_profile_id_fk) REFERENCES user_profiles (user_profile_id);
 	
 ALTER TABLE eisdb.user_profiles
-##	ADD role_fk_profile int (11) NOT NULL,
 	ADD risk_preference_fk int (11), 
 	ADD project_fk_profiles int (11);
 	
 ALTER TABLE eisdb.user_profiles
-##	ADD CONSTRAINT role_fk_profile FOREIGN KEY (role_fk_profile) REFERENCES role (role_id),
     ADD CONSTRAINT project_fk_profiles FOREIGN KEY (project_fk_profiles) REFERENCES projects (project_id),
 	ADD CONSTRAINT risk_preference_fk FOREIGN KEY (risk_preference_fk) REFERENCES risk_preferences (risk_preference_id)  ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -346,7 +338,6 @@ INSERT INTO `eisdb`.`user_profiles`
 `challenge_question_three`,
 `challenge_question_three_answer`,
 `notification_frequency`,
-##`role_fk_profile`,
 `risk_preference_fk`,
 `project_fk_profiles`)
 VALUES
@@ -374,7 +365,6 @@ VALUES
 'challenge_question_three',
 'challenge_question_three_answer',
 'weekly',
-##'1',
 '1',
 '1');
 
@@ -405,6 +395,5 @@ INSERT INTO `eisdb`.`flagged_assets` (`flagged_id`, `flagged_reason`, `flagged_r
 INSERT INTO `eisdb`.`email_templates` (`email_template_id`, `email_template_name`, `email_subject`, `email_body`, `email_from`, `last_modified_date`) VALUES ('1', 'New Account Request', 'New EIS Account Request', 'Please create an account for user X given justification XYZ', 'somePerson@xyz.com', '20150101');
 
 INSERT INTO `eisdb`.`contact_us` (`contact_us_id`, `email`, `name`, `category`, `user_comment`, `last_modified_date`) VALUES ('1', 'somePerson@xyz.com', 'Person A', 'comment', 'Great system. Very useful.', '20150101');
-
 
 SET FOREIGN_KEY_CHECKS = 1;
