@@ -426,7 +426,9 @@ public class BaseController {
       + "</p>"
       + "<ol>"
       + "<li>Data Integration - EIS will interact with the National Institute of Standards and Technology (NIST) - National"
-      + " Vulnerabilities Database (NVD) system via an RSS Feed to consume product vulnerability and risk rating information.</li>"
+          + " Vulnerabilities Database (NVD) Common Vulnerabilities & Exposures (CVE) system via an RSS Feed to consume CVE"
+          + " risk rating information. CVE’s common identifiers enable data exchange between security products and provide a"
+          + " baseline index point for evaluating coverage of tools and services.</li>"
       + "<li>Technologies and User Personas are referenced in Technical Solution Appendix A and B, respectively.</li>"
       + "</ol>";
  

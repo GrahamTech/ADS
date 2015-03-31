@@ -9,7 +9,9 @@
 </head>
 
 <body>
-<p>${userProfileList}</p>
+<p>${message1}</p>
+</br>
+<p>${message2}</p>
 
 </body>
 </html>
