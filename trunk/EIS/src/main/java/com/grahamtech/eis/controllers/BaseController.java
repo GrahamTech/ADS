@@ -12,16 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.grahamtech.eis.pojos.Project;
 import com.grahamtech.eis.daos.MyProjectDAO;
 import com.grahamtech.eis.daos.MyRiskPreferenceDAO;
-//import com.grahamtech.eis.daos.MyFlaggedAssetsDAO;
-//import com.grahamtech.eis.daos.MyProjectSystemDAO;
-//import com.grahamtech.eis.daos.MySystemVulnerabilitiesDAO;
-//import com.grahamtech.eis.daos.AbstractDAO;
-//import com.grahamtech.eis.daos.MyProjectDAO;
-//import com.grahamtech.eis.daos.MyProjectDetailDAO;
-//import com.grahamtech.eis.daos.MyRiskPreferenceDAO;
-//import com.grahamtech.eis.daos.MyRolesDAO;
 import com.grahamtech.eis.daos.MyUserProfileDAO;
-//import com.grahamtech.eis.pojos.FlaggedAsset;
 import com.grahamtech.eis.pojos.ProjectPartner;
 import com.grahamtech.eis.pojos.ProjectSystem;
 import com.grahamtech.eis.pojos.RiskPreference;
@@ -29,50 +20,17 @@ import com.grahamtech.eis.pojos.Role;
 import com.grahamtech.eis.pojos.RolesEnum;
 import com.grahamtech.eis.pojos.SystemProduct;
 import com.grahamtech.eis.pojos.SystemVulnerability;
-//import com.grahamtech.eis.pojos.DaoTypesEnum;
-//import com.grahamtech.eis.pojos.RiskPreference;
-//import com.grahamtech.eis.pojos.Role;
-//import com.grahamtech.eis.pojos.RolesEnum;
-//import com.grahamtech.eis.pojos.StatusEnum;
 import com.grahamtech.eis.pojos.UserProfile;
-
-
-
-
-
 import com.grahamtech.eis.utilities.StringUtil;
 
 import java.security.GeneralSecurityException;
 import java.util.HashSet;
-//import java.util.HashMap;
-//import java.util.HashSet;
-//import java.util.HashSet;
 import java.util.List;
-//import java.util.Map;
 import java.util.Set;
-
-//import javax.annotation.PostConstruct;
-//import java.util.Set;
-
-//import org.hibernate.Session;
-//import org.hibernate.SessionFactory;
-//import org.hibernate.cfg.Configuration;
-//import org.hibernate.service.ServiceRegistry;
-//import org.hibernate.service.ServiceRegistryBuilder;
-
-
-
-
-
-
-
-
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//@SuppressWarnings("deprecation")
 @Controller
 @RequestMapping("/")
 public class BaseController {
