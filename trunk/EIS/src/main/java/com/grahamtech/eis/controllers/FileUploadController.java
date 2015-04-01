@@ -1,7 +1,10 @@
 package com.grahamtech.eis.controllers;
 
+import java.io.File;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,20 +20,43 @@ import com.grahamtech.eis.utilities.AjaxUtils;
 @RequestMapping("/fileupload")
 public class FileUploadController {
 
+  private static final Logger logger = LoggerFactory
+      .getLogger(FileUploadController.class);
+
   @ModelAttribute
   public void ajaxAttribute(WebRequest request, Model model) {
+    logger.info("############### START ajaxAttribute.");
     model.addAttribute("ajaxRequest", AjaxUtils.isAjaxRequest(request));
   }
 
   @RequestMapping(method = RequestMethod.GET)
   public void fileUploadForm() {
+    logger.info("############### START fileuploadForm.");
   }
 
   @RequestMapping(method = RequestMethod.POST)
   public void processUpload(@RequestParam MultipartFile file, Model model)
       throws IOException {
+    logger.info("############### START processUpload.");
+
+    String orginalName = file.getOriginalFilename();
+    String filePath = "/home/morrisrod/my_file_uploads/" + orginalName;
+    File destination = new File(filePath);
+    String status = "success";
+    try {
+      file.transferTo(destination);
+    } catch (IllegalStateException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      status = "failure";
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      status = "iofailure";
+    }
+
     model.addAttribute("message", "File '" + file.getOriginalFilename()
-        + "' uploaded successfully");
+        + "' uploaded: " + status);
   }
 }
 

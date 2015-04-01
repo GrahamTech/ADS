@@ -1,6 +1,9 @@
 package com.grahamtech.eis.controllers;
 
 import java.util.concurrent.Callable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,12 +15,16 @@ import org.springframework.web.context.request.async.WebAsyncTask;
 @RequestMapping("/async/callable")
 public class CallableController {
 
+  private static final Logger logger = LoggerFactory
+      .getLogger(CallableController.class);
+
   @RequestMapping("/response-body")
   public @ResponseBody
   Callable<String> callable() {
     return new Callable<String>() {
       @Override
       public String call() throws Exception {
+        logger.info("############### START response-body > call.");
         Thread.sleep(6000);
         return "Callable result";
       }
@@ -29,6 +36,7 @@ public class CallableController {
     return new Callable<String>() {
       @Override
       public String call() throws Exception {
+        logger.info("############### START view > call.");
         Thread.sleep(6000);
         model.addAttribute("message1", "async message 1 test");
         model.addAttribute("message2", "async message 2 test");
@@ -44,6 +52,7 @@ public class CallableController {
     return new Callable<String>() {
       @Override
       public String call() throws Exception {
+        logger.info("############### START exception > call.");
         Thread.sleep(6000);
         if (handled) {
           // see handleException method further below
@@ -61,6 +70,7 @@ public class CallableController {
     Callable<String> callable = new Callable<String>() {
       @Override
       public String call() throws Exception {
+        logger.info("############### START custom-timeout-handling > call.");
         Thread.sleep(6000);
         return "Callable result";
       }
