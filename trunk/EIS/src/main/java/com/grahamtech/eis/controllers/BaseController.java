@@ -1,7 +1,6 @@
 package com.grahamtech.eis.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Controller
-@RequestMapping("/")
+// @RequestMapping("/")
 public class BaseController {
   private static final Logger logger = LoggerFactory
       .getLogger(BaseController.class);
@@ -72,7 +71,7 @@ public class BaseController {
     return model;
   }
 
-  @RequestMapping(value = RestURIConstants.GET_ALL_EMP, method = RequestMethod.GET)
+  @RequestMapping(value = RestURIConstants.PROFILE_GET_ALL_USERS, method = RequestMethod.GET)
   public @ResponseBody
   List<UserProfile> getAllUserProfiles() {
     ModelAndView model = new ModelAndView("index");
@@ -83,14 +82,14 @@ public class BaseController {
     return listUserProfiles;
   }
 
-  @RequestMapping(value = RestURIConstants.GET_EMP, method = RequestMethod.GET)
+  @RequestMapping(value = RestURIConstants.PROFILE_GET_USER, method = RequestMethod.GET)
   public @ResponseBody
   UserProfile getUserProfileById(@PathVariable String id) {
     //
     return getUserProfile(id);
   }
 
-  @RequestMapping(value = RestURIConstants.CREATE_EMP, method = RequestMethod.POST)
+  @RequestMapping(value = RestURIConstants.PROFILE_CREATE_USER, method = RequestMethod.POST)
   public @ResponseBody
   void createUserProfile(@PathVariable String userEmail,
       @PathVariable String primaryRole) {
@@ -98,14 +97,14 @@ public class BaseController {
     createUserProfile(userEmail, RolesEnum.fromString(primaryRole));
   }
 
-  @RequestMapping(value = RestURIConstants.UPDATE_EMP_EMAIL, method = RequestMethod.POST)
+  @RequestMapping(value = RestURIConstants.PROFILE_UPDATE_USER_EMAIL, method = RequestMethod.POST)
   public @ResponseBody
   void updateUserProfile(@PathVariable String id, @PathVariable String userEmail) {
 
     updateUser(id, userEmail);
   }
 
-  @RequestMapping(value = RestURIConstants.DELETE_EMP, method = RequestMethod.PUT)
+  @RequestMapping(value = RestURIConstants.PROFILE_DELETE_USER, method = RequestMethod.PUT)
   public @ResponseBody
   void createUserProfile(@PathVariable String id) {
 
@@ -354,15 +353,6 @@ public class BaseController {
   // return "index";
   //
   // }
-  
-  @RequestMapping(value="overview", method = RequestMethod.GET)
-  public String welcome(ModelMap model) {
-        
-    model.addAttribute("message", overviewStr);
- 
-    return "index";
- 
-  }
   
   private String overviewStr = "<p>Graham Technologies aims to provide an on-line Enterprise Governance, Risk, and Compliance (eGRC) - "
       + "Executive Information System (EIS) where risk perception is made reality to enhance enterprise-wide visibility, "

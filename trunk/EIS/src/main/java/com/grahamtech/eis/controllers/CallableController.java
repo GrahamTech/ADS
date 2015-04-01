@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.WebAsyncTask;
 @Controller
-@RequestMapping("/async/callable")
+@RequestMapping(RestURIConstants.ASYNC_CALLABLE)
 public class CallableController {
 
   private static final Logger logger = LoggerFactory
       .getLogger(CallableController.class);
 
-  @RequestMapping("/response-body")
+  @RequestMapping(RestURIConstants.ASYNC_RESPONSE_BODY)
   public @ResponseBody
   Callable<String> callable() {
     return new Callable<String>() {
@@ -31,7 +31,7 @@ public class CallableController {
     };
   }
 
-  @RequestMapping("/view")
+  @RequestMapping(RestURIConstants.ASYNC_VIEW)
   public Callable<String> callableWithView(final Model model) {
     return new Callable<String>() {
       @Override
@@ -45,7 +45,7 @@ public class CallableController {
     };
   }
 
-  @RequestMapping("/exception")
+  @RequestMapping(RestURIConstants.ASYNC_EXCEPTION)
   public @ResponseBody
   Callable<String> callableWithException(
       final @RequestParam(required = false, defaultValue = "true") boolean handled) {
@@ -64,7 +64,7 @@ public class CallableController {
     };
   }
 
-  @RequestMapping("/custom-timeout-handling")
+  @RequestMapping(RestURIConstants.ASYNC_CUSTOM_TIMEOUT_HANDLING)
   public @ResponseBody
   WebAsyncTask<String> callableWithCustomTimeoutHandling() {
     Callable<String> callable = new Callable<String>() {

@@ -17,12 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grahamtech.eis.utilities.AjaxUtils;
 
 @Controller
-@RequestMapping("/fileupload")
+@RequestMapping(RestURIConstants.FILE_UPLOAD)
 public class FileUploadController {
 
   private static final Logger logger = LoggerFactory
       .getLogger(FileUploadController.class);
 
+  private static final String UPLOAD_LOCATION = "/home/morrisrod/my_file_uploads/";
+  
   @ModelAttribute
   public void ajaxAttribute(WebRequest request, Model model) {
     logger.info("############### START ajaxAttribute.");
@@ -40,7 +42,7 @@ public class FileUploadController {
     logger.info("############### START processUpload.");
 
     String orginalName = file.getOriginalFilename();
-    String filePath = "/home/morrisrod/my_file_uploads/" + orginalName;
+    String filePath = UPLOAD_LOCATION + orginalName;
     File destination = new File(filePath);
     String status = "success";
     try {
