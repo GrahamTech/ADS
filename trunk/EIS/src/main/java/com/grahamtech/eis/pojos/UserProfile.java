@@ -25,6 +25,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
+
 //import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -143,7 +145,7 @@ public class UserProfile implements java.io.Serializable {
   public UserProfile(String email, RolesEnum primary_role,
       Set<Project> userProjectSet, RiskPreference riskPreference) {
     this(email, primary_role);
-    this.userProjectSet = userProjectSet;
+    this.setUserProjectSet(userProjectSet);
     this.riskPreference = riskPreference;
   }
   
@@ -340,7 +342,10 @@ public class UserProfile implements java.io.Serializable {
   }
 
   public void setUserProjectSet(Set<Project> userProjectSet) {
-    this.userProjectSet = userProjectSet;
+    for (Project obj : userProjectSet) {
+      this.getUserProjectSet().add(obj);
+      obj.setUserProfileAttribute(this);
+    }
   }
 
   public static long getSerialversionuid() {
@@ -388,7 +393,10 @@ public class UserProfile implements java.io.Serializable {
   }
 
   public void setRoleSet(Set<Role> roleSet) {
-    this.roleSet = roleSet;
+    for (Role obj : roleSet) {
+      this.getRoleSet().add(obj);
+      obj.getUserProfileSet().add(this);
+    }
   }
 
   public RolesEnum getPrimary_role() {
@@ -398,29 +406,5 @@ public class UserProfile implements java.io.Serializable {
   public void setPrimary_role(RolesEnum primary_role) {
     this.primary_role = primary_role;
   }
-
-  // public Set<Role> getRoleSet() {
-  // return roleSet;
-  // }
-  //
-  // public void setRoleSet(Set<Role> roleSet) {
-  // this.roleSet = roleSet;
-  // }
-
-  // public int getRole_fk_profile() {
-  // return role_fk_profile;
-  // }
-  //
-  // public void setRole_fk_profile(int role_fk_profile) {
-  // this.role_fk_profile = role_fk_profile;
-  // }
-
-  // public Role getRole() {
-  // return role;
-  // }
-  //
-  // public void setRole(Role role) {
-  // this.role = role;
-  // }
 
 }

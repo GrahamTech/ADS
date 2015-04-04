@@ -244,6 +244,7 @@ public class BaseController {
     Project project = getDefaultProject();
     projectSet.add(project);
     UserProfile userProfile1 = new UserProfile(userEmail, primaryRole, projectSet, getDefaultRiskPreference());
+    project.setUserProfileAttribute(userProfile1);
 
     String userPassword = "12345678";
     char[] password = userPassword.toCharArray();

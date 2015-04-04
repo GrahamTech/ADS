@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+
 //import javax.persistence.CascadeType;
 //import javax.persistence.ElementCollection;
 //import javax.persistence.Embeddable;
@@ -98,7 +99,10 @@ public class Role implements java.io.Serializable {
   }
 
   public void setUserProfileSet(Set<UserProfile> userProfileSet) {
-    this.userProfileSet = userProfileSet;
+    for (UserProfile obj : userProfileSet) {
+      this.getUserProfileSet().add(obj);
+      obj.getRoleSet().add(this);
+    }
   }
 
 }

@@ -129,7 +129,10 @@ public class ProjectSystem implements java.io.Serializable {
 
   public void setSystemVulnerabilitySet(
       Set<SystemVulnerability> systemVulnerabilitySet) {
-    this.systemVulnerabilitySet = systemVulnerabilitySet;
+    for (SystemVulnerability obj : systemVulnerabilitySet) {
+      this.getSystemVulnerabilitySet().add(obj);
+      obj.setProjectSystemAttribute(this);
+    }
   }
 
   public Project getProjectAttribute() {
@@ -145,7 +148,10 @@ public class ProjectSystem implements java.io.Serializable {
   }
 
   public void setSystemProductSet(Set<SystemProduct> systemProductSet) {
-    this.systemProductSet = systemProductSet;
+    for (SystemProduct obj : systemProductSet) {
+      this.getSystemProductSet().add(obj);
+      obj.setProjectSystemAttribute(this);
+    }
   }
 
   public FlaggedAsset getFlaggedAsset() {

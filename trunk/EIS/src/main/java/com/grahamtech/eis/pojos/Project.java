@@ -100,14 +100,6 @@ public class Project implements java.io.Serializable {
     this.projectDetail = projectDetail;
   }
 
-  // public UserProfile getUserProfileAttribute() {
-  // return userProfileAttribute;
-  // }
-  //
-  // public void setUserProfileAttribute(UserProfile userProfileAttribute) {
-  // this.userProfileAttribute = userProfileAttribute;
-  // }
-
   public static long getSerialversionuid() {
     return serialVersionUID;
   }
@@ -117,7 +109,10 @@ public class Project implements java.io.Serializable {
   }
 
   public void setProjectSystemSet(Set<ProjectSystem> projectSystemSet) {
-    this.projectSystemSet = projectSystemSet;
+    for (ProjectSystem obj : projectSystemSet) {
+      this.getProjectSystemSet().add(obj);
+      obj.setProjectAttribute(this);
+    }
   }
 
   public Set<ProjectPartner> getProjectPartnerSet() {
@@ -125,7 +120,10 @@ public class Project implements java.io.Serializable {
   }
 
   public void setProjectPartnerSet(Set<ProjectPartner> projectPartnerSet) {
-    this.projectPartnerSet = projectPartnerSet;
+    for (ProjectPartner obj : projectPartnerSet) {
+      this.getProjectPartnerSet().add(obj);
+      obj.setProjectAttribute(this);
+    }
   }
 
   public FlaggedAsset getFlaggedAsset() {
@@ -135,4 +133,13 @@ public class Project implements java.io.Serializable {
   public void setFlaggedAsset(FlaggedAsset flaggedAsset) {
     this.flaggedAsset = flaggedAsset;
   }
+
+  public UserProfile getUserProfileAttribute() {
+    return userProfileAttribute;
+  }
+
+  public void setUserProfileAttribute(UserProfile userProfileAttribute) {
+    this.userProfileAttribute = userProfileAttribute;
+  }
+
 }
