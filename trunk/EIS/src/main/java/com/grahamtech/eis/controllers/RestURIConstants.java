@@ -18,6 +18,22 @@ public class RestURIConstants {
   
   public static final String OVERVIEW = "/overview";
   
+  public static final String RSS_NVD_20_ALL = "/rss/nvd/all";
+  public static final String RSS_NVD_CVE_20_2015_URL =
+      "https://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-2015.xml";
+  public static final String RSS_NVD_CVE_20_2014_URL =
+      "https://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-2014.xml";
+  public static final String RSS_NVD_CVE_20_2013_URL =
+      "https://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-2013.xml";
+
+  public static final String RSS_NVD_20_MODIFIED = "/rss/nvd/modified";
+  public static final String RSS_NVD_CVE_20_MODIFIED_URL =
+      "http://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-Modified.xml";
+
+  public static final String RSS_NVD_20_RECENT = "/rss/nvd/recent";
+  public static final String RSS_NVD_CVE_20_RECENT_URL =
+      "https://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-Recent.xml";
+
   // CallableController
   public static final String ASYNC_CALLABLE = "/async/callable";
   public static final String ASYNC_VIEW = "/view";

@@ -3,6 +3,32 @@ use eisdb;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS eisdb.nvd_entry_message;
+CREATE TABLE IF NOT EXISTS eisdb.nvd_entry_message (
+	entry_message_id int (11) NOT NULL AUTO_INCREMENT,
+	cve_id varchar (45) NOT NULL,
+	published_datetime date,
+	last_modified_datetime date,
+	generated_on_datetime date,
+	score decimal(6,2),
+	access_vector varchar (45),
+	access_complexity varchar (45),
+	authentication varchar (45),
+	confidentiality_impact varchar (45),
+	integrity_impact varchar (45),
+	availability_impact varchar (45),
+	source varchar (75),
+	summary varchar (775),
+	PRIMARY KEY (entry_message_id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS eisdb.nvd_entry_vulnerable_software;
+CREATE TABLE IF NOT EXISTS eisdb.nvd_entry_vulnerable_software (
+	vulnerable_software_id int (11) NOT NULL AUTO_INCREMENT,
+	vulnerable_software_name varchar (125),
+	PRIMARY KEY (vulnerable_software_id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS eisdb.email_templates;
 CREATE TABLE IF NOT EXISTS eisdb.email_templates (
 	email_template_id int (11) NOT NULL AUTO_INCREMENT,
@@ -209,6 +235,18 @@ CREATE TABLE IF NOT EXISTS eisdb.flagged_assets (
 	PRIMARY KEY (flagged_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+ALTER TABLE eisdb.nvd_entry_vulnerable_software
+	ADD entry_message_id_fk int (11);
+	
+ALTER TABLE eisdb.nvd_entry_vulnerable_software
+  	ADD CONSTRAINT entry_message_id_fk FOREIGN KEY (entry_message_id_fk) REFERENCES nvd_entry_message (entry_message_id);
+
+#ALTER TABLE eisdb.nvd_entry_message
+#	ADD vulnerable_software_id_fk int (11);
+	
+#ALTER TABLE eisdb.nvd_entry_message
+#  	ADD CONSTRAINT vulnerable_software_id_fk FOREIGN KEY (vulnerable_software_id_fk) REFERENCES nvd_entry_vulnerable_software (vulnerable_software_id);
+	
 ALTER TABLE eisdb.user_profiles_roles
 	ADD role_id_fk int (11) NOT NULL,
 	ADD user_profile_id_fk int (11) NOT NULL;

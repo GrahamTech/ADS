@@ -15,6 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.grahamtech.eis.utilities.AjaxUtils;
+import com.grahamtech.eis.utilities.ConstantsUtil;
 
 @Controller
 @RequestMapping(RestURIConstants.FILE_UPLOAD)
@@ -23,7 +24,7 @@ public class FileUploadController {
   private static final Logger logger = LoggerFactory
       .getLogger(FileUploadController.class);
 
-  private static final String UPLOAD_LOCATION = "/home/morrisrod/my_file_uploads/";
+  private static final String UPLOAD_LOCATION = ConstantsUtil.UPLOAD_LOCATION;
   
   @ModelAttribute
   public void ajaxAttribute(WebRequest request, Model model) {

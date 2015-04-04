@@ -67,6 +67,12 @@
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
 	</bean>
+	<bean id="myNVDEntryMessageDAO" class="com.grahamtech.eis.daos.MyNVDEntryMessageDAO">
+	    <constructor-arg>
+	        <ref bean="sessionFactory" />
+	    </constructor-arg>
+	</bean>
+	
 	<!-- <bean id="myRolesDAO" class="com.grahamtech.eis.daos.MyRolesDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
