@@ -24,7 +24,6 @@ public class NVDEntryVulnerableSoftware implements java.io.Serializable {
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "entry_message_id_fk")
-  // @JoinColumn(name = "vulnerable_software_id")
   @JsonBackReference
   private NVDEntryMessage nvdEntryMessageAttribute;
 

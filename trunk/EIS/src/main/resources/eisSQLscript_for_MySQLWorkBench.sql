@@ -241,11 +241,11 @@ ALTER TABLE eisdb.nvd_entry_vulnerable_software
 ALTER TABLE eisdb.nvd_entry_vulnerable_software
   	ADD CONSTRAINT entry_message_id_fk FOREIGN KEY (entry_message_id_fk) REFERENCES nvd_entry_message (entry_message_id);
 
-#ALTER TABLE eisdb.nvd_entry_message
-#	ADD vulnerable_software_id_fk int (11);
+ALTER TABLE eisdb.nvd_entry_message
+	ADD system_id_fk int (11);
 	
-#ALTER TABLE eisdb.nvd_entry_message
-#  	ADD CONSTRAINT vulnerable_software_id_fk FOREIGN KEY (vulnerable_software_id_fk) REFERENCES nvd_entry_vulnerable_software (vulnerable_software_id);
+ALTER TABLE eisdb.nvd_entry_message
+  	ADD CONSTRAINT system_id_fk FOREIGN KEY (system_id_fk) REFERENCES project_systems (system_id);
 	
 ALTER TABLE eisdb.user_profiles_roles
 	ADD role_id_fk int (11) NOT NULL,

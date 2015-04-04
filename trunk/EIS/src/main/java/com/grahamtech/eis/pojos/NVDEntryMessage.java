@@ -12,11 +12,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
@@ -58,14 +61,14 @@ public class NVDEntryMessage implements java.io.Serializable {
   private String summary = "";
 
   @OneToMany(mappedBy = "nvdEntryMessageAttribute", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  // @ManyToOne
-  // @JoinColumn(name = "vulnerable_software_id_fk", nullable = false,
-  // columnDefinition = "int default 1")
-  // @Column(name = "vulnerable_software_id_fk", columnDefinition =
-  // "int default 1")
   @JsonManagedReference
   private Set<NVDEntryVulnerableSoftware> vulnerability_software_list =
       new HashSet<NVDEntryVulnerableSoftware>(); // product
+
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "system_id_fk")
+  @JsonBackReference
+  private ProjectSystem nvdEntrySystemAttribute;
 
   public NVDEntryMessage() {
   }
@@ -227,6 +230,15 @@ public class NVDEntryMessage implements java.io.Serializable {
   public void setSummary(String summary) {
     this.summary = summary;
   }
+
+  public ProjectSystem getNvdEntrySystemAttribute() {
+    return nvdEntrySystemAttribute;
+  }
+
+  public void setNvdEntrySystemAttribute(ProjectSystem nvdEntrySystemAttribute) {
+    this.nvdEntrySystemAttribute = nvdEntrySystemAttribute;
+  }
+
 }
 
 /*

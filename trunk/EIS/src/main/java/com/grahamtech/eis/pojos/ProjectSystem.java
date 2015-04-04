@@ -49,13 +49,17 @@ public class ProjectSystem implements java.io.Serializable {
   @JsonBackReference
   private UserProfile last_modified_by_fk_systems;
 
-  @OneToMany(mappedBy = "projectSystemAttribute", fetch = FetchType.EAGER, targetEntity = SystemVulnerability.class)
+  @OneToMany(mappedBy = "projectSystemAttribute", fetch = FetchType.EAGER)
   @JsonManagedReference
   private Set<SystemVulnerability> systemVulnerabilitySet;
 
-  @OneToMany(mappedBy = "projectSystemAttribute", fetch = FetchType.EAGER, targetEntity = SystemProduct.class)
+  @OneToMany(mappedBy = "projectSystemAttribute", fetch = FetchType.EAGER)
   @JsonManagedReference
   private Set<SystemProduct> systemProductSet;
+
+  @OneToMany(mappedBy = "nvdEntrySystemAttribute", fetch = FetchType.EAGER)
+  @JsonManagedReference
+  private Set<NVDEntryMessage> systemNVDEntryMessageSet;
 
   @ManyToOne
   @JoinColumn(name = "flagged_by_fk_systems")
