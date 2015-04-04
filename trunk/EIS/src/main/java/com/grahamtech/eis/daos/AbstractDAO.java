@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +26,14 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
 
   /** {@inheritDoc} */
   @Transactional
-  public void save(final T transientInstance) {
+  public void save(final T transientInstance)
+      throws ConstraintViolationException {
     log.debug("About to save object of type " + entityClass);
     try {
       getHibernateTemplate().save(transientInstance);
       log.debug("Saved");
+    } catch (ConstraintViolationException e) {
+      throw e;
     } catch (final RuntimeException re) {
       log.error("Failed to save object of type " + entityClass, re);
       throw re;

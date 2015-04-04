@@ -9,11 +9,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.grahamtech.eis.pojos.Project;
-import com.grahamtech.eis.daos.MyNVDEntryMessageDAO;
 import com.grahamtech.eis.daos.MyProjectDAO;
 import com.grahamtech.eis.daos.MyRiskPreferenceDAO;
 import com.grahamtech.eis.daos.MyUserProfileDAO;
-import com.grahamtech.eis.pojos.NVDEntryMessage;
 import com.grahamtech.eis.pojos.ProjectPartner;
 import com.grahamtech.eis.pojos.ProjectSystem;
 import com.grahamtech.eis.pojos.RiskPreference;
@@ -22,7 +20,6 @@ import com.grahamtech.eis.pojos.RolesEnum;
 import com.grahamtech.eis.pojos.SystemProduct;
 import com.grahamtech.eis.pojos.SystemVulnerability;
 import com.grahamtech.eis.pojos.UserProfile;
-import com.grahamtech.eis.services.RSSFeedParser;
 import com.grahamtech.eis.utilities.StringUtil;
 
 import java.security.GeneralSecurityException;
@@ -45,8 +42,7 @@ public class BaseController {
   private MyRiskPreferenceDAO myRiskPreferenceDAO;
   @Autowired
   private MyProjectDAO myProjectDAO;
-  @Autowired
-  private MyNVDEntryMessageDAO myNVDEntryMessageDAO;
+
   // @Autowired
   // private MyProjectDetailDAO myProjectDetailDAO;
   // @Autowired
@@ -115,42 +111,6 @@ public class BaseController {
 
     deleteUserProfile(getUserProfile(id));
 
-  }
-
-  @RequestMapping(value = RestURIConstants.RSS_NVD_20_ALL, method = RequestMethod.GET)
-  public @ResponseBody
-  void getRss() {
-    logger.info("############### START getRss.");
-
-    getDataFromNVDFeedAndStore(RestURIConstants.RSS_NVD_CVE_20_2015_URL);
-    getDataFromNVDFeedAndStore(RestURIConstants.RSS_NVD_CVE_20_2014_URL);
-
-    logger.info("############### FINISH getRss.");
-  }
-
-  private void getDataFromNVDFeedAndStore(String uriConstant) {
-    logger.info("############### START getDataFromNVDFeedAndStore: "
-        + uriConstant);
-    RSSFeedParser rssFeedParser = new RSSFeedParser(uriConstant);
-    List<NVDEntryMessage> feedEntries = rssFeedParser.readFeed();
-    int maxNvdEntriesStored = 5;
-    int storedEntriesCount = 0;
-    for (NVDEntryMessage message : feedEntries) {
-      if (storedEntriesCount > maxNvdEntriesStored) {
-        break;
-      }
-      // logger.info("Saving: " + message.toString());
-      // logger.info("Vulnerable Software List: "
-      // + message.getVulnerability_software_list().toString());
-      try {
-        myNVDEntryMessageDAO.save(message);
-      } catch (Exception e) {
-        logger.warn("Could not save " + message.getCve_id(), e);
-      }
-      storedEntriesCount++;
-    }
-    logger.info("############### FINISH getDataFromNVDFeedAndStore: "
-        + uriConstant);
   }
 
   public List<UserProfile> getUserProfiles() {
