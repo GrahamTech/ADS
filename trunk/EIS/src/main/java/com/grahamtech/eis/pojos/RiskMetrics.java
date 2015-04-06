@@ -4,10 +4,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
+//import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Inheritance;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.InheritanceType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
@@ -16,6 +20,9 @@ import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 import com.grahamtech.eis.utilities.enums.InstanceCountEnum;
 import com.grahamtech.eis.utilities.enums.PartialToCompleteEnum;
 
+//@Embeddable
+@MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class RiskMetrics implements java.io.Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -37,15 +44,16 @@ public abstract class RiskMetrics implements java.io.Serializable {
   private String source = "";
   private String summary = "";
 
-  @Column(name = "generated_on_datetime", columnDefinition = "DATETIME")
+  @Column(name = "generated_on_datetime", nullable = false, columnDefinition = "Timestamp default CURRENT_TIMESTAMP")
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)
   private Date generated_on_datetime; // generated-on-datetime
-  @Column(name = "published_datetime", columnDefinition = "DATETIME")
+  @Column(name = "published_datetime", nullable = false, columnDefinition = "Timestamp default CURRENT_TIMESTAMP")
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)
   private Date published_datetime; // published-datetime
-  @Column(name = "last_modified_datetime", columnDefinition = "DATETIME")
+  @Column(name = "last_modified_datetime", nullable = false, columnDefinition = "Timestamp default CURRENT_TIMESTAMP")
+  // @Generated(value = GenerationTime.ALWAYS)
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)
   private Date last_modified_datetime; // last-modified-datetime

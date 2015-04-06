@@ -166,4 +166,13 @@ public class ProjectSystem implements java.io.Serializable {
     this.flaggedAsset = flaggedAsset;
   }
 
+  public Set<NVDEntryMessage> getSystemNVDEntryMessageSet() {
+    return systemNVDEntryMessageSet;
+  }
+
+  public void setSystemNVDEntryMessageSet(
+      Set<NVDEntryMessage> systemNVDEntryMessageSet) {
+    this.systemNVDEntryMessageSet = systemNVDEntryMessageSet;
+  }
+
 }

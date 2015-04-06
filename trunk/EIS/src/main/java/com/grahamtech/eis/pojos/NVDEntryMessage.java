@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 /*
  * Represents one RSS entry message
  */
+
 @Entity
 @Table(name = "nvd_entry_message")
 public class NVDEntryMessage extends RiskMetrics implements
@@ -42,6 +43,11 @@ public class NVDEntryMessage extends RiskMetrics implements
   @JoinColumn(name = "system_id_fk")
   @JsonBackReference
   private ProjectSystem nvdEntrySystemAttribute;
+
+  @ManyToOne
+  @JoinColumn(name = "flagged_by_fk_nvd")
+  @JsonBackReference
+  private FlaggedAsset flaggedAsset;
 
   public NVDEntryMessage() {
   }
@@ -121,108 +127,20 @@ public class NVDEntryMessage extends RiskMetrics implements
     return serialVersionUID;
   }
 
-  // public Date getPublished_datetime() {
-  // return published_datetime;
-  // }
-  //
-  // public void setPublished_datetime(Date published_datetime) {
-  // this.published_datetime = published_datetime;
-  // }
-  //
-  // public Date getLast_modified_datetime() {
-  // return last_modified_datetime;
-  // }
-  //
-  // public void setLast_modified_datetime(Date last_modified_datetime) {
-  // this.last_modified_datetime = last_modified_datetime;
-  // }
-  //
-  // public BigDecimal getScore() {
-  // return score;
-  // }
-  //
-  // public void setScore(BigDecimal score) {
-  // this.score = score;
-  // }
-  //
-  // public String getAccess_vector() {
-  // return access_vector;
-  // }
-  //
-  // public void setAccess_vector(String access_vector) {
-  // this.access_vector = access_vector;
-  // }
-  //
-  // public String getAccess_complexity() {
-  // return access_complexity;
-  // }
-  //
-  // public void setAccess_complexity(String access_complexity) {
-  // this.access_complexity = access_complexity;
-  // }
-  //
-  // public String getAuthentication() {
-  // return authentication;
-  // }
-  //
-  // public void setAuthentication(String authentication) {
-  // this.authentication = authentication;
-  // }
-  //
-  // public String getConfidentiality_impact() {
-  // return confidentiality_impact;
-  // }
-  //
-  // public void setConfidentiality_impact(String confidentiality_impact) {
-  // this.confidentiality_impact = confidentiality_impact;
-  // }
-  //
-  // public String getIntegrity_impact() {
-  // return integrity_impact;
-  // }
-  //
-  // public void setIntegrity_impact(String integrity_impact) {
-  // this.integrity_impact = integrity_impact;
-  // }
-  //
-  // public String getAvailability_impact() {
-  // return availability_impact;
-  // }
-  //
-  // public void setAvailability_impact(String availability_impact) {
-  // this.availability_impact = availability_impact;
-  // }
-  //
-  // public String getSource() {
-  // return source;
-  // }
-  //
-  // public void setSource(String source) {
-  // this.source = source;
-  // }
-  //
-  // public Date getGenerated_on_datetime() {
-  // return generated_on_datetime;
-  // }
-  //
-  // public void setGenerated_on_datetime(Date generated_on_datetime) {
-  // this.generated_on_datetime = generated_on_datetime;
-  // }
-  //
-  // public String getSummary() {
-  // return summary;
-  // }
-  //
-  // public void setSummary(String summary) {
-  // this.summary = summary;
-  // }
-
   public ProjectSystem getNvdEntrySystemAttribute() {
     return nvdEntrySystemAttribute;
   }
 
   public void setNvdEntrySystemAttribute(ProjectSystem nvdEntrySystemAttribute) {
     this.nvdEntrySystemAttribute = nvdEntrySystemAttribute;
+  }
+
+  public FlaggedAsset getFlaggedAsset() {
+    return flaggedAsset;
+  }
+
+  public void setFlaggedAsset(FlaggedAsset flaggedAsset) {
+    this.flaggedAsset = flaggedAsset;
   }
 
 }

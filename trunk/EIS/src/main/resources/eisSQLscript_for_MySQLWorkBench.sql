@@ -279,7 +279,7 @@ ALTER TABLE eisdb.system_vulnerabilities
 	ADD CONSTRAINT flagged_by_fk_vulnerabilities FOREIGN KEY (flagged_by_fk_vulnerabilities) REFERENCES flagged_assets (flagged_id),
 	ADD CONSTRAINT project_system_fk_vulnerabilities FOREIGN KEY (project_system_fk_vulnerabilities) REFERENCES project_systems (system_id),
 	ADD CONSTRAINT last_modified_by_fk_vulnerabilities2 FOREIGN KEY (last_modified_by_fk_vulnerabilities2) REFERENCES user_profiles (user_profile_id);
-	
+
 ALTER TABLE eisdb.system_products 
 	ADD flagged_by_fk_products int (11),
 	ADD last_modified_by_fk_products int (11),
@@ -297,9 +297,11 @@ ALTER TABLE eisdb.nvd_entry_vulnerable_software
   	ADD CONSTRAINT entry_message_id_fk FOREIGN KEY (entry_message_id_fk) REFERENCES nvd_entry_message (entry_message_id);
 
 ALTER TABLE eisdb.nvd_entry_message
+	ADD flagged_by_fk_nvd int (11),
 	ADD system_id_fk int (11);
 	
 ALTER TABLE eisdb.nvd_entry_message
+	ADD CONSTRAINT flagged_by_fk_nvd FOREIGN KEY (flagged_by_fk_nvd) REFERENCES flagged_assets (flagged_id),
   	ADD CONSTRAINT system_id_fk FOREIGN KEY (system_id_fk) REFERENCES project_systems (system_id);
 	
 ALTER TABLE eisdb.user_profiles_roles

@@ -12,6 +12,7 @@ import com.grahamtech.eis.pojos.Project;
 import com.grahamtech.eis.daos.MyProjectDAO;
 import com.grahamtech.eis.daos.MyRiskPreferenceDAO;
 import com.grahamtech.eis.daos.MyUserProfileDAO;
+import com.grahamtech.eis.pojos.NVDEntryMessage;
 import com.grahamtech.eis.pojos.ProjectPartner;
 import com.grahamtech.eis.pojos.ProjectSystem;
 import com.grahamtech.eis.pojos.RiskPreference;
@@ -192,6 +193,19 @@ public class BaseController {
             logger.info("\n****** Project System Products Has a Flag of : "
                 + ((systemProduct.getFlaggedAsset() == null) ? "N/A"
                     : systemProduct.getFlaggedAsset().getFlagged_reason()));
+          }
+
+          // System NVD CVE Association
+          Set<NVDEntryMessage> nvdEntryMessageSet =
+              projectSystem.getSystemNVDEntryMessageSet();
+          for (NVDEntryMessage nvdEntryMessage : nvdEntryMessageSet) {
+            logger.info("\n****** Project System Has NVD Entry Message ID: "
+                + nvdEntryMessage.getCve_id());
+
+            logger
+                .info("\n****** Project System NVD Entry Message Has a Flag of : "
+                    + ((nvdEntryMessage.getFlaggedAsset() == null) ? "N/A"
+                        : nvdEntryMessage.getFlaggedAsset().getFlagged_reason()));
           }
         }// end project system
       }// end project
