@@ -1,7 +1,5 @@
 package com.grahamtech.eis.pojos;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,20 +14,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 
 /*
  * Represents one RSS entry message
  */
 @Entity
 @Table(name = "nvd_entry_message")
-public class NVDEntryMessage implements java.io.Serializable {
+public class NVDEntryMessage extends RiskMetrics implements
+    java.io.Serializable {
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,28 +32,6 @@ public class NVDEntryMessage implements java.io.Serializable {
   private long entry_message_id;
   @Column(name = "cve_id", unique = true)
   private String cve_id = ""; // cve-id
-  @Column(name = "published_datetime", columnDefinition = "DATETIME")
-  @Temporal(TemporalType.TIMESTAMP)
-  @JsonSerialize(using = DateSerializer.class)
-  private Date published_datetime; // published-datetime
-  @Column(name = "last_modified_datetime", columnDefinition = "DATETIME")
-  @Temporal(TemporalType.TIMESTAMP)
-  @JsonSerialize(using = DateSerializer.class)
-  private Date last_modified_datetime; // last-modified-datetime
-  // CVE Base Metrics
-  private BigDecimal score;
-  private String access_vector = ""; // access-vector
-  private String access_complexity = ""; // access-complexity
-  private String authentication = ""; // authentication
-  private String confidentiality_impact = ""; // confidentiality-impact
-  private String integrity_impact = ""; // integrity-impact
-  private String availability_impact = ""; // availability-impact
-  private String source = "";
-  @Column(name = "generated_on_datetime", columnDefinition = "DATETIME")
-  @Temporal(TemporalType.TIMESTAMP)
-  @JsonSerialize(using = DateSerializer.class)
-  private Date generated_on_datetime; // generated-on-datetime
-  private String summary = "";
 
   @OneToMany(mappedBy = "nvdEntryMessageAttribute", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JsonManagedReference
@@ -76,17 +49,30 @@ public class NVDEntryMessage implements java.io.Serializable {
   @Override
   public String toString() {
     return "Feed [cve_id= " + cve_id + ", pub date= "
-        + ((published_datetime == null) ? "N/A" : published_datetime.toString())
-        + ", score= " + score
-        + ", access_vector=" + access_vector + ", access_complexity= "
-        + access_complexity + ", authentication= " + authentication
-        + ", confidentiality_impact= " + confidentiality_impact
-        + ", integrity_impact= " + integrity_impact + ", availability_impact= "
-        + availability_impact + ", source= " + source
+        + ((this.getPublished_datetime() == null) ? "N/A" : this
+            .getPublished_datetime().toString())
+        + ", score= "
+        + this.getScore()
+        + ", access_vector="
+        + this.getAccess_vector()
+        + ", access_complexity= "
+        + this.getAccess_complexity()
+        + ", authentication= "
+        + this.getAuthentication()
+        + ", confidentiality_impact= "
+        + this.getConfidentiality_impact()
+        + ", integrity_impact= "
+        + this.getIntegrity_impact()
+        + ", availability_impact= "
+        + this.getAvailability_impact()
+        + ", source= "
+        + this.getSource()
         + ", generated_on_datetime= "
-        + ((generated_on_datetime == null) ? "N/A" : generated_on_datetime
+        + ((this.getGenerated_on_datetime() == null) ? "N/A" : this
+            .getGenerated_on_datetime()
             .toString()) + ", summary= "
-        + summary + ", product list= " + getSoftwareListToString() + "]";
+        + this.getSummary() + ", product list= " + getSoftwareListToString()
+        + "]";
   }
 
   public String getSoftwareListToString() {
@@ -135,101 +121,101 @@ public class NVDEntryMessage implements java.io.Serializable {
     return serialVersionUID;
   }
 
-  public Date getPublished_datetime() {
-    return published_datetime;
-  }
-
-  public void setPublished_datetime(Date published_datetime) {
-    this.published_datetime = published_datetime;
-  }
-
-  public Date getLast_modified_datetime() {
-    return last_modified_datetime;
-  }
-
-  public void setLast_modified_datetime(Date last_modified_datetime) {
-    this.last_modified_datetime = last_modified_datetime;
-  }
-
-  public BigDecimal getScore() {
-    return score;
-  }
-
-  public void setScore(BigDecimal score) {
-    this.score = score;
-  }
-
-  public String getAccess_vector() {
-    return access_vector;
-  }
-
-  public void setAccess_vector(String access_vector) {
-    this.access_vector = access_vector;
-  }
-
-  public String getAccess_complexity() {
-    return access_complexity;
-  }
-
-  public void setAccess_complexity(String access_complexity) {
-    this.access_complexity = access_complexity;
-  }
-
-  public String getAuthentication() {
-    return authentication;
-  }
-
-  public void setAuthentication(String authentication) {
-    this.authentication = authentication;
-  }
-
-  public String getConfidentiality_impact() {
-    return confidentiality_impact;
-  }
-
-  public void setConfidentiality_impact(String confidentiality_impact) {
-    this.confidentiality_impact = confidentiality_impact;
-  }
-
-  public String getIntegrity_impact() {
-    return integrity_impact;
-  }
-
-  public void setIntegrity_impact(String integrity_impact) {
-    this.integrity_impact = integrity_impact;
-  }
-
-  public String getAvailability_impact() {
-    return availability_impact;
-  }
-
-  public void setAvailability_impact(String availability_impact) {
-    this.availability_impact = availability_impact;
-  }
-
-  public String getSource() {
-    return source;
-  }
-
-  public void setSource(String source) {
-    this.source = source;
-  }
-
-  public Date getGenerated_on_datetime() {
-    return generated_on_datetime;
-  }
-
-  public void setGenerated_on_datetime(Date generated_on_datetime) {
-    this.generated_on_datetime = generated_on_datetime;
-  }
-
-  public String getSummary() {
-    return summary;
-  }
-
-  public void setSummary(String summary) {
-    this.summary = summary;
-  }
+  // public Date getPublished_datetime() {
+  // return published_datetime;
+  // }
+  //
+  // public void setPublished_datetime(Date published_datetime) {
+  // this.published_datetime = published_datetime;
+  // }
+  //
+  // public Date getLast_modified_datetime() {
+  // return last_modified_datetime;
+  // }
+  //
+  // public void setLast_modified_datetime(Date last_modified_datetime) {
+  // this.last_modified_datetime = last_modified_datetime;
+  // }
+  //
+  // public BigDecimal getScore() {
+  // return score;
+  // }
+  //
+  // public void setScore(BigDecimal score) {
+  // this.score = score;
+  // }
+  //
+  // public String getAccess_vector() {
+  // return access_vector;
+  // }
+  //
+  // public void setAccess_vector(String access_vector) {
+  // this.access_vector = access_vector;
+  // }
+  //
+  // public String getAccess_complexity() {
+  // return access_complexity;
+  // }
+  //
+  // public void setAccess_complexity(String access_complexity) {
+  // this.access_complexity = access_complexity;
+  // }
+  //
+  // public String getAuthentication() {
+  // return authentication;
+  // }
+  //
+  // public void setAuthentication(String authentication) {
+  // this.authentication = authentication;
+  // }
+  //
+  // public String getConfidentiality_impact() {
+  // return confidentiality_impact;
+  // }
+  //
+  // public void setConfidentiality_impact(String confidentiality_impact) {
+  // this.confidentiality_impact = confidentiality_impact;
+  // }
+  //
+  // public String getIntegrity_impact() {
+  // return integrity_impact;
+  // }
+  //
+  // public void setIntegrity_impact(String integrity_impact) {
+  // this.integrity_impact = integrity_impact;
+  // }
+  //
+  // public String getAvailability_impact() {
+  // return availability_impact;
+  // }
+  //
+  // public void setAvailability_impact(String availability_impact) {
+  // this.availability_impact = availability_impact;
+  // }
+  //
+  // public String getSource() {
+  // return source;
+  // }
+  //
+  // public void setSource(String source) {
+  // this.source = source;
+  // }
+  //
+  // public Date getGenerated_on_datetime() {
+  // return generated_on_datetime;
+  // }
+  //
+  // public void setGenerated_on_datetime(Date generated_on_datetime) {
+  // this.generated_on_datetime = generated_on_datetime;
+  // }
+  //
+  // public String getSummary() {
+  // return summary;
+  // }
+  //
+  // public void setSummary(String summary) {
+  // this.summary = summary;
+  // }
 
   public ProjectSystem getNvdEntrySystemAttribute() {
     return nvdEntrySystemAttribute;

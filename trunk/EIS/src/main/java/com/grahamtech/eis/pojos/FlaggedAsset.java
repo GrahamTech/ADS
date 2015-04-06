@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 
 @Entity
 @Table(name = "flagged_assets")

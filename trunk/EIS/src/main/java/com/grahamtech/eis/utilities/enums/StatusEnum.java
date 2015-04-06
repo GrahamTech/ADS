@@ -1,8 +1,8 @@
-package com.grahamtech.eis.pojos;
+package com.grahamtech.eis.utilities.enums;
 
 public enum StatusEnum {
-  active("active"), inactive("inactive"), pending("pending"), preliminary_login(
-      "preliminary_login");
+  ACTIVE("ACTIVE"), INACTIVE("INACTIVE"), PENDING("PENDING"), PRELIMINARY_LOGIN(
+      "PRELIMINARY_LOGIN");
 
   private String myEnum;
 

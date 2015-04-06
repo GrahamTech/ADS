@@ -1,4 +1,4 @@
-package com.grahamtech.eis.pojos;
+package com.grahamtech.eis.utilities.enums;
 
 public enum UsStatesEnum {
   AL("AL"), AK("AK"), AS("AS"), AZ("AZ"), AR("AR"), CA("CA"), CO("CO"), CT("CT"), DE(

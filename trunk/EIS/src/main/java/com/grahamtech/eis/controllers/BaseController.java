@@ -16,15 +16,17 @@ import com.grahamtech.eis.pojos.ProjectPartner;
 import com.grahamtech.eis.pojos.ProjectSystem;
 import com.grahamtech.eis.pojos.RiskPreference;
 import com.grahamtech.eis.pojos.Role;
-import com.grahamtech.eis.pojos.RolesEnum;
 import com.grahamtech.eis.pojos.SystemProduct;
 import com.grahamtech.eis.pojos.SystemVulnerability;
 import com.grahamtech.eis.pojos.UserProfile;
 import com.grahamtech.eis.utilities.StringUtil;
+import com.grahamtech.eis.utilities.enums.RolesEnum;
 
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -247,44 +249,21 @@ public class BaseController {
     project.setUserProfileAttribute(userProfile1);
 
     String userPassword = "12345678";
-    char[] password = userPassword.toCharArray();
-    byte[] salt = StringUtil.nextSalt();
-    byte[] passwordAndSaltHash = null;
-    try {
-      passwordAndSaltHash = StringUtil.hashPassword(password, salt);
-    } catch (GeneralSecurityException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    // assertTrue(Passwords.matches(password, passwordHash, salt));
-    // byte[] otherSaltBytes = Arrays.copyOf(salt, salt.length);
-    // otherSaltBytes[0] ^= otherSaltBytes[0];
-    // assertFalse(Passwords.matches(password, passwordHash, otherSaltBytes));
-    // assertFalse(Passwords.matches("wrong".toCharArray(), passwordHash,
-    // salt));
-
-    String encodedSalt = StringUtil.encode(salt);
-    String encryptedSalt = null;
-    try {
-      encryptedSalt = StringUtil.encrypt(encodedSalt);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    String encodedPasswordAndSalt = StringUtil.encode(passwordAndSaltHash);
-
+    Map<String, String> passwordMap = generatePassword(userPassword);
+    
+    String encryptedSalt = passwordMap.get("encryptedSalt");
+    String encodedPasswordAndSaltHash =
+        passwordMap.get("encodedPasswordAndSaltHash");
+        
     userProfile1.setPwd_salt(encryptedSalt);
-    userProfile1.setPwd_hash(encodedPasswordAndSalt);
-    // assertEquals(encodedSalt.length(), 24);
-    // assertEquals(encodedSalt.substring(22, 24), "==");
 
-    logger.info("\n** User Profile Pwd Salt encoded: " + encodedSalt);
     logger.info("\n** User Profile Pwd Salt encrypted: " + encryptedSalt);
     logger.info("\n** User Profile Password with Salt encoded: "
-        + encodedPasswordAndSalt);
+        + encodedPasswordAndSaltHash);
 
     // TODO get Pwd and Salt from DB for this User using email and remove the
     // variables from the method signature and calls
-    String encodedPasswordAndSaltFromDB = encodedPasswordAndSalt;
+    String encodedPasswordAndSaltFromDB = encodedPasswordAndSaltHash;
     String encodedSaltFromDB = null;
     try {
       encodedSaltFromDB = StringUtil.decrypt(encryptedSalt);
@@ -310,6 +289,41 @@ public class BaseController {
     myUserProfileDAO.save(userProfile1);
 
     logger.info("############### FINISH createUserProfile.");
+  }
+
+  private Map<String, String> generatePassword(String userPassword) {
+    Map<String, String> passwordMap = new HashMap<String, String>();
+
+    char[] password = userPassword.toCharArray();
+    byte[] salt = StringUtil.nextSalt();
+    byte[] passwordAndSaltHash = null;
+    try {
+      passwordAndSaltHash = StringUtil.hashPassword(password, salt);
+    } catch (GeneralSecurityException e) {
+      logger.error("Could not hash the password and salt", e);
+    }
+    // assertTrue(Passwords.matches(password, passwordHash, salt));
+    // byte[] otherSaltBytes = Arrays.copyOf(salt, salt.length);
+    // otherSaltBytes[0] ^= otherSaltBytes[0];
+    // assertFalse(Passwords.matches(password, passwordHash, otherSaltBytes));
+    // assertFalse(Passwords.matches("wrong".toCharArray(), passwordHash,
+    // salt));
+
+    String encodedSalt = StringUtil.encode(salt);
+    String encryptedSalt = null;
+    try {
+      encryptedSalt = StringUtil.encrypt(encodedSalt);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    String encodedPasswordAndSaltHash = StringUtil.encode(passwordAndSaltHash);
+    // assertEquals(encodedSalt.length(), 24);
+    // assertEquals(encodedSalt.substring(22, 24), "==");
+
+    passwordMap.put("encryptedSalt", encryptedSalt);
+    passwordMap.put("encodedPasswordAndSaltHash", encodedPasswordAndSaltHash);
+
+    return passwordMap;
   }
 
   public boolean authenticateUser(String userEmail, String userPassword,

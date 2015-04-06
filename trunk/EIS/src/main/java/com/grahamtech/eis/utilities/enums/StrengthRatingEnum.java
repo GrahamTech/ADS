@@ -1,7 +1,7 @@
-package com.grahamtech.eis.pojos;
+package com.grahamtech.eis.utilities.enums;
 
 public enum StrengthRatingEnum {
-  gap("gap"), vulnerability("vulnerability"), strength("strength");
+  GAP("GAP"), VULNERABILITY("VULNERABILITY"), STRENGTH("STRENGTH");
 
   private String myEnum;
 

@@ -1,8 +1,8 @@
-package com.grahamtech.eis.pojos;
+package com.grahamtech.eis.utilities.enums;
 
 public enum NotificationFrequencyEnum {
-  optout("opt_out"), daily("daily"), weekly("weekly"), biweekly("bi_weekly"), monthly(
-      "monthly"), quarterly("quarterly"), yearly("yearly");
+  OPT_OUT("OPT_OUT"), DAILY("DAILY"), WEEKLY("WEEKLY"), BI_WEEKLY("BI_WEEKLY"), MONTHLY(
+      "MONTHLY"), QUARTERLY("QUARTERLY"), YEARLY("YEARLY");
 
   private String myEnum;
 

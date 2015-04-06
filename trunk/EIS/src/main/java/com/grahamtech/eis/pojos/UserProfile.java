@@ -27,11 +27,15 @@ import javax.persistence.TemporalType;
 
 
 
+
 //import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.grahamtech.eis.pojos.Role;
+import com.grahamtech.eis.utilities.enums.NotificationFrequencyEnum;
+import com.grahamtech.eis.utilities.enums.RolesEnum;
+import com.grahamtech.eis.utilities.enums.StatusEnum;
 
 import javax.persistence.UniqueConstraint;
 

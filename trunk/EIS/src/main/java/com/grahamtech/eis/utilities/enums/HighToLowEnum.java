@@ -1,8 +1,7 @@
-package com.grahamtech.eis.pojos;
+package com.grahamtech.eis.utilities.enums;
 
 public enum HighToLowEnum {
-  very_high("very_high"), high("high"), medium("medium"), low("low"), very_low(
-      "very_low"), unknown("unknown");
+  UNKNOWN("UNKNOWN"), HIGH("HIGH"), MEDIUM("MEDIUM"), LOW("LOW");
 
   private String myEnum;
 

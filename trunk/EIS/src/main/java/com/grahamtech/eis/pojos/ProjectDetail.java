@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.grahamtech.eis.utilities.enums.CountriesEnum;
+import com.grahamtech.eis.utilities.enums.HighToLowEnum;
+import com.grahamtech.eis.utilities.enums.StrengthRatingEnum;
+import com.grahamtech.eis.utilities.enums.UsStatesEnum;
 
 @Entity
 @Table(name = "project_details")

@@ -1,4 +1,4 @@
-package com.grahamtech.eis.pojos;
+package com.grahamtech.eis.utilities.enums;
 
 import java.io.IOException;
 

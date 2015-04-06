@@ -27,6 +27,10 @@ import com.grahamtech.eis.pojos.NVDEntryMessage;
 import com.grahamtech.eis.pojos.NVDEntryVulnerableSoftware;
 import com.grahamtech.eis.utilities.ConstantsUtil;
 import com.grahamtech.eis.utilities.StringUtil;
+import com.grahamtech.eis.utilities.enums.AccessVectorEnum;
+import com.grahamtech.eis.utilities.enums.HighToLowEnum;
+import com.grahamtech.eis.utilities.enums.InstanceCountEnum;
+import com.grahamtech.eis.utilities.enums.PartialToCompleteEnum;
 
 public class RSSFeedParser {
   private static final Logger logger = LoggerFactory
@@ -196,12 +200,18 @@ public class RSSFeedParser {
             }
 
             message.setScore(StringUtil.stringToBigDecimal(score));
-            message.setAccess_vector(access_vector);
-            message.setAccess_complexity(access_complexity);
-            message.setAuthentication(authentication);
-            message.setConfidentiality_impact(confidentiality_impact);
-            message.setIntegrity_impact(integrity_impact);
-            message.setAvailability_impact(availability_impact);
+            message
+                .setAccess_vector(AccessVectorEnum.fromString(access_vector));
+            message.setAccess_complexity(HighToLowEnum
+                .fromString(access_complexity));
+            message.setAuthentication(InstanceCountEnum
+                .fromString(authentication));
+            message.setConfidentiality_impact(PartialToCompleteEnum
+                .fromString(confidentiality_impact));
+            message.setIntegrity_impact(PartialToCompleteEnum
+                .fromString(integrity_impact));
+            message.setAvailability_impact(PartialToCompleteEnum
+                .fromString(availability_impact));
             message.setSource(source);
 
             try {

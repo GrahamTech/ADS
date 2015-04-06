@@ -5,6 +5,7 @@ import java.util.Set;
 
 
 
+
 //import javax.persistence.CascadeType;
 //import javax.persistence.ElementCollection;
 //import javax.persistence.Embeddable;
@@ -21,6 +22,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.grahamtech.eis.utilities.enums.RolesEnum;
+import com.grahamtech.eis.utilities.enums.StatusEnum;
 
 @Entity
 @Table(name = "roles")

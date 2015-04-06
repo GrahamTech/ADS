@@ -17,6 +17,8 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.grahamtech.eis.utilities.enums.HighToLowEnum;
+import com.grahamtech.eis.utilities.enums.StatusEnum;
 
 @Entity
 @Table(name = "risk_preferences")
