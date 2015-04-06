@@ -16,6 +16,7 @@ public class RestURIConstants {
   public static final String PROFILE_DELETE_USER = "/user/delete/{id}";
   public static final String PROFILE_UPDATE_USER_EMAIL = "/user/update/{id}/{userEmail}";
   
+  public static final String LOCALIZATION = "/localization";
   public static final String OVERVIEW = "/overview";
   
   public static final String RSS_NVD_20_ALL = "/rss/nvd/all";

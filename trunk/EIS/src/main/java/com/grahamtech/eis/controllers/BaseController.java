@@ -68,10 +68,19 @@ public class BaseController {
   public ModelAndView index() {
     ModelAndView model = new ModelAndView("index");
 
-    List<UserProfile> listUserProfiles = getUserProfiles();
-    model.addObject("userProfileList", listUserProfiles);
-    model.addObject("message", overviewStr);
+    // List<UserProfile> listUserProfiles = getUserProfiles();
+    // model.addObject("userProfileList", listUserProfiles);
+    // model.addObject("message", overviewStr);
 
+    return model;
+  }
+
+  @RequestMapping(value = RestURIConstants.LOCALIZATION, method = RequestMethod.GET)
+  public ModelAndView localization() {
+    logger.info("*** START localization()");
+    ModelAndView model = new ModelAndView("localization");
+
+    logger.info("*** FINISH localization()");
     return model;
   }
 
