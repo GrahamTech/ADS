@@ -70,7 +70,7 @@ public class BaseController {
 
     // List<UserProfile> listUserProfiles = getUserProfiles();
     // model.addObject("userProfileList", listUserProfiles);
-    // model.addObject("message", overviewStr);
+    model.addObject("message", overviewStr);
 
     return model;
   }
@@ -424,10 +424,10 @@ public class BaseController {
       + "</ul>"
       
       + "<p>"
-          + "At a high-level, a UserProfile has a Role, Risk Preferences, and one or more Project associations. Projects "
-          + "have Systems, Partners, and Project Risk (Schedule/Budget/FTE Utilization) as risk assets. Systems have Products "
-          + "and Vulnerabilities. These risk assets may be Flagged for escalation review: Projects, Partners, System Products "
-          + "and System Vulnerabilities."
+          + "At a high-level, a UserProfile has Roles, Risk Preferences, and one or more Project associations. Projects "
+          + "have Systems, Partners, and Project Risk (Schedule/Budget/FTE Utilization) as risk assets. Systems have custom Products "
+          + "and Vulnerabilities, as well as National Vulnerability Database (NVD) - Common Vulnerability & Exposure (CVE) associations. These risk assets may be Flagged for escalation review: Projects, Partners, System Products, "
+          + "System Vulnerabilities, and NVD CVEs."
           + "</p>"
 
           + "<p>The EIS Workflow will roll-up risk analysis for products and project vulnerabilities (Project Risks) either entered into"
