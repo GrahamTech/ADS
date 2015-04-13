@@ -19,8 +19,6 @@ CREATE TABLE IF NOT EXISTS eisdb.nvd_entry_message (
 	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
 	source varchar (75),
 	summary varchar (775),
-	latitude decimal(18,14),
-	longitude decimal(18,14),
 	PRIMARY KEY (entry_message_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -104,24 +102,45 @@ CREATE TABLE IF NOT EXISTS eisdb.risk_preferences (
 	risk_preference_name varchar (45) NOT NULL,
 	preference_status enum('ACTIVE', 'INACTIVE') NOT NULL,
 	last_modified_date TIMESTAMP NOT NULL,
+	
 	overall_project_risk_tolerance decimal(6,2),
 	overall_project_risk_weight decimal(6,2),
 	overall_project_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	
 	project_budget_variance_tolerance decimal(6,2),
 	project_budget_variance_weight decimal(6,2),
 	project_budget_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	
 	project_schedule_variance_tolerance decimal(6,2),
 	project_schedule_variance_weight decimal(6,2),
 	project_schedule_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	
 	project_fte_utilization_variance_tolerance decimal(6,2),
 	project_fte_utilization_variance_weight decimal(6,2),
 	project_fte_utilization_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	
 	project_partner_risk_tolerance decimal(6,2),
 	project_partner_risk_weight decimal(6,2),
 	project_partner_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
 	project_product_risk_tolerance decimal(6,2),
 	project_product_risk_weight decimal(6,2),
 	project_product_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	
+	score decimal(6,2),
+	score_weight decimal(6,2),
+	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK') NOT NULL,
+	access_vector_weight decimal(6,2),
+	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW') NOT NULL,
+	access_complexity_weight decimal(6,2),
+	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE') NOT NULL,
+	authentication_weight decimal(6,2),
+	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
+	confidentiality_impact_weight decimal(6,2),
+	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
+	integrity_impact_weight decimal(6,2),
+	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
+	availability_impact_weight decimal(6,2),
+	
 	PRIMARY KEY (risk_preference_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -162,7 +181,17 @@ CREATE TABLE IF NOT EXISTS eisdb.project_systems (
 	system_id int (11) NOT NULL AUTO_INCREMENT,
 	system_name varchar (75) NOT NULL,
 	description varchar (255),
-	last_modified_date TIMESTAMP NOT NULL,
+	last_modified_date TIMESTAMP,
+	latitude decimal(18,14),
+	longitude decimal(18,14),
+	#Roll-up Metrics
+	score decimal(6,2),
+	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK') NOT NULL,
+	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW') NOT NULL,
+	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE') NOT NULL,
+	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
+	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
+	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
 	PRIMARY KEY (system_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -174,6 +203,7 @@ CREATE TABLE IF NOT EXISTS eisdb.project_partners (
 	on_site enum('ACTIVE', 'INACTIVE') NOT NULL,
 	project_participation_status enum('PENDING', 'ACTIVE', 'INACTIVE') NOT NULL,
 	last_modified_date TIMESTAMP NOT NULL,
+	score decimal(6,2),
 	corp_leadership_history_rating enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
 	financial_viability_rating enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
 	market_and_labeling_rating enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
@@ -182,8 +212,6 @@ CREATE TABLE IF NOT EXISTS eisdb.project_partners (
 	insider_threat_rating enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
 	regional_stability_rating enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
 	lessons_learned varchar (516),
-	latitude decimal(18,14),
-	longitude decimal(18,14),
 	PRIMARY KEY (project_partner_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -193,7 +221,6 @@ CREATE TABLE IF NOT EXISTS eisdb.system_products (
 	product_name varchar (75) NOT NULL,
 	product_state enum ('ACTIVE', 'ARCHIVED') NOT NULL,
 	lessons_learned varchar (516),
-	
 	published_datetime TIMESTAMP,
 	last_modified_datetime TIMESTAMP,
 	generated_on_datetime TIMESTAMP,
@@ -206,22 +233,6 @@ CREATE TABLE IF NOT EXISTS eisdb.system_products (
 	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
 	source varchar (75),
 	summary varchar (775),
-	latitude decimal(18,14),
-	longitude decimal(18,14),
-	
-	#product_version varchar (45),
-	#product_type varchar (45),
-	#product_description varchar (255),
-	#severity decimal(6,2),
-	#cvss_base_score decimal(6,2),
-	#cvss_score decimal(6,2),
-	#cvss_exploit_sub_score decimal(6,2),
-	#cvss_impact_sub_score decimal(6,2),
-	#cvss_version decimal(6,2),
-	#cvss_publish_date TIMESTAMP,
-	#latitude decimal(18,14),
-	#longitude decimal(18,14),
-	
 	PRIMARY KEY (product_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -231,7 +242,6 @@ CREATE TABLE IF NOT EXISTS eisdb.system_vulnerabilities (
 	vulnerability_name varchar (75) NOT NULL,
 	vulnerability_type enum('API_Abuse', 'Authentication', 'Authorization', 'Availability', 'Code_Permission', 'Code_Quality', 'Configuration', 'Cryptographic', 'Encoding', 'Environmental', 'Error_Handling', 'General_Logic_Error', 'Input_Validation', 'Logging_and_Auditing', 'Password_Management', 'Path', 'Protocol_Errors', 'Range_and_Type_Error', 'Sensitive_Data_Protection', 'Session_Management', 'Synchronization_and_Timing', 'Unsafe_Mobile_Code', 'Use_of_Dangerous_API', 'Unknown') NOT NULL,
 	lessons_learned varchar (516),
-	
 	published_datetime TIMESTAMP,
 	last_modified_datetime TIMESTAMP,
 	generated_on_datetime TIMESTAMP,
@@ -244,18 +254,6 @@ CREATE TABLE IF NOT EXISTS eisdb.system_vulnerabilities (
 	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
 	source varchar (75),
 	summary varchar (775),
-	latitude decimal(18,14),
-	longitude decimal(18,14),
-	
-	#description varchar (255),
-	#last_modified_date TIMESTAMP NOT NULL,
-	#vulnerability_severity decimal(6,2),
-	#vulnerability_score decimal(6,2),
-	#vulnerability_exploit_sub_score decimal(6,2),
-	#vulnerability_impact_sub_score decimal(6,2),
-	#latitude decimal(18,14),
-	#longitude decimal(18,14),
-	
 	PRIMARY KEY (vulnerability_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -378,23 +376,23 @@ ALTER TABLE eisdb.flagged_assets
 	ADD CONSTRAINT flagged_by_fk_assets FOREIGN KEY (flagged_by_fk_assets) REFERENCES user_profiles (user_profile_id),
 	ADD CONSTRAINT unflagged_by_fk_assets FOREIGN KEY (unflagged_by_fk_assets) REFERENCES user_profiles (user_profile_id);
 
-INSERT INTO `eisdb`.`system_vulnerabilities` (`vulnerability_id`, `vulnerability_name`, `vulnerability_type`, `lessons_learned`, `published_datetime`, `last_modified_datetime`, `generated_on_datetime`, `score`, `access_vector`, `access_complexity`, `authentication`, `confidentiality_impact`, `integrity_impact`, `availability_impact`, `source`, `summary`, `latitude`, `longitude`, `flagged_by_fk_vulnerabilities`, `project_system_fk_vulnerabilities`, `last_modified_by_fk_vulnerabilities2`)
-VALUES ('1', 'API Denial of Service', 'API_Abuse', 'Lesson learned 001', '2015-01-01', '2015-01-01', '2015-01-01', '1.8', 'NETWORK', 'MEDIUM', 'SINGLE_INSTANCE', 'PARTIAL', 'COMPLETE', 'NONE', 'the source 001', 'The Summary 001', '38.8981', '77.0208',  '1', '1', '1');
+INSERT INTO `eisdb`.`system_vulnerabilities` (`vulnerability_id`, `vulnerability_name`, `vulnerability_type`, `lessons_learned`, `published_datetime`, `last_modified_datetime`, `generated_on_datetime`, `score`, `access_vector`, `access_complexity`, `authentication`, `confidentiality_impact`, `integrity_impact`, `availability_impact`, `source`, `summary`, `flagged_by_fk_vulnerabilities`, `project_system_fk_vulnerabilities`, `last_modified_by_fk_vulnerabilities2`)
+VALUES ('1', 'API Denial of Service', 'API_Abuse', 'Lesson learned 001', '2015-01-01', '2015-01-01', '2015-01-01', '1.8', 'NETWORK', 'MEDIUM', 'SINGLE_INSTANCE', 'PARTIAL', 'COMPLETE', 'NONE', 'the source 001', 'The Summary 001', '1', '1', '1');
 
-INSERT INTO `eisdb`.`system_vulnerabilities` (`vulnerability_id`, `vulnerability_name`, `vulnerability_type`, `lessons_learned`, `published_datetime`, `last_modified_datetime`, `generated_on_datetime`, `score`, `access_vector`, `access_complexity`, `authentication`, `confidentiality_impact`, `integrity_impact`, `availability_impact`, `source`, `summary`, `latitude`, `longitude`, `flagged_by_fk_vulnerabilities`, `project_system_fk_vulnerabilities`, `last_modified_by_fk_vulnerabilities2`)
-VALUES ('2', 'API Denial of Service', 'API_Abuse', 'Lesson learned 002', '2015-01-01', '2015-01-01', '2015-01-01', '1.8', 'NETWORK', 'MEDIUM', 'SINGLE_INSTANCE', 'PARTIAL', 'COMPLETE', 'NONE', 'the source 001', 'The Summary 001', '38.8981', '77.0208',  '1', '1', '1');
+INSERT INTO `eisdb`.`system_vulnerabilities` (`vulnerability_id`, `vulnerability_name`, `vulnerability_type`, `lessons_learned`, `published_datetime`, `last_modified_datetime`, `generated_on_datetime`, `score`, `access_vector`, `access_complexity`, `authentication`, `confidentiality_impact`, `integrity_impact`, `availability_impact`, `source`, `summary`, `flagged_by_fk_vulnerabilities`, `project_system_fk_vulnerabilities`, `last_modified_by_fk_vulnerabilities2`)
+VALUES ('2', 'API Denial of Service', 'API_Abuse', 'Lesson learned 002', '2015-01-01', '2015-01-01', '2015-01-01', '1.8', 'NETWORK', 'MEDIUM', 'SINGLE_INSTANCE', 'PARTIAL', 'COMPLETE', 'NONE', 'the source 001', 'The Summary 001', '1', '1', '1');
 
-INSERT INTO `eisdb`.`system_products` (`product_id`, `product_name`, `product_state`, `lessons_learned`, `published_datetime`, `last_modified_datetime`, `generated_on_datetime`, `score`, `access_vector`, `access_complexity`, `authentication`, `confidentiality_impact`, `integrity_impact`, `availability_impact`, `source`, `summary`, `latitude`, `longitude`, `flagged_by_fk_products`, `last_modified_by_fk_products`, `project_system_fk_products`)
-VALUES ('1', 'Product Name 001', 'ACTIVE', 'Lesson Learned 001', '2015-01-01', '2015-01-01', '2015-01-01', '1.8', 'NETWORK', 'MEDIUM', 'SINGLE_INSTANCE', 'PARTIAL', 'COMPLETE', 'NONE', 'the source 001', 'The summary 001', '38.8981', '77.0208', '1', '1', '1');
+INSERT INTO `eisdb`.`system_products` (`product_id`, `product_name`, `product_state`, `lessons_learned`, `published_datetime`, `last_modified_datetime`, `generated_on_datetime`, `score`, `access_vector`, `access_complexity`, `authentication`, `confidentiality_impact`, `integrity_impact`, `availability_impact`, `source`, `summary`, `flagged_by_fk_products`, `last_modified_by_fk_products`, `project_system_fk_products`)
+VALUES ('1', 'Product Name 001', 'ACTIVE', 'Lesson Learned 001', '2015-01-01', '2015-01-01', '2015-01-01', '1.8', 'NETWORK', 'MEDIUM', 'SINGLE_INSTANCE', 'PARTIAL', 'COMPLETE', 'NONE', 'the source 001', 'The summary 001', '1', '1', '1');
 
-INSERT INTO `eisdb`.`system_products` (`product_id`, `product_name`, `product_state`, `lessons_learned`, `published_datetime`, `last_modified_datetime`, `generated_on_datetime`, `score`, `access_vector`, `access_complexity`, `authentication`, `confidentiality_impact`, `integrity_impact`, `availability_impact`, `source`, `summary`, `latitude`, `longitude`, `flagged_by_fk_products`, `last_modified_by_fk_products`, `project_system_fk_products`)
-VALUES ('2', 'Product Name 002', 'ACTIVE', 'Lesson Learned 002', '2015-01-01', '2015-01-01', '2015-01-01', '1.8', 'NETWORK', 'MEDIUM', 'SINGLE_INSTANCE', 'PARTIAL', 'COMPLETE', 'NONE', 'the source 001', 'The summary 001', '38.8981', '77.0208', '1', '1', '1');
+INSERT INTO `eisdb`.`system_products` (`product_id`, `product_name`, `product_state`, `lessons_learned`, `published_datetime`, `last_modified_datetime`, `generated_on_datetime`, `score`, `access_vector`, `access_complexity`, `authentication`, `confidentiality_impact`, `integrity_impact`, `availability_impact`, `source`, `summary`, `flagged_by_fk_products`, `last_modified_by_fk_products`, `project_system_fk_products`)
+VALUES ('2', 'Product Name 002', 'ACTIVE', 'Lesson Learned 002', '2015-01-01', '2015-01-01', '2015-01-01', '1.8', 'NETWORK', 'MEDIUM', 'SINGLE_INSTANCE', 'PARTIAL', 'COMPLETE', 'NONE', 'the source 001', 'The summary 001', '1', '1', '1');
 
-#INSERT INTO `eisdb`.`system_vulnerabilities` (`vulnerability_id`, `vulnerability_name`, `vulnerability_type`, `description`, `lessons_learned`, `last_modified_date`, `vulnerability_severity`, `vulnerability_score`, `vulnerability_exploit_sub_score`, `vulnerability_impact_sub_score`, `latitude`, `longitude`, `flagged_by_fk_vulnerabilities`, `last_modified_by_fk_vulnerabilities2`, `project_system_fk_vulnerabilities`) VALUES ('1', 'Vul Name 001', 'Unknown', 'An open port on the network', 'my lessons learned 001', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', '1', '1');
-#INSERT INTO `eisdb`.`system_vulnerabilities` (`vulnerability_id`, `vulnerability_name`, `vulnerability_type`, `description`, `lessons_learned`, `last_modified_date`, `vulnerability_severity`, `vulnerability_score`, `vulnerability_exploit_sub_score`, `vulnerability_impact_sub_score`, `latitude`, `longitude`, `flagged_by_fk_vulnerabilities`, `last_modified_by_fk_vulnerabilities2`, `project_system_fk_vulnerabilities`) VALUES ('2', 'Vul Name 002', 'API_Abuse', 'Spam', 'my lessons learned 001', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', '1', '1');
+#INSERT INTO `eisdb`.`system_vulnerabilities` (`vulnerability_id`, `vulnerability_name`, `vulnerability_type`, `description`, `lessons_learned`, `last_modified_date`, `vulnerability_severity`, `vulnerability_score`, `vulnerability_exploit_sub_score`, `vulnerability_impact_sub_score`, `flagged_by_fk_vulnerabilities`, `last_modified_by_fk_vulnerabilities2`, `project_system_fk_vulnerabilities`) VALUES ('1', 'Vul Name 001', 'Unknown', 'An open port on the network', 'my lessons learned 001', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
+#INSERT INTO `eisdb`.`system_vulnerabilities` (`vulnerability_id`, `vulnerability_name`, `vulnerability_type`, `description`, `lessons_learned`, `last_modified_date`, `vulnerability_severity`, `vulnerability_score`, `vulnerability_exploit_sub_score`, `vulnerability_impact_sub_score`, `flagged_by_fk_vulnerabilities`, `last_modified_by_fk_vulnerabilities2`, `project_system_fk_vulnerabilities`) VALUES ('2', 'Vul Name 002', 'API_Abuse', 'Spam', 'my lessons learned 001', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
 
-#INSERT INTO `eisdb`.`system_products` (`product_id`, `product_name`, `product_state`, `product_version`, `product_type`, `product_description`, `lessons_learned`, `last_modified_date`, `severity`, `cvss_base_score`, `cvss_score`, `cvss_exploit_sub_score`, `cvss_impact_sub_score`, `cvss_version`, `cvss_publish_date`, `latitude`, `longitude`, `flagged_by_fk_products`, `last_modified_by_fk_products`, `project_system_fk_products`) VALUES ('1', 'Product A', 'ACTIVE', '1.0', 'virus scanner', 'scans incoming and outgoing messages', 'my lessons learned', '20150101', '.5', '.5', '.5', '.5', '.5', '1.1', '20150101', '17.42323', '18.24343', '1', '1', '1');
-#INSERT INTO `eisdb`.`system_products` (`product_id`, `product_name`, `product_state`, `product_version`, `product_type`, `product_description`, `lessons_learned`, `last_modified_date`, `severity`, `cvss_base_score`, `cvss_score`, `cvss_exploit_sub_score`, `cvss_impact_sub_score`, `cvss_version`, `cvss_publish_date`, `latitude`, `longitude`, `flagged_by_fk_products`, `last_modified_by_fk_products`, `project_system_fk_products`) VALUES ('2', 'Product B', 'ACTIVE', '2.0', 'Server', 'Host server', 'my lessons learned', '20150101', '.5', '.5', '.5', '.5', '.5', '1.1', '20150101', '17.42323', '18.24343', '1', '1', '1');
+#INSERT INTO `eisdb`.`system_products` (`product_id`, `product_name`, `product_state`, `product_version`, `product_type`, `product_description`, `lessons_learned`, `last_modified_date`, `severity`, `cvss_base_score`, `cvss_score`, `cvss_exploit_sub_score`, `cvss_impact_sub_score`, `cvss_version`, `cvss_publish_date`, `flagged_by_fk_products`, `last_modified_by_fk_products`, `project_system_fk_products`) VALUES ('1', 'Product A', 'ACTIVE', '1.0', 'virus scanner', 'scans incoming and outgoing messages', 'my lessons learned', '20150101', '.5', '.5', '.5', '.5', '.5', '1.1', '20150101', '1', '1', '1');
+#INSERT INTO `eisdb`.`system_products` (`product_id`, `product_name`, `product_state`, `product_version`, `product_type`, `product_description`, `lessons_learned`, `last_modified_date`, `severity`, `cvss_base_score`, `cvss_score`, `cvss_exploit_sub_score`, `cvss_impact_sub_score`, `cvss_version`, `cvss_publish_date`, `flagged_by_fk_products`, `last_modified_by_fk_products`, `project_system_fk_products`) VALUES ('2', 'Product B', 'ACTIVE', '2.0', 'Server', 'Host server', 'my lessons learned', '20150101', '.5', '.5', '.5', '.5', '.5', '1.1', '20150101', '1', '1', '1');
 	
 INSERT INtO eisdb.roles (role_name, role_description, role_status)
 VALUES ('ADMINISTRATOR', 'can do anything in the system', 'ACTIVE'),
@@ -469,11 +467,11 @@ INSERT INTO `eisdb`.`projects` (`project_id`, `project_name`, `project_status`, 
 INSERT INTO `eisdb`.`project_details` (`project_details_id`, `org_details`, `country_code`, `state_province`, `lessons_learned`, `budget_variance`, `schedule_variance`, `fte_utilization_rate_variance`, `latitude`, `longitude`, `risk_context_plans_count`, `risk_context_plans_rating`, `risk_identification_plans_count`, `risk_identification_plans_rating`, `risk_analysis_plans_count`, `risk_analysis_plans_rating`, `risk_plans_communicated_count`, `risk_plans_communicated_rating`, `last_modified_date`, `last_modified_by_fk_details`, `primary_poc_manager_fk`, `primary_poc_executive_fk`) VALUES ('1', 'project A details', 'USA', 'MD', 'my lessons learned', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '20150101', '1', '1', '1');
 INSERT INTO `eisdb`.`project_details` (`project_details_id`, `org_details`, `country_code`, `state_province`, `lessons_learned`, `budget_variance`, `schedule_variance`, `fte_utilization_rate_variance`, `latitude`, `longitude`, `risk_context_plans_count`, `risk_context_plans_rating`, `risk_identification_plans_count`, `risk_identification_plans_rating`, `risk_analysis_plans_count`, `risk_analysis_plans_rating`, `risk_plans_communicated_count`, `risk_plans_communicated_rating`, `last_modified_date`, `last_modified_by_fk_details`, `primary_poc_manager_fk`, `primary_poc_executive_fk`) VALUES ('2', 'project B details', 'USA', 'VA', 'my lessons learned', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '20150101', '1', '1', '1');
 
-INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `latitude`, `longitude`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('1', 'Partner A', 'partner B details', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', '1', '1');
-INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `latitude`, `longitude`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('2', 'Partner B', 'partner B details', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', '1', '1');
+INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('1', 'Partner A', 'partner B details', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
+INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('2', 'Partner B', 'partner B details', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
 
-INSERT INTO `eisdb`.`project_systems` (`system_id`, `system_name`, `description`, `last_modified_date`, `flagged_by_fk_systems`, `project_fk_systems`, `last_modified_by_fk_systems`) VALUES ('1', 'System A', 'System A description', '20150101', '1', '1', '1');
-INSERT INTO `eisdb`.`project_systems` (`system_id`, `system_name`, `description`, `last_modified_date`, `flagged_by_fk_systems`, `project_fk_systems`, `last_modified_by_fk_systems`) VALUES ('2', 'System B', 'System B description', '20150101', '1', '1', '1');
+INSERT INTO `eisdb`.`project_systems` (`system_id`, `system_name`, `description`, `last_modified_date`, `latitude`, `longitude`, `flagged_by_fk_systems`, `project_fk_systems`, `last_modified_by_fk_systems`) VALUES ('1', 'System A', 'System A description', '20150101', '38.8981', '77.0208', '1', '1', '1');
+INSERT INTO `eisdb`.`project_systems` (`system_id`, `system_name`, `description`, `last_modified_date`, `latitude`, `longitude`, `flagged_by_fk_systems`, `project_fk_systems`, `last_modified_by_fk_systems`) VALUES ('2', 'System B', 'System B description', '20150101', '38.8981', '77.0208', '1', '1', '1');
 
 INSERT INTO `eisdb`.`flagged_assets` (`flagged_id`, `flagged_reason`, `flagged_risk_state`, `flagged_date`, `unflagged_risk_state`, `unflagged_date`, `flagged_by_fk_assets`, `unflagged_by_fk_assets`) VALUES ('1', 'Schedule needs attention', 'HIGH', '20150101', 'unknown', '20150101', '1', '');
 INSERT INTO `eisdb`.`flagged_assets` (`flagged_id`, `flagged_reason`, `flagged_risk_state`, `flagged_date`, `unflagged_risk_state`, `unflagged_date`, `flagged_by_fk_assets`, `unflagged_by_fk_assets`) VALUES ('2', 'Schedule needs attention', 'HIGH', '20150101', 'unknown', '20150101', '1', '');

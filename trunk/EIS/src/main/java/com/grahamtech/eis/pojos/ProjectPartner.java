@@ -63,8 +63,7 @@ public class ProjectPartner implements java.io.Serializable {
   private HighToLowEnum insider_threat_rating;
   @Enumerated(EnumType.STRING)
   private HighToLowEnum regional_stability_rating;
-  private BigDecimal latitude;
-  private BigDecimal longitude;
+  private BigDecimal score;
   
   @ManyToOne
   @JoinColumn(name = "last_modified_by_fk_partners")
@@ -206,22 +205,6 @@ public class ProjectPartner implements java.io.Serializable {
     this.regional_stability_rating = regional_stability_rating;
   }
 
-  public BigDecimal getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(BigDecimal latitude) {
-    this.latitude = latitude;
-  }
-
-  public BigDecimal getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(BigDecimal longitude) {
-    this.longitude = longitude;
-  }
-
   public UserProfile getLast_modified_by_fk_partners() {
     return last_modified_by_fk_partners;
   }
@@ -249,6 +232,14 @@ public class ProjectPartner implements java.io.Serializable {
 
   public void setFlaggedAsset(FlaggedAsset flaggedAsset) {
     this.flaggedAsset = flaggedAsset;
+  }
+
+  public BigDecimal getScore() {
+    return score;
+  }
+
+  public void setScore(BigDecimal score) {
+    this.score = score;
   }
 
 }

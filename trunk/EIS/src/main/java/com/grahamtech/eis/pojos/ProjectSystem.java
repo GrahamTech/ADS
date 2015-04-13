@@ -1,5 +1,6 @@
 package com.grahamtech.eis.pojos;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 
 @Entity
 @Table(name = "project_systems")
-public class ProjectSystem implements java.io.Serializable {
+public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
 
   private static final long serialVersionUID = 1L;
   @Id
@@ -34,6 +35,8 @@ public class ProjectSystem implements java.io.Serializable {
   private long system_id;
   private String system_name;
   private String description;
+  private BigDecimal latitude;
+  private BigDecimal longitude;
   @Column(name = "last_modified_date", columnDefinition = "DATETIME")
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)
@@ -175,4 +178,19 @@ public class ProjectSystem implements java.io.Serializable {
     this.systemNVDEntryMessageSet = systemNVDEntryMessageSet;
   }
 
+  public BigDecimal getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(BigDecimal latitude) {
+    this.latitude = latitude;
+  }
+
+  public BigDecimal getLongitude() {
+    return longitude;
+  }
+
+  public void setLongitude(BigDecimal longitude) {
+    this.longitude = longitude;
+  }
 }

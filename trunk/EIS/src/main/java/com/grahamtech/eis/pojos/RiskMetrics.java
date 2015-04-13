@@ -20,7 +20,6 @@ import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 import com.grahamtech.eis.utilities.enums.InstanceCountEnum;
 import com.grahamtech.eis.utilities.enums.PartialToCompleteEnum;
 
-//@Embeddable
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class RiskMetrics implements java.io.Serializable {
@@ -57,9 +56,6 @@ public abstract class RiskMetrics implements java.io.Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)
   private Date last_modified_datetime; // last-modified-datetime
-
-  private BigDecimal latitude;
-  private BigDecimal longitude;
 
   public BigDecimal getScore() {
     return score;
@@ -160,22 +156,6 @@ public abstract class RiskMetrics implements java.io.Serializable {
 
   public void setLast_modified_datetime(Date last_modified_datetime) {
     this.last_modified_datetime = last_modified_datetime;
-  }
-
-  public BigDecimal getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(BigDecimal latitude) {
-    this.latitude = latitude;
-  }
-
-  public BigDecimal getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(BigDecimal longitude) {
-    this.longitude = longitude;
   }
 
 }
