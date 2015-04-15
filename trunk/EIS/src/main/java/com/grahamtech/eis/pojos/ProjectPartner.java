@@ -26,6 +26,8 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.grahamtech.eis.utilities.ConstantsUtil;
+import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 import com.grahamtech.eis.utilities.enums.StatusEnum;
 
@@ -240,6 +242,11 @@ public class ProjectPartner implements java.io.Serializable {
 
   public void setScore(BigDecimal score) {
     this.score = score;
+  }
+
+  public String gettLast_modified_date_String() {
+    return StringUtil.dateToString(this.getLast_modified_date(),
+        ConstantsUtil.DATE_FORMAT);
   }
 
 }

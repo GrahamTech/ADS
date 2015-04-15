@@ -58,11 +58,6 @@
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
 	</bean>
-	<bean id="myRiskPreferenceDAO" class="com.grahamtech.eis.daos.MyRiskPreferenceDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
 	<bean id="myProjectDAO" class="com.grahamtech.eis.daos.MyProjectDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
@@ -79,11 +74,21 @@
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
 	</bean>
+	<bean id="myRiskPreferenceDAO" class="com.grahamtech.eis.daos.MyRiskPreferenceDAO">
+	    <constructor-arg>
+	        <ref bean="sessionFactory" />
+	    </constructor-arg>
+	</bean>
 	<bean id="myProjectDetailDAO" class="com.grahamtech.eis.daos.MyProjectDetailDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
 	</bean> 
+	<bean id="myProjectPartnerDAO" class="com.grahamtech.eis.daos.MyProjectPartnerDAO">
+	    <constructor-arg>
+	        <ref bean="sessionFactory" />
+	    </constructor-arg>
+	</bean>
 	<bean id="myProjectSystemDAO" class="com.grahamtech.eis.daos.MyProjectSystemDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />

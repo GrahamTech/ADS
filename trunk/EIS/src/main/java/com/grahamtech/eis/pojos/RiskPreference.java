@@ -17,6 +17,8 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.grahamtech.eis.utilities.ConstantsUtil;
+import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 import com.grahamtech.eis.utilities.enums.StatusEnum;
 
@@ -263,5 +265,10 @@ public class RiskPreference implements Serializable {
 
   public static long getSerialversionuid() {
     return serialVersionUID;
+  }
+
+  public String getLast_modified_date_String() {
+    return StringUtil.dateToString(this.getLast_modified_date(),
+        ConstantsUtil.DATE_FORMAT);
   }
 }

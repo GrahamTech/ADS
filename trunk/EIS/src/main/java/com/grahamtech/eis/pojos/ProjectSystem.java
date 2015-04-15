@@ -1,9 +1,9 @@
 package com.grahamtech.eis.pojos;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Set;
-
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,21 +11,20 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-//import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 
 @Entity
 @Table(name = "project_systems")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Access(AccessType.FIELD)
 public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -34,13 +33,38 @@ public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
   @Column(name = "system_id")
   private long system_id;
   private String system_name;
-  private String description;
   private BigDecimal latitude;
   private BigDecimal longitude;
+
+  // START RISK METRICS
+  // @Column(name = "summary")
+  // private String summary;
+  // @Column(name = "score")
+  // private BigDecimal score;
+  // @Column(name = "access_vector")
+  // @Enumerated(EnumType.STRING)
+  // private AccessVectorEnum access_vector; // access-vector
+  // @Column(name = "access_complexity")
+  // @Enumerated(EnumType.STRING)
+  // private HighToLowEnum access_complexity; // access-complexity
+  // @Column(name = "authentication")
+  // @Enumerated(EnumType.STRING)
+  // private InstanceCountEnum authentication; // authentication
+  // @Column(name = "confidentiality_impact")
+  // @Enumerated(EnumType.STRING)
+  // private PartialToCompleteEnum confidentiality_impact; //
+  // confidentiality-impact
+  // @Column(name = "integrity_impact")
+  // @Enumerated(EnumType.STRING)
+  // private PartialToCompleteEnum integrity_impact; // integrity-impact
+  // @Column(name = "availability_impact")
+  // @Enumerated(EnumType.STRING)
+  // private PartialToCompleteEnum availability_impact; // availability-impact
   // @Column(name = "last_modified_date", columnDefinition = "DATETIME")
   // @Temporal(TemporalType.TIMESTAMP)
   // @JsonSerialize(using = DateSerializer.class)
-  // private Date last_modified_date;
+  // private Date last_modified_date; // last-modified-datetime
+  // END RISK METRICS
 
   @ManyToOne
   @JoinColumn(name = "project_fk_systems", insertable = false, updatable = false)
@@ -92,30 +116,6 @@ public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
   public void setSystem_name(String system_name) {
     this.system_name = system_name;
   }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  // public Date getLast_modified_date() {
-  // return last_modified_date;
-  // }
-  //
-  // public void setLast_modified_date(Date last_modified_date) {
-  // this.last_modified_date = last_modified_date;
-  // }
-
-  // public Project getProject_fk_systems() {
-  // return project_fk_systems;
-  // }
-  //
-  // public void setProject_fk_systems(Project project_fk_systems) {
-  // this.project_fk_systems = project_fk_systems;
-  // }
 
   public UserProfile getLast_modified_by_fk_systems() {
     return last_modified_by_fk_systems;
@@ -193,4 +193,78 @@ public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
   public void setLongitude(BigDecimal longitude) {
     this.longitude = longitude;
   }
+
+  // public String getSummary() {
+  // return summary;
+  // }
+  //
+  // public void setSummary(String summary) {
+  // this.summary = summary;
+  // }
+  //
+  // public BigDecimal getScore() {
+  // return score;
+  // }
+  //
+  // public void setScore(BigDecimal score) {
+  // this.score = score;
+  // }
+  //
+  // public AccessVectorEnum getAccess_vector() {
+  // return access_vector;
+  // }
+  //
+  // public void setAccess_vector(AccessVectorEnum access_vector) {
+  // this.access_vector = access_vector;
+  // }
+  //
+  // public HighToLowEnum getAccess_complexity() {
+  // return access_complexity;
+  // }
+  //
+  // public void setAccess_complexity(HighToLowEnum access_complexity) {
+  // this.access_complexity = access_complexity;
+  // }
+  //
+  // public InstanceCountEnum getAuthentication() {
+  // return authentication;
+  // }
+  //
+  // public void setAuthentication(InstanceCountEnum authentication) {
+  // this.authentication = authentication;
+  // }
+  //
+  // public PartialToCompleteEnum getConfidentiality_impact() {
+  // return confidentiality_impact;
+  // }
+  //
+  // public void setConfidentiality_impact(
+  // PartialToCompleteEnum confidentiality_impact) {
+  // this.confidentiality_impact = confidentiality_impact;
+  // }
+  //
+  // public PartialToCompleteEnum getIntegrity_impact() {
+  // return integrity_impact;
+  // }
+  //
+  // public void setIntegrity_impact(PartialToCompleteEnum integrity_impact) {
+  // this.integrity_impact = integrity_impact;
+  // }
+  //
+  // public PartialToCompleteEnum getAvailability_impact() {
+  // return availability_impact;
+  // }
+  //
+  // public void setAvailability_impact(PartialToCompleteEnum
+  // availability_impact) {
+  // this.availability_impact = availability_impact;
+  // }
+  //
+  // public Date getLast_modified_date() {
+  // return last_modified_date;
+  // }
+  //
+  // public void setLast_modified_date(Date last_modified_date) {
+  // this.last_modified_date = last_modified_date;
+  // }
 }

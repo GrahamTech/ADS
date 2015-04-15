@@ -1,6 +1,5 @@
 package com.grahamtech.eis.pojos;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,8 +9,6 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,10 +28,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.grahamtech.eis.utilities.ConstantsUtil;
 import com.grahamtech.eis.utilities.StringUtil;
-import com.grahamtech.eis.utilities.enums.AccessVectorEnum;
-import com.grahamtech.eis.utilities.enums.HighToLowEnum;
-import com.grahamtech.eis.utilities.enums.InstanceCountEnum;
-import com.grahamtech.eis.utilities.enums.PartialToCompleteEnum;
 
 /*
  * Represents one RSS entry message
@@ -54,32 +47,39 @@ public class NVDEntryMessage extends RiskMetrics implements
   private long entry_message_id;
   @Column(name = "cve_id", unique = true)
   private String cve_id = ""; // cve-id
-
-  // START RISK METRICS
-  @Column(name = "summary")
-  private String summary;
   @Column(name = "source")
   private String source;
-  @Column(name = "score")
-  private BigDecimal score;
-  @Column(name = "access_vector")
-  @Enumerated(EnumType.STRING)
-  private AccessVectorEnum access_vector; // access-vector
-  @Column(name = "access_complexity")
-  @Enumerated(EnumType.STRING)
-  private HighToLowEnum access_complexity; // access-complexity
-  @Column(name = "authentication")
-  @Enumerated(EnumType.STRING)
-  private InstanceCountEnum authentication; // authentication
-  @Column(name = "confidentiality_impact")
-  @Enumerated(EnumType.STRING)
-  private PartialToCompleteEnum confidentiality_impact; // confidentiality-impact
-  @Column(name = "integrity_impact")
-  @Enumerated(EnumType.STRING)
-  private PartialToCompleteEnum integrity_impact; // integrity-impact
-  @Column(name = "availability_impact")
-  @Enumerated(EnumType.STRING)
-  private PartialToCompleteEnum availability_impact; // availability-impact
+
+  // START RISK METRICS
+  // @Column(name = "summary")
+  // private String summary;
+  // @Column(name = "score")
+  // private BigDecimal score;
+  // @Column(name = "access_vector")
+  // @Enumerated(EnumType.STRING)
+  // private AccessVectorEnum access_vector; // access-vector
+  // @Column(name = "access_complexity")
+  // @Enumerated(EnumType.STRING)
+  // private HighToLowEnum access_complexity; // access-complexity
+  // @Column(name = "authentication")
+  // @Enumerated(EnumType.STRING)
+  // private InstanceCountEnum authentication; // authentication
+  // @Column(name = "confidentiality_impact")
+  // @Enumerated(EnumType.STRING)
+  // private PartialToCompleteEnum confidentiality_impact; //
+  // confidentiality-impact
+  // @Column(name = "integrity_impact")
+  // @Enumerated(EnumType.STRING)
+  // private PartialToCompleteEnum integrity_impact; // integrity-impact
+  // @Column(name = "availability_impact")
+  // @Enumerated(EnumType.STRING)
+  // private PartialToCompleteEnum availability_impact; // availability-impact
+  // @Column(name = "last_modified_date", columnDefinition = "DATETIME")
+  // @Temporal(TemporalType.TIMESTAMP)
+  // @JsonSerialize(using = DateSerializer.class)
+  // private Date last_modified_date; // last-modified-datetime
+  // END RISK METRICS
+
   @Column(name = "generated_on_date", columnDefinition = "DATETIME")
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)
@@ -88,11 +88,6 @@ public class NVDEntryMessage extends RiskMetrics implements
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)
   private Date published_date; // published-datetime
-  @Column(name = "last_modified_date", columnDefinition = "DATETIME")
-  @Temporal(TemporalType.TIMESTAMP)
-  @JsonSerialize(using = DateSerializer.class)
-  private Date last_modified_date; // last-modified-datetime
-  // END RISK METRICS
 
   @OneToMany(mappedBy = "nvdEntryMessageAttribute", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JsonManagedReference
@@ -140,7 +135,13 @@ public class NVDEntryMessage extends RiskMetrics implements
             .getPublished_date_String())
         + ", last_mod_date= "
         + ((this.getLast_modified_date() == null) ? "N/A" : this
-            .getLast_modified_date_String()) + ", summary= "
+            .getLast_modified_date_String())
+        + ", project_system_name="
+        + ((this.getNvdEntrySystemAttribute().getSystem_name() == null) ? "N/A"
+            : this.getNvdEntrySystemAttribute().getSystem_name())
+        + ", flagged_reason="
+        + ((this.getFlaggedAsset().getFlagged_reason() == null) ? "N/A" : this
+            .getFlaggedAsset().getFlagged_reason()) + ", summary= "
         + this.getSummary() + ", product list= " + getSoftwareListToString()
         + "]";
   }
@@ -207,77 +208,12 @@ public class NVDEntryMessage extends RiskMetrics implements
     this.flaggedAsset = flaggedAsset;
   }
 
-  public String getSummary() {
-    return summary;
-  }
-
-  public void setSummary(String summary) {
-    this.summary = summary;
-  }
-
   public String getSource() {
     return source;
   }
 
   public void setSource(String source) {
     this.source = source;
-  }
-
-  public BigDecimal getScore() {
-    return score;
-  }
-
-  public void setScore(BigDecimal score) {
-    this.score = score;
-  }
-
-  public AccessVectorEnum getAccess_vector() {
-    return access_vector;
-  }
-
-  public void setAccess_vector(AccessVectorEnum access_vector) {
-    this.access_vector = access_vector;
-  }
-
-  public HighToLowEnum getAccess_complexity() {
-    return access_complexity;
-  }
-
-  public void setAccess_complexity(HighToLowEnum access_complexity) {
-    this.access_complexity = access_complexity;
-  }
-
-  public InstanceCountEnum getAuthentication() {
-    return authentication;
-  }
-
-  public void setAuthentication(InstanceCountEnum authentication) {
-    this.authentication = authentication;
-  }
-
-  public PartialToCompleteEnum getConfidentiality_impact() {
-    return confidentiality_impact;
-  }
-
-  public void setConfidentiality_impact(
-      PartialToCompleteEnum confidentiality_impact) {
-    this.confidentiality_impact = confidentiality_impact;
-  }
-
-  public PartialToCompleteEnum getIntegrity_impact() {
-    return integrity_impact;
-  }
-
-  public void setIntegrity_impact(PartialToCompleteEnum integrity_impact) {
-    this.integrity_impact = integrity_impact;
-  }
-
-  public PartialToCompleteEnum getAvailability_impact() {
-    return availability_impact;
-  }
-
-  public void setAvailability_impact(PartialToCompleteEnum availability_impact) {
-    this.availability_impact = availability_impact;
   }
 
   public Date getGenerated_on_date() {
@@ -294,14 +230,6 @@ public class NVDEntryMessage extends RiskMetrics implements
 
   public void setPublished_date(Date published_date) {
     this.published_date = published_date;
-  }
-
-  public Date getLast_modified_date() {
-    return last_modified_date;
-  }
-
-  public void setLast_modified_date(Date last_modified_date) {
-    this.last_modified_date = last_modified_date;
   }
 
   public String getGenerated_on_date_String() {

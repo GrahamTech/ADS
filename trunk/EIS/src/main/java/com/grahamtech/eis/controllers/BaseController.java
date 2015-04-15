@@ -11,12 +11,26 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
+
+
+
+
+import com.grahamtech.eis.daos.MyFlaggedAssetsDAO;
+import com.grahamtech.eis.daos.MyNVDEntryMessageDAO;
 import com.grahamtech.eis.daos.MyProjectDAO;
+import com.grahamtech.eis.daos.MyProjectDetailDAO;
+import com.grahamtech.eis.daos.MyProjectPartnerDAO;
+import com.grahamtech.eis.daos.MyProjectSystemDAO;
 import com.grahamtech.eis.daos.MyRiskPreferenceDAO;
+import com.grahamtech.eis.daos.MyRolesDAO;
 import com.grahamtech.eis.daos.MySystemProductDAO;
+import com.grahamtech.eis.daos.MySystemVulnerabilitiesDAO;
 import com.grahamtech.eis.daos.MyUserProfileDAO;
+import com.grahamtech.eis.pojos.FlaggedAsset;
 import com.grahamtech.eis.pojos.NVDEntryMessage;
 import com.grahamtech.eis.pojos.Project;
+import com.grahamtech.eis.pojos.ProjectDetail;
 import com.grahamtech.eis.pojos.ProjectPartner;
 import com.grahamtech.eis.pojos.ProjectSystem;
 import com.grahamtech.eis.pojos.RiskPreference;
@@ -65,20 +79,101 @@ public class BaseController {
   @Autowired
   private MyUserProfileDAO myUserProfileDAO;
   @Autowired
-  private MyRiskPreferenceDAO myRiskPreferenceDAO;
-  @Autowired
   private MyProjectDAO myProjectDAO;
   @Autowired
   private MySystemProductDAO mySystemProductDAO;
+  @Autowired
+  private MySystemVulnerabilitiesDAO mySystemVulnerabilitiesDAO;
+  @Autowired
+  private MyRolesDAO myRolesDAO;
+  @Autowired
+  private MyRiskPreferenceDAO myRiskPreferenceDAO;
+  @Autowired
+  private MyProjectSystemDAO myProjectSystemDAO;
+  @Autowired
+  private MyProjectPartnerDAO myProjectPartnerDAO;
+  @Autowired
+  private MyProjectDetailDAO myProjectDetailDAO;
+  @Autowired
+  private MyNVDEntryMessageDAO myNVDEntryMessageDAO;
 
-  @RequestMapping(value = "/get/all/systemProducts", method = RequestMethod.GET)
+  @Autowired
+  private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
+
+  @RequestMapping(value = RestURIConstants.GET_FLAGGED_ASSETS, method = RequestMethod.GET)
+  public @ResponseBody
+  List<FlaggedAsset> getFlaggedAssets() {
+    List<FlaggedAsset> list = myFlaggedAssetsDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_NVD_ENTRY_MESSAGES, method = RequestMethod.GET)
+  public @ResponseBody
+  List<NVDEntryMessage> getNvdEntryMessages() {
+    List<NVDEntryMessage> list = myNVDEntryMessageDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_PROJECTS, method = RequestMethod.GET)
+  public @ResponseBody
+  List<Project> getProject() {
+    List<Project> list = myProjectDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_PROJECT_DETAILS, method = RequestMethod.GET)
+  public @ResponseBody
+  List<ProjectDetail> getProjectDetails() {
+    List<ProjectDetail> list = myProjectDetailDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_PROJECT_PARTNERS, method = RequestMethod.GET)
+  public @ResponseBody
+  List<ProjectPartner> getProjectPartners() {
+    List<ProjectPartner> list = myProjectPartnerDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_PROJECT_SYSTEMS, method = RequestMethod.GET)
+  public @ResponseBody
+  List<ProjectSystem> getProjectSystems() {
+    List<ProjectSystem> list = myProjectSystemDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_RISK_PREFERENCES, method = RequestMethod.GET)
+  public @ResponseBody
+  List<RiskPreference> getRiskPreferences() {
+    List<RiskPreference> list = myRiskPreferenceDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_ROLES, method = RequestMethod.GET)
+  public @ResponseBody
+  List<Role> getRoles() {
+    List<Role> list = myRolesDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_SYSTEM_VULNERABILITIES, method = RequestMethod.GET)
+  public @ResponseBody
+  List<SystemVulnerability> getSystemVulnerabilities() {
+    List<SystemVulnerability> list = mySystemVulnerabilitiesDAO.findAll();
+    return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_SYSTEM_PRODUCTS, method = RequestMethod.GET)
   public @ResponseBody
   List<SystemProduct> getSystemProducts() {
-    ModelAndView model = new ModelAndView("index");
-
     List<SystemProduct> list = mySystemProductDAO.findAll();
-    model.addObject("list", list);
+    return list;
+  }
 
+  @RequestMapping(value = RestURIConstants.GET_USERS, method = RequestMethod.GET)
+  public @ResponseBody
+  List<UserProfile> getUsers() {
+    List<UserProfile> list = myUserProfileDAO.findAll();
     return list;
   }
 
@@ -111,7 +206,7 @@ public class BaseController {
     return model;
   }
 
-  @RequestMapping(value = RestURIConstants.PROFILE_GET_ALL_USERS, method = RequestMethod.GET)
+  @RequestMapping(value = RestURIConstants.GET_PROFILES, method = RequestMethod.GET)
   public @ResponseBody
   List<UserProfile> getAllUserProfiles() {
     ModelAndView model = new ModelAndView("index");
@@ -122,14 +217,14 @@ public class BaseController {
     return listUserProfiles;
   }
 
-  @RequestMapping(value = RestURIConstants.PROFILE_GET_USER, method = RequestMethod.GET)
+  @RequestMapping(value = RestURIConstants.GET_PROFILE, method = RequestMethod.GET)
   public @ResponseBody
   UserProfile getUserProfileById(@PathVariable String id) {
     //
     return getUserProfile(id);
   }
 
-  @RequestMapping(value = RestURIConstants.PROFILE_CREATE_USER, method = RequestMethod.POST)
+  @RequestMapping(value = RestURIConstants.CREATE_USER, method = RequestMethod.POST)
   public @ResponseBody
   void createUserProfile(@PathVariable String userEmail,
       @PathVariable String primaryRole) {
@@ -137,14 +232,14 @@ public class BaseController {
     createUserProfile(userEmail, RolesEnum.fromString(primaryRole));
   }
 
-  @RequestMapping(value = RestURIConstants.PROFILE_UPDATE_USER_EMAIL, method = RequestMethod.POST)
+  @RequestMapping(value = RestURIConstants.UPDATE_USER_EMAIL, method = RequestMethod.POST)
   public @ResponseBody
   void updateUserProfile(@PathVariable String id, @PathVariable String userEmail) {
 
     updateUser(id, userEmail);
   }
 
-  @RequestMapping(value = RestURIConstants.PROFILE_DELETE_USER, method = RequestMethod.PUT)
+  @RequestMapping(value = RestURIConstants.DELETE_USER, method = RequestMethod.PUT)
   public @ResponseBody
   void createUserProfile(@PathVariable String id) {
 

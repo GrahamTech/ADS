@@ -28,11 +28,14 @@ import javax.persistence.TemporalType;
 
 
 
+
 //import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.grahamtech.eis.pojos.Role;
+import com.grahamtech.eis.utilities.ConstantsUtil;
+import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.NotificationFrequencyEnum;
 import com.grahamtech.eis.utilities.enums.RolesEnum;
 import com.grahamtech.eis.utilities.enums.StatusEnum;
@@ -409,6 +412,16 @@ public class UserProfile implements java.io.Serializable {
 
   public void setPrimary_role(RolesEnum primary_role) {
     this.primary_role = primary_role;
+  }
+
+  public String getLock_account_until_String() {
+    return StringUtil.dateToString(this.getLock_account_until(),
+        ConstantsUtil.DATE_FORMAT);
+  }
+
+  public String getProfile_expires_on_String() {
+    return StringUtil.dateToString(this.getProfile_expires_on(),
+        ConstantsUtil.DATE_FORMAT);
   }
 
 }

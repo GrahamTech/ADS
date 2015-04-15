@@ -25,6 +25,8 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.grahamtech.eis.utilities.ConstantsUtil;
+import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 
 @Entity
@@ -55,9 +57,12 @@ public class FlaggedAsset implements java.io.Serializable {
   @JsonBackReference
   private UserProfile flaggedByUserProfile;
 
-  // TODO figure out why this is being reported as No row exists
+  // TODO figure out why this is being reported as:
+  // hibernate.ObjectNotFoundException: No row with the given identifier exists:
+  // [com.grahamtech.eis.pojos.UserProfile#0]
   // @ManyToOne
   // @JoinColumn(name = "unflagged_by_fk_assets")
+  // @JsonBackReference
   // private UserProfile unflaggedByUserProfile;
 
   public FlaggedAsset() {
@@ -131,5 +136,15 @@ public class FlaggedAsset implements java.io.Serializable {
   // public void setUnflaggedByUserProfile(UserProfile unflaggedByUserProfile) {
   // this.unflaggedByUserProfile = unflaggedByUserProfile;
   // }
+
+  public String getFlagged_date_String() {
+    return StringUtil.dateToString(this.getFlagged_date(),
+        ConstantsUtil.DATE_FORMAT);
+  }
+
+  public String getUnflagged_date_String() {
+    return StringUtil.dateToString(this.getUnflagged_date(),
+        ConstantsUtil.DATE_FORMAT);
+  }
 
 }
