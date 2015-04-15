@@ -27,7 +27,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   /** {@inheritDoc} */
   @Transactional
   public void save(final T transientInstance)
-      throws ConstraintViolationException {
+      throws ConstraintViolationException, RuntimeException {
     log.debug("About to save object of type " + entityClass);
     try {
       getHibernateTemplate().save(transientInstance);
@@ -42,7 +42,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
 
   /** {@inheritDoc} */
   @Transactional
-  public void delete(final T persistentInstance) {
+  public void delete(final T persistentInstance) throws RuntimeException {
     log.debug("About to delete instance of " + entityClass);
     try {
       getHibernateTemplate().delete(persistentInstance);
@@ -102,7 +102,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
 
   /** {@inheritDoc} */
   @Transactional
-  public T merge(final T detachedInstance) {
+  public T merge(final T detachedInstance) throws RuntimeException {
     log.debug("Merging instance of type " + entityClass);
     try {
       final T result = (T) getHibernateTemplate().merge(detachedInstance);
@@ -116,7 +116,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
 
   /** {@inheritDoc} */
   @Transactional
-  public void deleteAll() {
+  public void deleteAll() throws RuntimeException {
     log.debug("About to delete all records from the " + tableName);
     try {
       // flush all changes to the database to avoid issues when deleting.

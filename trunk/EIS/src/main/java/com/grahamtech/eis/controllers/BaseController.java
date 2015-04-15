@@ -2,12 +2,15 @@ package com.grahamtech.eis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 //import org.springframework.beans.factory.annotation.Autowired;
+
+
 
 
 
@@ -67,6 +70,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.ConstraintViolationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +80,8 @@ import org.slf4j.LoggerFactory;
 public class BaseController {
   private static final Logger logger = LoggerFactory
       .getLogger(BaseController.class);
+
+  // private CRUDUtil crudUtil = new CRUDUtil();
 
   @Autowired
   private MyUserProfileDAO myUserProfileDAO;
@@ -107,11 +114,138 @@ public class BaseController {
     return list;
   }
 
+  @RequestMapping(value = RestURIConstants.GET_FLAGGED_ASSET, method = RequestMethod.GET)
+  public @ResponseBody
+  FlaggedAsset getFlaggedAssetById(@PathVariable String id) {
+    return myFlaggedAssetsDAO.findById(new Long(id).longValue());
+  }
+
+  /*
+   * <sf:form method="POST" modelAttribute="entity"
+   * enctype="multipart/form-data" action="/update/flaggedAsset/${entity.id}">
+   * <fieldset> <table cellspacing="0"> <tr> <th><label
+   * for="entity_id">Id:</label></th> <td><sf:input path="id" size="15"
+   * id="entity_id" /></td> </tr> <tr> <th><label
+   * for="entity_flagged_reason">Flagged Reason:</label></th> <td><sf:input
+   * path="flagged_reason" size="15" id="entity_flagged_reason" /></td> </tr>
+   * </table> <input type="submit" value="Update" /> </fieldset> </sf:form>
+   */
+  @RequestMapping(value = RestURIConstants.UPDATE_FLAGGED_ASSET, method = RequestMethod.POST)
+  public String updateMember(@PathVariable long id,
+      @ModelAttribute("entity") FlaggedAsset entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myFlaggedAssetsDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: FlaggedAsset");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: FlaggedAsset");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_FLAGGED_ASSET, method = RequestMethod.POST)
+  public String deleteFlaggedAssetById(@PathVariable long id,
+      @ModelAttribute("entity") FlaggedAsset entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setFlagged_id(id);
+      myFlaggedAssetsDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: FlaggedAsset");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: FlaggedAsset");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_FLAGGED_ASSET, method = RequestMethod.POST)
+  public String createFlaggedAsset(
+      @ModelAttribute("entity") FlaggedAsset entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myFlaggedAssetsDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: FlaggedAsset");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: FlaggedAsset");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: FlaggedAsset");
+    }
+    return strBuffer.toString();
+  }
+
   @RequestMapping(value = RestURIConstants.GET_NVD_ENTRY_MESSAGES, method = RequestMethod.GET)
   public @ResponseBody
   List<NVDEntryMessage> getNvdEntryMessages() {
     List<NVDEntryMessage> list = myNVDEntryMessageDAO.findAll();
     return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_NVD_ENTRY_MESSAGE, method = RequestMethod.GET)
+  public @ResponseBody
+  NVDEntryMessage getNVDEntryMessageById(@PathVariable String id) {
+    return myNVDEntryMessageDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_NVD_ENTRY_MESSAGE, method = RequestMethod.POST)
+  public String updateNVDEntryMessage(@PathVariable long id,
+      @ModelAttribute("entity") NVDEntryMessage entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myNVDEntryMessageDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: NVDEntryMessage");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: NVDEntryMessage");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_NVD_ENTRY_MESSAGE, method = RequestMethod.PUT)
+  public String deleteNVDEntryMessageById(@PathVariable long id,
+      @ModelAttribute("entity") NVDEntryMessage entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setEntry_message_id(id);
+      myNVDEntryMessageDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: NVDEntryMessage");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: NVDEntryMessage");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_NVD_ENTRY_MESSAGE, method = RequestMethod.POST)
+  public String createNVDEntryMessage(
+      @ModelAttribute("entity") NVDEntryMessage entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myNVDEntryMessageDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: NVDEntryMessage");
+    } catch (RuntimeException e) {
+      strBuffer
+          .append(" RuntimeException updating the entity: NVDEntryMessage");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: NVDEntryMessage");
+    }
+    return strBuffer.toString();
   }
 
   @RequestMapping(value = RestURIConstants.GET_PROJECTS, method = RequestMethod.GET)
@@ -121,11 +255,126 @@ public class BaseController {
     return list;
   }
 
+  @RequestMapping(value = RestURIConstants.GET_PROJECT, method = RequestMethod.GET)
+  public @ResponseBody
+  Project getProjectById(@PathVariable String id) {
+    return myProjectDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_PROJECT, method = RequestMethod.POST)
+  public String updateProject(@PathVariable long id,
+      @ModelAttribute("entity") Project entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myProjectDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: Project");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: Project");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_PROJECT, method = RequestMethod.PUT)
+  public String deleteProjectById(@PathVariable long id,
+      @ModelAttribute("entity") Project entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setRole_id(id);
+      myProjectDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: Project");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: Project");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_PROJECT, method = RequestMethod.POST)
+  public String createProject(@ModelAttribute("entity") Project entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myProjectDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: Project");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: Project");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: Project");
+    }
+    return strBuffer.toString();
+  }
+
   @RequestMapping(value = RestURIConstants.GET_PROJECT_DETAILS, method = RequestMethod.GET)
   public @ResponseBody
   List<ProjectDetail> getProjectDetails() {
     List<ProjectDetail> list = myProjectDetailDAO.findAll();
     return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_PROJECT_DETAIL, method = RequestMethod.GET)
+  public @ResponseBody
+  ProjectDetail getProjectDetailById(@PathVariable String id) {
+    return myProjectDetailDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_PROJECT_DETAIL, method = RequestMethod.POST)
+  public String updateProjectDetail(@PathVariable long id,
+      @ModelAttribute("entity") ProjectDetail entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myProjectDetailDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: ProjectDetail");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: ProjectDetail");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_PROJECT_DETAIL, method = RequestMethod.PUT)
+  public String deleteProjectDetailById(@PathVariable long id,
+      @ModelAttribute("entity") ProjectDetail entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setProject_details_id(id);
+      myProjectDetailDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: ProjectDetail");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: ProjectDetail");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_PROJECT_DETAIL, method = RequestMethod.POST)
+  public String createProjectDetail(
+      @ModelAttribute("entity") ProjectDetail entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myProjectDetailDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: ProjectDetail");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: ProjectDetail");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: ProjectDetail");
+    }
+    return strBuffer.toString();
   }
 
   @RequestMapping(value = RestURIConstants.GET_PROJECT_PARTNERS, method = RequestMethod.GET)
@@ -135,11 +384,127 @@ public class BaseController {
     return list;
   }
 
+  @RequestMapping(value = RestURIConstants.GET_PROJECT_PARTNER, method = RequestMethod.GET)
+  public @ResponseBody
+  ProjectPartner getProjectPartnerById(@PathVariable String id) {
+    return myProjectPartnerDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_PROJECT_PARTNER, method = RequestMethod.POST)
+  public String updateProjectPartner(@PathVariable long id,
+      @ModelAttribute("entity") ProjectPartner entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myProjectPartnerDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: ProjectPartner");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: ProjectPartner");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_PROJECT_PARTNER, method = RequestMethod.PUT)
+  public String deleteProjectPartnerById(@PathVariable long id,
+      @ModelAttribute("entity") ProjectPartner entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setProject_partner_id(id);
+      myProjectPartnerDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: ProjectPartner");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: ProjectPartner");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_PROJECT_PARTNER, method = RequestMethod.POST)
+  public String createProjectPartner(
+      @ModelAttribute("entity") ProjectPartner entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myProjectPartnerDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: ProjectPartner");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: ProjectPartner");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: ProjectPartner");
+    }
+    return strBuffer.toString();
+  }
+
   @RequestMapping(value = RestURIConstants.GET_PROJECT_SYSTEMS, method = RequestMethod.GET)
   public @ResponseBody
   List<ProjectSystem> getProjectSystems() {
     List<ProjectSystem> list = myProjectSystemDAO.findAll();
     return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_PROJECT_SYSTEM, method = RequestMethod.GET)
+  public @ResponseBody
+  ProjectSystem getProjectSystemById(@PathVariable String id) {
+    return myProjectSystemDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_PROJECT_SYSTEM, method = RequestMethod.POST)
+  public String updateProjectSystem(@PathVariable long id,
+      @ModelAttribute("entity") ProjectSystem entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myProjectSystemDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: ProjectSystem");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: ProjectSystem");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_PROJECT_SYSTEM, method = RequestMethod.PUT)
+  public String deleteProjectSystemById(@PathVariable long id,
+      @ModelAttribute("entity") ProjectSystem entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setSystem_id(id);
+      myProjectSystemDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: ProjectSystem");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: ProjectSystem");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_PROJECT_SYSTEM, method = RequestMethod.POST)
+  public String createProjectSystem(
+      @ModelAttribute("entity") ProjectSystem entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myProjectSystemDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: ProjectSystem");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: ProjectSystem");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: ProjectSystem");
+    }
+    return strBuffer.toString();
   }
 
   @RequestMapping(value = RestURIConstants.GET_RISK_PREFERENCES, method = RequestMethod.GET)
@@ -149,11 +514,127 @@ public class BaseController {
     return list;
   }
 
+  @RequestMapping(value = RestURIConstants.GET_RISK_PREFERENCE, method = RequestMethod.GET)
+  public @ResponseBody
+  RiskPreference getRiskPreferenceById(@PathVariable String id) {
+    return myRiskPreferenceDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_RISK_PREFERENCE, method = RequestMethod.POST)
+  public String updateRiskPreference(@PathVariable long id,
+      @ModelAttribute("entity") RiskPreference entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myRiskPreferenceDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: RiskPreference");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: RiskPreference");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_RISK_PREFERENCE, method = RequestMethod.PUT)
+  public String deleteRiskPreferenceById(@PathVariable long id,
+      @ModelAttribute("entity") RiskPreference entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setRisk_preference_id(id);
+      ;
+      myRiskPreferenceDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: RiskPreference");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: RiskPreference");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_RISK_PREFERENCE, method = RequestMethod.POST)
+  public String createRiskPreference(
+      @ModelAttribute("entity") RiskPreference entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myRiskPreferenceDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: RiskPreference");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: RiskPreference");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: RiskPreference");
+    }
+    return strBuffer.toString();
+  }
+
   @RequestMapping(value = RestURIConstants.GET_ROLES, method = RequestMethod.GET)
   public @ResponseBody
   List<Role> getRoles() {
     List<Role> list = myRolesDAO.findAll();
     return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_ROLE, method = RequestMethod.GET)
+  public @ResponseBody
+  Role getRoleById(@PathVariable String id) {
+    return myRolesDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_ROLE, method = RequestMethod.POST)
+  public String updateRole(@PathVariable long id,
+      @ModelAttribute("entity") Role entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myRolesDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: Role");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: Role");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_ROLE, method = RequestMethod.PUT)
+  public String deleteRoleById(@PathVariable long id,
+      @ModelAttribute("entity") Role entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setRole_id(id);
+      myRolesDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: Role");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: Role");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_ROLE, method = RequestMethod.POST)
+  public String createRole(@ModelAttribute("entity") Role entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myRolesDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: Role");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: Role");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: Role");
+    }
+    return strBuffer.toString();
   }
 
   @RequestMapping(value = RestURIConstants.GET_SYSTEM_VULNERABILITIES, method = RequestMethod.GET)
@@ -163,11 +644,128 @@ public class BaseController {
     return list;
   }
 
+  @RequestMapping(value = RestURIConstants.GET_SYSTEM_VULNERABILITY, method = RequestMethod.GET)
+  public @ResponseBody
+  SystemVulnerability getSystemVulnerabilityById(@PathVariable String id) {
+    return mySystemVulnerabilitiesDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_SYSTEM_VULNERABILITY, method = RequestMethod.POST)
+  public String updateSystemVulnerability(@PathVariable long id,
+      @ModelAttribute("entity") SystemVulnerability entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      mySystemVulnerabilitiesDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: SystemVulnerability");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: SystemVulnerability");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_SYSTEM_VULNERABILITY, method = RequestMethod.PUT)
+  public String deleteSystemVulnerabilityById(@PathVariable long id,
+      @ModelAttribute("entity") SystemVulnerability entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setVulnerability_id(id);
+      mySystemVulnerabilitiesDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: SystemVulnerability");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: SystemVulnerability");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_SYSTEM_VULNERABILITY, method = RequestMethod.POST)
+  public String createSystemVulnerability(
+      @ModelAttribute("entity") SystemVulnerability entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      mySystemVulnerabilitiesDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: SystemVulnerability");
+    } catch (RuntimeException e) {
+      strBuffer
+          .append(" RuntimeException updating the entity: SystemVulnerability");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: SystemVulnerability");
+    }
+    return strBuffer.toString();
+  }
+
   @RequestMapping(value = RestURIConstants.GET_SYSTEM_PRODUCTS, method = RequestMethod.GET)
   public @ResponseBody
   List<SystemProduct> getSystemProducts() {
     List<SystemProduct> list = mySystemProductDAO.findAll();
     return list;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_SYSTEM_PRODUCT, method = RequestMethod.GET)
+  public @ResponseBody
+  SystemProduct getSystemProductById(@PathVariable String id) {
+    return mySystemProductDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_SYSTEM_PRODUCT, method = RequestMethod.POST)
+  public String updateSystemProduct(@PathVariable long id,
+      @ModelAttribute("entity") SystemProduct entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      mySystemProductDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: SystemProduct");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: SystemProduct");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_SYSTEM_PRODUCT, method = RequestMethod.PUT)
+  public String deleteSystemProductById(@PathVariable long id,
+      @ModelAttribute("entity") SystemProduct entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setProduct_id(id);
+      mySystemProductDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: SystemProduct");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: SystemProduct");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_SYSTEM_PRODUCT, method = RequestMethod.POST)
+  public String createSystemProduct(
+      @ModelAttribute("entity") SystemProduct entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      mySystemProductDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: SystemProduct");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: SystemProduct");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: SystemProduct");
+    }
+    return strBuffer.toString();
   }
 
   @RequestMapping(value = RestURIConstants.GET_USERS, method = RequestMethod.GET)
@@ -177,7 +775,62 @@ public class BaseController {
     return list;
   }
 
-  // private CRUDUtil crudUtil = new CRUDUtil();
+  @RequestMapping(value = RestURIConstants.GET_USER, method = RequestMethod.GET)
+  public @ResponseBody
+  UserProfile getUserById(@PathVariable String id) {
+    return myUserProfileDAO.findById(new Long(id).longValue());
+  }
+
+  @RequestMapping(value = RestURIConstants.UPDATE_USER, method = RequestMethod.POST)
+  public String updateUserProfile(@PathVariable long id,
+      @ModelAttribute("entity") UserProfile entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myUserProfileDAO.merge(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: UserProfile");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Updated successfully: UserProfile");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.DELETE_USER, method = RequestMethod.PUT)
+  public String deleteUserProfileById(@PathVariable long id,
+      @ModelAttribute("entity") UserProfile entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      entity.setUser_profile_id(id);
+      myUserProfileDAO.delete(entity);
+    } catch (RuntimeException e) {
+      strBuffer.append("Error updating the entity: UserProfile");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Deleted successfully: UserProfile");
+    }
+    return strBuffer.toString();
+  }
+
+  @RequestMapping(value = RestURIConstants.CREATE_USER, method = RequestMethod.POST)
+  public String createUserProfile(@ModelAttribute("entity") UserProfile entity) {
+    StringBuffer strBuffer = new StringBuffer();
+    int bufferLength = strBuffer.length();
+    try {
+      myUserProfileDAO.save(entity);
+    } catch (ConstraintViolationException ec) {
+      strBuffer
+          .append(" ConstraintViolationException updating the entity: UserProfile");
+    } catch (RuntimeException e) {
+      strBuffer.append(" RuntimeException updating the entity: UserProfile");
+    }
+    if (strBuffer.length() == bufferLength) {
+      strBuffer.append("Created successfully: UserProfile");
+    }
+    return strBuffer.toString();
+  }
 
   /*
    * A UserProfile has a Role, Risk Preferences, and one or more Project
@@ -189,11 +842,7 @@ public class BaseController {
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView index() {
     ModelAndView model = new ModelAndView("index");
-
-    // List<UserProfile> listUserProfiles = getUserProfiles();
-    // model.addObject("userProfileList", listUserProfiles);
     model.addObject("message", overviewStr);
-
     return model;
   }
 
@@ -224,7 +873,7 @@ public class BaseController {
     return getUserProfile(id);
   }
 
-  @RequestMapping(value = RestURIConstants.CREATE_USER, method = RequestMethod.POST)
+  @RequestMapping(value = RestURIConstants.CREATE_USER_BASIC, method = RequestMethod.POST)
   public @ResponseBody
   void createUserProfile(@PathVariable String userEmail,
       @PathVariable String primaryRole) {
