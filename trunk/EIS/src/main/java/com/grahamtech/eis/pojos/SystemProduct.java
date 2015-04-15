@@ -1,25 +1,41 @@
 package com.grahamtech.eis.pojos;
 
-//import java.util.Set;
+import java.math.BigDecimal;
+import java.util.Date;
 
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-//import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-//import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.grahamtech.eis.utilities.ConstantsUtil;
+import com.grahamtech.eis.utilities.StringUtil;
+import com.grahamtech.eis.utilities.enums.AccessVectorEnum;
+import com.grahamtech.eis.utilities.enums.HighToLowEnum;
+import com.grahamtech.eis.utilities.enums.InstanceCountEnum;
+import com.grahamtech.eis.utilities.enums.PartialToCompleteEnum;
 import com.grahamtech.eis.utilities.enums.StatusEnum;
 
 @Entity
 @Table(name = "system_products")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Access(AccessType.FIELD)
 public class SystemProduct extends RiskMetrics implements java.io.Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -27,31 +43,52 @@ public class SystemProduct extends RiskMetrics implements java.io.Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "product_id")
   private long product_id;
+  @Column(name = "product_name")
   private String product_name;
+  @Column(name = "product_state")
   @Enumerated(EnumType.STRING)
   private StatusEnum product_state;
+  @Column(name = "lessons_learned")
   private String lessons_learned;
 
-  // private String product_version;
-  // private String product_type;
-  // private String product_description;
-  //
-  // @Column(name = "last_modified_date", columnDefinition = "DATETIME")
-  // @Temporal(TemporalType.TIMESTAMP)
-  // @JsonSerialize(using = DateSerializer.class)
-  // private Date last_modified_date;
-  // private BigDecimal severity;
-  // private BigDecimal cvss_base_score;
-  // private BigDecimal cvss_score;
-  // private BigDecimal cvss_exploit_sub_score;
-  // private BigDecimal cvss_impact_sub_score;
-  // private BigDecimal cvss_version;
-  // @Column(name = "cvss_publish_date", columnDefinition = "DATETIME")
-  // @Temporal(TemporalType.TIMESTAMP)
-  // @JsonSerialize(using = DateSerializer.class)
-  // private Date cvss_publish_date;
-  // private BigDecimal latitude;
-  // private BigDecimal longitude;
+  // START RISK METRICS
+  @Column(name = "summary")
+  private String summary;
+  @Column(name = "source")
+  private String source;
+  @Column(name = "score")
+  private BigDecimal score;
+  @Column(name = "access_vector")
+  @Enumerated(EnumType.STRING)
+  private AccessVectorEnum access_vector; // access-vector
+  @Column(name = "access_complexity")
+  @Enumerated(EnumType.STRING)
+  private HighToLowEnum access_complexity; // access-complexity
+  @Column(name = "authentication")
+  @Enumerated(EnumType.STRING)
+  private InstanceCountEnum authentication; // authentication
+  @Column(name = "confidentiality_impact")
+  @Enumerated(EnumType.STRING)
+  private PartialToCompleteEnum confidentiality_impact; // confidentiality-impact
+  @Column(name = "integrity_impact")
+  @Enumerated(EnumType.STRING)
+  private PartialToCompleteEnum integrity_impact; // integrity-impact
+  @Column(name = "availability_impact")
+  @Enumerated(EnumType.STRING)
+  private PartialToCompleteEnum availability_impact; // availability-impact
+  @Column(name = "generated_on_date", columnDefinition = "DATETIME")
+  @Temporal(TemporalType.TIMESTAMP)
+  @JsonSerialize(using = DateSerializer.class)
+  private Date generated_on_date; // generated-on-datetime
+  @Column(name = "published_date", columnDefinition = "DATETIME")
+  @Temporal(TemporalType.TIMESTAMP)
+  @JsonSerialize(using = DateSerializer.class)
+  private Date published_date; // published-datetime
+  @Column(name = "last_modified_date", columnDefinition = "DATETIME")
+  @Temporal(TemporalType.TIMESTAMP)
+  @JsonSerialize(using = DateSerializer.class)
+  private Date last_modified_date; // last-modified-datetime
+  // END RISK METRICS
 
   @ManyToOne
   @JoinColumn(name = "last_modified_by_fk_products")
@@ -80,9 +117,6 @@ public class SystemProduct extends RiskMetrics implements java.io.Serializable {
         + this.getProduct_name()
         + ", product_state= "
         + this.getProduct_state().getEnumString()
-        + ", pub date= "
-        + ((this.getPublished_datetime() == null) ? "N/A" : this
-            .getPublished_datetime().toString())
         + ", score= "
         + this.getScore()
         + ", access_vector="
@@ -99,9 +133,15 @@ public class SystemProduct extends RiskMetrics implements java.io.Serializable {
         + this.getAvailability_impact()
         + ", source= "
         + this.getSource()
-        + ", generated_on_datetime= "
-        + ((this.getGenerated_on_datetime() == null) ? "N/A" : this
-            .getGenerated_on_datetime().toString()) + ", summary= "
+        + ", generated_on_date= "
+        + ((this.getGenerated_on_date() == null) ? "N/A" : this
+            .getGenerated_on_date_String())
+        + ", pub_date= "
+        + ((this.getPublished_date() == null) ? "N/A" : this
+            .getPublished_date_String())
+        + ", last_mod_date= "
+        + ((this.getLast_modified_date() == null) ? "N/A" : this
+            .getLast_modified_date_String()) + ", summary= "
         + this.getSummary() + ", lesson_learned= " + this.getLessons_learned()
         + "]";
   }
@@ -134,30 +174,6 @@ public class SystemProduct extends RiskMetrics implements java.io.Serializable {
     this.product_state = product_state;
   }
 
-  // public String getProduct_version() {
-  // return product_version;
-  // }
-  //
-  // public void setProduct_version(String product_version) {
-  // this.product_version = product_version;
-  // }
-  //
-  // public String getProduct_type() {
-  // return product_type;
-  // }
-  //
-  // public void setProduct_type(String product_type) {
-  // this.product_type = product_type;
-  // }
-  //
-  // public String getProduct_description() {
-  // return product_description;
-  // }
-  //
-  // public void setProduct_description(String product_description) {
-  // this.product_description = product_description;
-  // }
-
   public String getLessons_learned() {
     return lessons_learned;
   }
@@ -165,82 +181,6 @@ public class SystemProduct extends RiskMetrics implements java.io.Serializable {
   public void setLessons_learned(String lessons_learned) {
     this.lessons_learned = lessons_learned;
   }
-
-  // public Date getLast_modified_date() {
-  // return last_modified_date;
-  // }
-  //
-  // public void setLast_modified_date(Date last_modified_date) {
-  // this.last_modified_date = last_modified_date;
-  // }
-  //
-  // public BigDecimal getSeverity() {
-  // return severity;
-  // }
-  //
-  // public void setSeverity(BigDecimal severity) {
-  // this.severity = severity;
-  // }
-  //
-  // public BigDecimal getCvss_base_score() {
-  // return cvss_base_score;
-  // }
-  //
-  // public void setCvss_base_score(BigDecimal cvss_base_score) {
-  // this.cvss_base_score = cvss_base_score;
-  // }
-  //
-  // public BigDecimal getCvss_score() {
-  // return cvss_score;
-  // }
-  //
-  // public void setCvss_score(BigDecimal cvss_score) {
-  // this.cvss_score = cvss_score;
-  // }
-  //
-  // public BigDecimal getCvss_exploit_sub_score() {
-  // return cvss_exploit_sub_score;
-  // }
-  //
-  // public void setCvss_exploit_sub_score(BigDecimal cvss_exploit_sub_score) {
-  // this.cvss_exploit_sub_score = cvss_exploit_sub_score;
-  // }
-  //
-  // public BigDecimal getCvss_impact_sub_score() {
-  // return cvss_impact_sub_score;
-  // }
-  //
-  // public void setCvss_impact_sub_score(BigDecimal cvss_impact_sub_score) {
-  // this.cvss_impact_sub_score = cvss_impact_sub_score;
-  // }
-  //
-  // public BigDecimal getCvss_version() {
-  // return cvss_version;
-  // }
-  //
-  // public void setCvss_version(BigDecimal cvss_version) {
-  // this.cvss_version = cvss_version;
-  // }
-  //
-  // public void setCvss_publish_date(Date cvss_publish_date) {
-  // this.cvss_publish_date = cvss_publish_date;
-  // }
-  //
-  // public BigDecimal getLatitude() {
-  // return latitude;
-  // }
-  //
-  // public void setLatitude(BigDecimal latitude) {
-  // this.latitude = latitude;
-  // }
-  //
-  // public BigDecimal getLongitude() {
-  // return longitude;
-  // }
-  //
-  // public void setLongitude(BigDecimal longitude) {
-  // this.longitude = longitude;
-  // }
 
   public UserProfile getLast_modified_by_fk_products() {
     return last_modified_by_fk_products;
@@ -271,4 +211,115 @@ public class SystemProduct extends RiskMetrics implements java.io.Serializable {
     this.flaggedAsset = flaggedAsset;
   }
 
+  public String getSummary() {
+    return summary;
+  }
+
+  public void setSummary(String summary) {
+    this.summary = summary;
+  }
+
+  public String getSource() {
+    return source;
+  }
+
+  public void setSource(String source) {
+    this.source = source;
+  }
+
+  public BigDecimal getScore() {
+    return score;
+  }
+
+  public void setScore(BigDecimal score) {
+    this.score = score;
+  }
+
+  public AccessVectorEnum getAccess_vector() {
+    return access_vector;
+  }
+
+  public void setAccess_vector(AccessVectorEnum access_vector) {
+    this.access_vector = access_vector;
+  }
+
+  public HighToLowEnum getAccess_complexity() {
+    return access_complexity;
+  }
+
+  public void setAccess_complexity(HighToLowEnum access_complexity) {
+    this.access_complexity = access_complexity;
+  }
+
+  public InstanceCountEnum getAuthentication() {
+    return authentication;
+  }
+
+  public void setAuthentication(InstanceCountEnum authentication) {
+    this.authentication = authentication;
+  }
+
+  public PartialToCompleteEnum getConfidentiality_impact() {
+    return confidentiality_impact;
+  }
+
+  public void setConfidentiality_impact(
+      PartialToCompleteEnum confidentiality_impact) {
+    this.confidentiality_impact = confidentiality_impact;
+  }
+
+  public PartialToCompleteEnum getIntegrity_impact() {
+    return integrity_impact;
+  }
+
+  public void setIntegrity_impact(PartialToCompleteEnum integrity_impact) {
+    this.integrity_impact = integrity_impact;
+  }
+
+  public PartialToCompleteEnum getAvailability_impact() {
+    return availability_impact;
+  }
+
+  public void setAvailability_impact(PartialToCompleteEnum availability_impact) {
+    this.availability_impact = availability_impact;
+  }
+
+  public Date getGenerated_on_date() {
+    return generated_on_date;
+  }
+
+  public void setGenerated_on_date(Date generated_on_date) {
+    this.generated_on_date = generated_on_date;
+  }
+
+  public Date getPublished_date() {
+    return published_date;
+  }
+
+  public void setPublished_date(Date published_date) {
+    this.published_date = published_date;
+  }
+
+  public Date getLast_modified_date() {
+    return last_modified_date;
+  }
+
+  public void setLast_modified_date(Date last_modified_date) {
+    this.last_modified_date = last_modified_date;
+  }
+
+  public String getGenerated_on_date_String() {
+    return StringUtil.dateToString(this.getGenerated_on_date(),
+        ConstantsUtil.DATE_FORMAT);
+  }
+
+  public String getPublished_date_String() {
+    return StringUtil.dateToString(this.getPublished_date(),
+        ConstantsUtil.DATE_FORMAT);
+  }
+
+  public String getLast_modified_date_String() {
+    return StringUtil.dateToString(this.getLast_modified_date(),
+        ConstantsUtil.DATE_FORMAT);
+  }
 }

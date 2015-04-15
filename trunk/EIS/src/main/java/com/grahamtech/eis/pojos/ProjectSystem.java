@@ -37,10 +37,10 @@ public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
   private String description;
   private BigDecimal latitude;
   private BigDecimal longitude;
-  @Column(name = "last_modified_date", columnDefinition = "DATETIME")
-  @Temporal(TemporalType.TIMESTAMP)
-  @JsonSerialize(using = DateSerializer.class)
-  private Date last_modified_date;
+  // @Column(name = "last_modified_date", columnDefinition = "DATETIME")
+  // @Temporal(TemporalType.TIMESTAMP)
+  // @JsonSerialize(using = DateSerializer.class)
+  // private Date last_modified_date;
 
   @ManyToOne
   @JoinColumn(name = "project_fk_systems", insertable = false, updatable = false)
@@ -101,13 +101,13 @@ public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
     this.description = description;
   }
 
-  public Date getLast_modified_date() {
-    return last_modified_date;
-  }
-
-  public void setLast_modified_date(Date last_modified_date) {
-    this.last_modified_date = last_modified_date;
-  }
+  // public Date getLast_modified_date() {
+  // return last_modified_date;
+  // }
+  //
+  // public void setLast_modified_date(Date last_modified_date) {
+  // this.last_modified_date = last_modified_date;
+  // }
 
   // public Project getProject_fk_systems() {
   // return project_fk_systems;

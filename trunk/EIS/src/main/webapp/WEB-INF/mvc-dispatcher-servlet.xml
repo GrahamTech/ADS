@@ -74,7 +74,7 @@
 	    </constructor-arg>
 	</bean>
 	
-	<!-- <bean id="myRolesDAO" class="com.grahamtech.eis.daos.MyRolesDAO">
+	<bean id="myRolesDAO" class="com.grahamtech.eis.daos.MyRolesDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
@@ -94,11 +94,16 @@
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
 	</bean>
+	<bean id="mySystemProductDAO" class="com.grahamtech.eis.daos.MySystemProductDAO">
+	    <constructor-arg>
+	        <ref bean="sessionFactory" />
+	    </constructor-arg>
+	</bean>
 	<bean id="myFlaggedAssetsDAO" class="com.grahamtech.eis.daos.MyFlaggedAssetsDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
-	</bean>-->
+	</bean>
 	
 	<!-- Plugin JSON as request and response in method handler -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">

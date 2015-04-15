@@ -1,32 +1,55 @@
 package com.grahamtech.eis.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 
-import com.grahamtech.eis.pojos.Project;
+
+
 import com.grahamtech.eis.daos.MyProjectDAO;
 import com.grahamtech.eis.daos.MyRiskPreferenceDAO;
+import com.grahamtech.eis.daos.MySystemProductDAO;
 import com.grahamtech.eis.daos.MyUserProfileDAO;
 import com.grahamtech.eis.pojos.NVDEntryMessage;
+import com.grahamtech.eis.pojos.Project;
 import com.grahamtech.eis.pojos.ProjectPartner;
 import com.grahamtech.eis.pojos.ProjectSystem;
 import com.grahamtech.eis.pojos.RiskPreference;
 import com.grahamtech.eis.pojos.Role;
 import com.grahamtech.eis.pojos.SystemProduct;
 import com.grahamtech.eis.pojos.SystemVulnerability;
+//import com.grahamtech.eis.pojos.Project;
+//import com.grahamtech.eis.daos.MyProjectDAO;
+//import com.grahamtech.eis.daos.MyRiskPreferenceDAO;
+//import com.grahamtech.eis.daos.MyUserProfileDAO;
+//import com.grahamtech.eis.pojos.NVDEntryMessage;
+//import com.grahamtech.eis.pojos.ProjectPartner;
+//import com.grahamtech.eis.pojos.ProjectSystem;
+//import com.grahamtech.eis.pojos.RiskPreference;
+//import com.grahamtech.eis.pojos.Role;
+//import com.grahamtech.eis.pojos.SystemProduct;
+//import com.grahamtech.eis.pojos.SystemVulnerability;
 import com.grahamtech.eis.pojos.UserProfile;
 import com.grahamtech.eis.utilities.StringUtil;
+//import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.RolesEnum;
 
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.HashSet;
+//import java.security.GeneralSecurityException;
+//import java.util.HashMap;
+//import java.util.HashSet;
 import java.util.List;
+//import java.util.Map;
+//import java.util.Set;
+
+
 import java.util.Map;
 import java.util.Set;
 
@@ -45,17 +68,21 @@ public class BaseController {
   private MyRiskPreferenceDAO myRiskPreferenceDAO;
   @Autowired
   private MyProjectDAO myProjectDAO;
+  @Autowired
+  private MySystemProductDAO mySystemProductDAO;
 
-  // @Autowired
-  // private MyProjectDetailDAO myProjectDetailDAO;
-  // @Autowired
-  // private MyProjectSystemDAO myProjectSystemDAO;
-  // @Autowired
-  // private MySystemVulnerabilitiesDAO mySystemVulnerabilitiesDAO;
-  // @Autowired
-  // private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
-  // @Autowired
-  // private MyRolesDAO myRolesDAO;
+  @RequestMapping(value = "/get/all/systemProducts", method = RequestMethod.GET)
+  public @ResponseBody
+  List<SystemProduct> getSystemProducts() {
+    ModelAndView model = new ModelAndView("index");
+
+    List<SystemProduct> list = mySystemProductDAO.findAll();
+    model.addObject("list", list);
+
+    return list;
+  }
+
+  // private CRUDUtil crudUtil = new CRUDUtil();
 
   /*
    * A UserProfile has a Role, Risk Preferences, and one or more Project
@@ -124,7 +151,21 @@ public class BaseController {
     deleteUserProfile(getUserProfile(id));
 
   }
-
+ 
+  // @RequestMapping(method = RequestMethod.GET)
+  // public String index(ModelMap model) {
+  //
+  // //model.addAttribute("message",
+  // "Welcome to the Executive Information System (EIS) enterprise application!");
+  // model.addAttribute("message", overviewStr);
+  //
+  // //Spring uses the InternalResourceViewResolver defined in
+  // // mvc-dispatcher-servlet.xml to prepend and append onto
+  // // the view name which returns index.jsp for this scenario
+  // return "index";
+  //
+  // }
+  
   public List<UserProfile> getUserProfiles() {
     logger.info("############### START getUserProfiles.");
 
@@ -146,7 +187,7 @@ public class BaseController {
       for (Project project : projectSet) {
         logger.info("\n** User Profile Has Project: "
             + project.getProject_name());
-            
+
         // Project Plan Risk (Schedule, Budget, FTE Utilization)
         logger.info("\n**** Project Has Budget Variance of : "
             + project.getProjectDetail().getBudget_variance());
@@ -220,6 +261,7 @@ public class BaseController {
       }// end project
 
     }// end user profile
+
     // Below are just for testing selects of all database tables.
 
     // List<Role> listRoles = myRolesDAO.findAll();
@@ -237,7 +279,7 @@ public class BaseController {
     return listUserProfiles;
   }
 
-  private void updateUser(String id, String userEmail) {
+  public void updateUser(String id, String userEmail) {
 
     UserProfile userProfile = getUserProfile(id);
     userProfile.setEmail(userEmail);
@@ -268,16 +310,18 @@ public class BaseController {
     Set<Project> projectSet = new HashSet<Project>();
     Project project = getDefaultProject();
     projectSet.add(project);
-    UserProfile userProfile1 = new UserProfile(userEmail, primaryRole, projectSet, getDefaultRiskPreference());
+    UserProfile userProfile1 =
+        new UserProfile(userEmail, primaryRole, projectSet,
+            getDefaultRiskPreference());
     project.setUserProfileAttribute(userProfile1);
 
     String userPassword = "12345678";
     Map<String, String> passwordMap = generatePassword(userPassword);
-    
+
     String encryptedSalt = passwordMap.get("encryptedSalt");
     String encodedPasswordAndSaltHash =
         passwordMap.get("encodedPasswordAndSaltHash");
-        
+
     userProfile1.setPwd_salt(encryptedSalt);
 
     logger.info("\n** User Profile Pwd Salt encrypted: " + encryptedSalt);
@@ -314,7 +358,7 @@ public class BaseController {
     logger.info("############### FINISH createUserProfile.");
   }
 
-  private Map<String, String> generatePassword(String userPassword) {
+  public Map<String, String> generatePassword(String userPassword) {
     Map<String, String> passwordMap = new HashMap<String, String>();
 
     char[] password = userPassword.toCharArray();
@@ -369,30 +413,16 @@ public class BaseController {
     return isAuthenticated;
   }
 
-  //Default
-   private RiskPreference getDefaultRiskPreference() {
-     return myRiskPreferenceDAO.findById(new Long(1).longValue());
-   }
-  
-   // Default
-   private Project getDefaultProject() {
-     return myProjectDAO.findById(new Long(1).longValue());
-   }
- 
-  // @RequestMapping(method = RequestMethod.GET)
-  // public String index(ModelMap model) {
-  //
-  // //model.addAttribute("message",
-  // "Welcome to the Executive Information System (EIS) enterprise application!");
-  // model.addAttribute("message", overviewStr);
-  //
-  // //Spring uses the InternalResourceViewResolver defined in
-  // // mvc-dispatcher-servlet.xml to prepend and append onto
-  // // the view name which returns index.jsp for this scenario
-  // return "index";
-  //
-  // }
-  
+  // Default
+  public RiskPreference getDefaultRiskPreference() {
+    return myRiskPreferenceDAO.findById(new Long(1).longValue());
+  }
+
+  // Default
+  public Project getDefaultProject() {
+    return myProjectDAO.findById(new Long(1).longValue());
+  }
+
   private String overviewStr = "<p>Graham Technologies aims to provide an on-line Enterprise Governance, Risk, and Compliance (eGRC) - "
       + "Executive Information System (EIS) where risk perception is made reality to enhance enterprise-wide visibility, "
       + "collaboration & decision-making to ensure compliance. The application will assess project risks and visualize "

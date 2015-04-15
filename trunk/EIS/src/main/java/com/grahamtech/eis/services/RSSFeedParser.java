@@ -39,8 +39,8 @@ public class RSSFeedParser {
   static final String ID = "id";
   static final String CVE_ID = "cve-id";
   static final String VULNERABILITY_SOFTWARE_LIST = "product";
-  static final String PUBLISHED_DATETIME = "published-datetime";
-  static final String LAST_MODIFIED_DATETIME = "last-modified-datetime";
+  static final String PUBLISHED_DATE = "published-datetime";
+  static final String LAST_MODIFIED_DATE = "last-modified-datetime";
   static final String SCORE = "score";
   static final String ACCESS_VECTOR = "access-vector";
   static final String ACCESS_COMPLEXITY = "access-complexity";
@@ -49,7 +49,7 @@ public class RSSFeedParser {
   static final String INTEGRITY_IMPACT = "integrity-impact";
   static final String AVAILABILITY_IMPACT = "availability-impact";
   static final String SOURCE = "source";
-  static final String GENERATED_ON_DATETIME = "generated-on-datetime";
+  static final String GENERATED_ON_DATE = "generated-on-datetime";
   static final String CWE_ID = "cwe_id";
   static final String SUMMARY = "summary";
 
@@ -72,8 +72,8 @@ public class RSSFeedParser {
       String cve_id = "";
       Set<NVDEntryVulnerableSoftware> vulnerability_software_list =
           new HashSet<NVDEntryVulnerableSoftware>(); // product
-      String published_datetime = "";
-      String last_modified_datetime = "";
+      String published_date = "";
+      String last_modified_date = "";
       String score = "";
       String access_vector = "";
       String access_complexity = "";
@@ -82,7 +82,7 @@ public class RSSFeedParser {
       String integrity_impact = "";
       String availability_impact = "";
       String source = "";
-      String generated_on_datetime = "";
+      String generated_on_date = "";
       String summary = "";
 
       // First create a new XMLInputFactory
@@ -137,11 +137,11 @@ public class RSSFeedParser {
             vulnerability_software_list.add(new NVDEntryVulnerableSoftware(
                 getCharacterData(event, eventReader)));
             break;
-          case PUBLISHED_DATETIME:
-            published_datetime = getCharacterData(event, eventReader);
+          case PUBLISHED_DATE:
+            published_date = getCharacterData(event, eventReader);
             break;
-          case LAST_MODIFIED_DATETIME:
-            last_modified_datetime = getCharacterData(event, eventReader);
+          case LAST_MODIFIED_DATE:
+            last_modified_date = getCharacterData(event, eventReader);
             break;
           case SCORE:
             score = getCharacterData(event, eventReader);
@@ -167,8 +167,8 @@ public class RSSFeedParser {
           case SOURCE:
             source = getCharacterData(event, eventReader);
             break;
-          case GENERATED_ON_DATETIME:
-            generated_on_datetime = getCharacterData(event, eventReader);
+          case GENERATED_ON_DATE:
+            generated_on_date = getCharacterData(event, eventReader);
             break;
           case SUMMARY:
             summary = getCharacterData(event, eventReader);
@@ -183,20 +183,17 @@ public class RSSFeedParser {
             message.setVulnerability_software_list(vulnerability_software_list);
 
             try {
-              message.setPublished_datetime(StringUtil.stringToFormattedDate(
-                  published_datetime, ConstantsUtil.DATE_FORMAT));
+              message.setPublished_date(StringUtil.stringToFormattedDate(
+                  published_date, ConstantsUtil.DATE_FORMAT));
             } catch (ParseException e) {
-              logger.warn("Cannot parse published_datetime for " + cve_id);
-              // e.printStackTrace();
+              logger.warn("Cannot parse published_date for " + cve_id);
             }
 
             try {
-              message.setLast_modified_datetime(StringUtil
-                  .stringToFormattedDate(last_modified_datetime,
-                      ConstantsUtil.DATE_FORMAT));
+              message.setLast_modified_date(StringUtil.stringToFormattedDate(
+                  last_modified_date, ConstantsUtil.DATE_FORMAT));
             } catch (ParseException e) {
-              logger.warn("Cannot parse last_modified_datetime for " + cve_id);
-              // e.printStackTrace();
+              logger.warn("Cannot parse last_modified_date for " + cve_id);
             }
 
             message.setScore(StringUtil.stringToBigDecimal(score));
@@ -215,12 +212,10 @@ public class RSSFeedParser {
             message.setSource(source);
 
             try {
-              message.setGenerated_on_datetime(StringUtil
-                  .stringToFormattedDate(generated_on_datetime,
-                      ConstantsUtil.DATE_FORMAT));
+              message.setGenerated_on_date(StringUtil.stringToFormattedDate(
+                  generated_on_date, ConstantsUtil.DATE_FORMAT));
             } catch (ParseException e) {
-              logger.warn("Cannot parse generated_on_datetime for " + cve_id);
-              // e.printStackTrace();
+              logger.warn("Cannot parse generated_on_date for " + cve_id);
             }
 
             message.setSummary(summary);
