@@ -24,4 +24,28 @@ public enum AccessVectorEnum {
     }
     return null;
   }
+
+  public static Integer getIntCodeForEnum(AccessVectorEnum theEnum) {
+    Integer code;
+
+    switch (theEnum) {
+    case UNKNOWN:
+      code = new Integer(4);
+      break;
+    case ADJACENT_NETWORK:
+      code = new Integer(3);
+      break;
+    case NETWORK:
+      code = new Integer(2);
+      break;
+    case LOCAL:
+      code = new Integer(1);
+      break;
+    default:
+      code = new Integer(0);
+      break;
+    }
+
+    return code;
+  }
 }

@@ -798,7 +798,7 @@ public class BaseController {
   }
 
   @RequestMapping(value = RestURIConstants.DELETE_USER, method = RequestMethod.PUT)
-  public String deleteUserProfileById(@PathVariable long id,
+  public String deleteUserProfileById1(@PathVariable long id,
       @ModelAttribute("entity") UserProfile entity) {
     StringBuffer strBuffer = new StringBuffer();
     int bufferLength = strBuffer.length();
@@ -886,14 +886,6 @@ public class BaseController {
   void updateUserProfile(@PathVariable String id, @PathVariable String userEmail) {
 
     updateUser(id, userEmail);
-  }
-
-  @RequestMapping(value = RestURIConstants.DELETE_USER, method = RequestMethod.PUT)
-  public @ResponseBody
-  void createUserProfile(@PathVariable String id) {
-
-    deleteUserProfile(getUserProfile(id));
-
   }
  
   // @RequestMapping(method = RequestMethod.GET)

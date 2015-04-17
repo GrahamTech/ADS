@@ -2,6 +2,7 @@ package com.grahamtech.eis.pojos;
 
 import java.math.BigDecimal;
 import java.util.Set;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -39,6 +40,8 @@ public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
   // START RISK METRICS
   // @Column(name = "summary")
   // private String summary;
+  // @Enumerated(EnumType.STRING)
+  // private VeryHighToVeryLowEnum system_weight;
   // @Column(name = "score")
   // private BigDecimal score;
   // @Column(name = "access_vector")
@@ -194,77 +197,4 @@ public class ProjectSystem extends RiskMetrics implements java.io.Serializable {
     this.longitude = longitude;
   }
 
-  // public String getSummary() {
-  // return summary;
-  // }
-  //
-  // public void setSummary(String summary) {
-  // this.summary = summary;
-  // }
-  //
-  // public BigDecimal getScore() {
-  // return score;
-  // }
-  //
-  // public void setScore(BigDecimal score) {
-  // this.score = score;
-  // }
-  //
-  // public AccessVectorEnum getAccess_vector() {
-  // return access_vector;
-  // }
-  //
-  // public void setAccess_vector(AccessVectorEnum access_vector) {
-  // this.access_vector = access_vector;
-  // }
-  //
-  // public HighToLowEnum getAccess_complexity() {
-  // return access_complexity;
-  // }
-  //
-  // public void setAccess_complexity(HighToLowEnum access_complexity) {
-  // this.access_complexity = access_complexity;
-  // }
-  //
-  // public InstanceCountEnum getAuthentication() {
-  // return authentication;
-  // }
-  //
-  // public void setAuthentication(InstanceCountEnum authentication) {
-  // this.authentication = authentication;
-  // }
-  //
-  // public PartialToCompleteEnum getConfidentiality_impact() {
-  // return confidentiality_impact;
-  // }
-  //
-  // public void setConfidentiality_impact(
-  // PartialToCompleteEnum confidentiality_impact) {
-  // this.confidentiality_impact = confidentiality_impact;
-  // }
-  //
-  // public PartialToCompleteEnum getIntegrity_impact() {
-  // return integrity_impact;
-  // }
-  //
-  // public void setIntegrity_impact(PartialToCompleteEnum integrity_impact) {
-  // this.integrity_impact = integrity_impact;
-  // }
-  //
-  // public PartialToCompleteEnum getAvailability_impact() {
-  // return availability_impact;
-  // }
-  //
-  // public void setAvailability_impact(PartialToCompleteEnum
-  // availability_impact) {
-  // this.availability_impact = availability_impact;
-  // }
-  //
-  // public Date getLast_modified_date() {
-  // return last_modified_date;
-  // }
-  //
-  // public void setLast_modified_date(Date last_modified_date) {
-  // this.last_modified_date = last_modified_date;
-  // }
 }

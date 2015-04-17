@@ -23,4 +23,28 @@ public enum HighToLowEnum {
     }
     return null;
   }
+
+  public static Integer getIntCodeForEnum(HighToLowEnum theEnum) {
+    Integer code;
+
+    switch (theEnum) {
+    case HIGH:
+      code = new Integer(4);
+      break;
+    case MEDIUM:
+      code = new Integer(3);
+      break;
+    case LOW:
+      code = new Integer(2);
+      break;
+    case UNKNOWN:
+      code = new Integer(0);
+      break;
+    default: // UNKNOWN
+      code = new Integer(0);
+      break;
+    }
+
+    return code;
+  }
 }

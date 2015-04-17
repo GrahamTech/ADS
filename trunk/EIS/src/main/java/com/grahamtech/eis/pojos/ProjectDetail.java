@@ -28,6 +28,7 @@ import com.grahamtech.eis.utilities.enums.CountriesEnum;
 import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 import com.grahamtech.eis.utilities.enums.StrengthRatingEnum;
 import com.grahamtech.eis.utilities.enums.UsStatesEnum;
+import com.grahamtech.eis.utilities.enums.VeryHighToVeryLowEnum;
 
 @Entity
 @Table(name = "project_details")
@@ -43,13 +44,21 @@ public class ProjectDetail implements java.io.Serializable {
   private CountriesEnum country_code;
   @Enumerated(EnumType.STRING)
   private UsStatesEnum state_province;
+  private BigDecimal rollup_score;
+  private BigDecimal risk_score;
+  @Enumerated(EnumType.STRING)
+  private VeryHighToVeryLowEnum project_weight;
   private String lessons_learned;
   @Enumerated(EnumType.STRING)
   private HighToLowEnum budget_variance;
   @Enumerated(EnumType.STRING)
+  private VeryHighToVeryLowEnum budget_variance_weight;
+  @Enumerated(EnumType.STRING)
   private HighToLowEnum schedule_variance;
   @Enumerated(EnumType.STRING)
   private HighToLowEnum fte_utilization_rate_variance;
+  @Enumerated(EnumType.STRING)
+  private VeryHighToVeryLowEnum fte_utilization_rate_variance_weight;
   private BigDecimal latitude;
   private BigDecimal longitude;
   private int risk_context_plans_count;
@@ -239,4 +248,48 @@ public class ProjectDetail implements java.io.Serializable {
     return StringUtil.dateToString(this.getLast_modified_date(),
         ConstantsUtil.DATE_FORMAT);
   }
+
+  public VeryHighToVeryLowEnum getProject_weight() {
+    return project_weight;
+  }
+
+  public void setProject_weight(VeryHighToVeryLowEnum project_weight) {
+    this.project_weight = project_weight;
+  }
+
+  public VeryHighToVeryLowEnum getBudget_variance_weight() {
+    return budget_variance_weight;
+  }
+
+  public void setBudget_variance_weight(
+      VeryHighToVeryLowEnum budget_variance_weight) {
+    this.budget_variance_weight = budget_variance_weight;
+  }
+
+  public VeryHighToVeryLowEnum getFte_utilization_rate_variance_weight() {
+    return fte_utilization_rate_variance_weight;
+  }
+
+  public void setFte_utilization_rate_variance_weight(
+      VeryHighToVeryLowEnum fte_utilization_rate_variance_weight) {
+    this.fte_utilization_rate_variance_weight =
+        fte_utilization_rate_variance_weight;
+  }
+
+  public BigDecimal getRollup_score() {
+    return rollup_score;
+  }
+
+  public void setRollup_score(BigDecimal rollup_score) {
+    this.rollup_score = rollup_score;
+  }
+
+  public BigDecimal getRisk_score() {
+    return risk_score;
+  }
+
+  public void setRisk_score(BigDecimal risk_score) {
+    this.risk_score = risk_score;
+  }
+
 }
