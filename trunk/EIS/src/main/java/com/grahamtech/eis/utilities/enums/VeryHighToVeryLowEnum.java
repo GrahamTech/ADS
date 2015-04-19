@@ -25,10 +25,10 @@ public enum VeryHighToVeryLowEnum {
     return null;
   }
   
-  public static Integer getIntCodeForEnum(VeryHighToVeryLowEnum theEnum) {
+  public Integer getIntCodeForEnum() {
     Integer code;
 
-    switch (theEnum) {
+    switch (this) {
     case VERY_HIGH:
       code = new Integer(5);
       break;

@@ -14,7 +14,9 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -209,5 +211,30 @@ public final class StringUtil {
     // } catch (ParseException e) {
     // e.printStackTrace();
     // }
+  }
+
+  public static long dateDaysDiff(Date inputDate) {
+
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(new Date());
+    int todayYear = cal.get(Calendar.YEAR);
+    int todayMonth = cal.get(Calendar.MONTH);
+    int todayDay = cal.get(Calendar.DAY_OF_MONTH);
+
+    // Java has January as month 0. Let's not require that the user know.
+    Calendar today = new GregorianCalendar(todayYear, todayMonth - 1, todayDay);
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(inputDate);
+    int year = cal.get(Calendar.YEAR);
+    int month = cal.get(Calendar.MONTH);
+    int day = cal.get(Calendar.DAY_OF_MONTH);
+    Calendar myDate = new GregorianCalendar(year, month - 1, day);
+
+    double diff = today.getTimeInMillis() - myDate.getTimeInMillis();
+    diff = diff / (24 * 60 * 60 * 1000); // hours in a day, minutes in a hour,
+    // seconds in a minute, millis in a
+    // second.
+    return Math.round(diff);
   }
 }

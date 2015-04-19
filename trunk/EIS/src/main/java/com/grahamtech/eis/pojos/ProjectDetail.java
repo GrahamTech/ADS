@@ -56,6 +56,8 @@ public class ProjectDetail implements java.io.Serializable {
   @Enumerated(EnumType.STRING)
   private HighToLowEnum schedule_variance;
   @Enumerated(EnumType.STRING)
+  private VeryHighToVeryLowEnum schedule_variance_weight;
+  @Enumerated(EnumType.STRING)
   private HighToLowEnum fte_utilization_rate_variance;
   @Enumerated(EnumType.STRING)
   private VeryHighToVeryLowEnum fte_utilization_rate_variance_weight;
@@ -290,6 +292,15 @@ public class ProjectDetail implements java.io.Serializable {
 
   public void setRisk_score(BigDecimal risk_score) {
     this.risk_score = risk_score;
+  }
+
+  public VeryHighToVeryLowEnum getSchedule_variance_weight() {
+    return schedule_variance_weight;
+  }
+
+  public void setSchedule_variance_weight(
+      VeryHighToVeryLowEnum schedule_variance_weight) {
+    this.schedule_variance_weight = schedule_variance_weight;
   }
 
 }

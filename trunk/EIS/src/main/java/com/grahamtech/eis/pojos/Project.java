@@ -1,11 +1,9 @@
 package com.grahamtech.eis.pojos;
 
-//import java.util.Set;
-
-//import javax.persistence.CascadeType;
-//import javax.persistence.ElementCollection;
-//import javax.persistence.Embeddable;
+import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +20,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
 import com.grahamtech.eis.utilities.enums.StatusEnum;
 
 @Entity
@@ -62,6 +61,79 @@ public class Project implements java.io.Serializable {
 
   public Project() {
     // default constructor
+  }
+
+  public Map<RiskMetricsCalcEnum, Double> getWeightedScore() {
+    Map<RiskMetricsCalcEnum, Double> calculationMap =
+        new TreeMap<RiskMetricsCalcEnum, Double>();
+
+    Double system_score_totals = 0.0;
+    for (ProjectSystem projectSystem : this.getProjectSystemSet()) {
+      Map<RiskMetricsCalcEnum, Double> map = projectSystem.getWeightedScore();
+      system_score_totals =
+          system_score_totals + map.get(RiskMetricsCalcEnum.system_score);
+    }
+    calculationMap.put(RiskMetricsCalcEnum.system_score_totals,
+        system_score_totals);
+
+    Double project_criteria_weight_totals =
+        this.getProjectDetail().getBudget_variance_weight().getIntCodeForEnum()
+            .doubleValue()
+            + this.getProjectDetail().getSchedule_variance_weight()
+                .getIntCodeForEnum().doubleValue()
+            + this.getProjectDetail().getFte_utilization_rate_variance_weight()
+                .getIntCodeForEnum().doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.project_criteria_weight_totals,
+        project_criteria_weight_totals);
+
+    Double project_criteria_score_totals =
+        this.getProjectDetail().getBudget_variance().getIntCodeForEnum()
+            .doubleValue()
+            + this.getProjectDetail().getSchedule_variance()
+                .getIntCodeForEnum().doubleValue()
+            + this.getProjectDetail().getFte_utilization_rate_variance()
+                .getIntCodeForEnum().doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.project_criteria_score_totals,
+        project_criteria_score_totals);
+
+    Double project_criteria_weighted_score_totals =
+        (this.getProjectDetail().getBudget_variance().getIntCodeForEnum()
+            .doubleValue() * this.getProjectDetail()
+            .getBudget_variance_weight().getIntCodeForEnum().doubleValue())
+            + (this.getProjectDetail().getSchedule_variance()
+                .getIntCodeForEnum().doubleValue() * this.getProjectDetail()
+                .getSchedule_variance_weight().getIntCodeForEnum()
+                .doubleValue())
+            + (this.getProjectDetail().getFte_utilization_rate_variance()
+                .getIntCodeForEnum().doubleValue() * this.getProjectDetail()
+                .getFte_utilization_rate_variance_weight().getIntCodeForEnum()
+                .doubleValue());
+    calculationMap.put(
+        RiskMetricsCalcEnum.project_criteria_weighted_score_totals,
+        project_criteria_weighted_score_totals);
+
+    Double project_category_score =
+        project_criteria_weighted_score_totals / project_criteria_weight_totals;
+    calculationMap.put(RiskMetricsCalcEnum.project_category_score,
+        project_category_score);
+
+    Double project_project_category_weighted_score =
+        project_category_score
+            * this.getProjectDetail().getProject_weight().getIntCodeForEnum()
+                .doubleValue();
+    calculationMap.put(
+        RiskMetricsCalcEnum.project_project_category_weighted_score,
+        project_project_category_weighted_score);
+
+    Double project_rollup_score =
+        (project_project_category_weighted_score + system_score_totals) / 2;
+    calculationMap.put(RiskMetricsCalcEnum.project_rollup_score,
+        project_rollup_score);
+
+    this.getProjectDetail().setRollup_score(
+        new BigDecimal(project_rollup_score));
+
+    return calculationMap;
   }
 
   public Project(String project_name, StatusEnum project_status) {

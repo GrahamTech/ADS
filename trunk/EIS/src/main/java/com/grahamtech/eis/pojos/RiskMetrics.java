@@ -2,6 +2,8 @@ package com.grahamtech.eis.pojos;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -17,9 +19,11 @@ import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.grahamtech.eis.utilities.ConstantsUtil;
 import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.AccessVectorEnum;
+import com.grahamtech.eis.utilities.enums.DaysDiffEnum;
 import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 import com.grahamtech.eis.utilities.enums.InstanceCountEnum;
 import com.grahamtech.eis.utilities.enums.PartialToCompleteEnum;
+import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
 import com.grahamtech.eis.utilities.enums.VeryHighToVeryLowEnum;
 
 @MappedSuperclass
@@ -87,6 +91,154 @@ public abstract class RiskMetrics implements java.io.Serializable {
 
   @Enumerated(EnumType.STRING)
   private VeryHighToVeryLowEnum last_modified_date_weight;
+
+  public Map<RiskMetricsCalcEnum, Double> getWeightedScores() {
+    Map<RiskMetricsCalcEnum, Double> calculationMap =
+        new TreeMap<RiskMetricsCalcEnum, Double>();
+    Double category_weighted_score = 0.0;
+    Double category_score = 0.0;
+    Double criteria_total = 0.0;
+    Double criteria_weight_total = 0.0;
+    Double last_modified_date_overdue_weighted_score = 0.0;
+    Double availability_impact_weighted_score = 0.0;
+    Double integrity_impact_weighted_score = 0.0;
+    Double confidentiality_impact_weighted_score = 0.0;
+    Double authentication_weighted_score = 0.0;
+    Double access_complexity_weighted_score = 0.0;
+    Double access_vector_weighted_score = 0.0;
+
+    access_vector_weighted_score =
+        this.getAccess_vector_weight().getIntCodeForEnum().doubleValue()
+            * this.getAccess_vector().getIntCodeForEnum().doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.access_vector,
+        access_vector_weighted_score);
+    criteria_total = criteria_total + access_vector_weighted_score;
+    criteria_weight_total =
+        criteria_weight_total
+            + this.getAccess_vector_weight().getIntCodeForEnum().doubleValue();
+
+    access_complexity_weighted_score =
+        this.getAccess_complexity().getIntCodeForEnum().doubleValue()
+            * this.getAccess_complexity_weight().getIntCodeForEnum()
+                .doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.access_complexity,
+        access_complexity_weighted_score);
+    criteria_total = criteria_total + access_complexity_weighted_score;
+    criteria_weight_total =
+        criteria_weight_total
+            + this.getAccess_complexity().getIntCodeForEnum().doubleValue();
+
+    authentication_weighted_score =
+        this.getAuthentication().getIntCodeForEnum().doubleValue()
+            * this.getAuthentication_weight().getIntCodeForEnum().doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.authentication,
+        authentication_weighted_score);
+    criteria_total = criteria_total + authentication_weighted_score;
+    criteria_weight_total =
+        criteria_weight_total
+            + this.getAuthentication().getIntCodeForEnum().doubleValue();
+
+    confidentiality_impact_weighted_score =
+        this.getConfidentiality_impact().getIntCodeForEnum().doubleValue()
+            * this.getConfidentiality_impact_weight().getIntCodeForEnum()
+                .doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.confidentiality_impact,
+        confidentiality_impact_weighted_score);
+    criteria_total = criteria_total + confidentiality_impact_weighted_score;
+    criteria_weight_total =
+        criteria_weight_total
+            + this.getConfidentiality_impact().getIntCodeForEnum()
+                .doubleValue();
+
+    integrity_impact_weighted_score =
+        this.getIntegrity_impact().getIntCodeForEnum().doubleValue()
+            * this.getIntegrity_impact_weight().getIntCodeForEnum()
+                .doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.integrity_impact,
+        integrity_impact_weighted_score);
+    criteria_total = criteria_total + integrity_impact_weighted_score;
+    criteria_weight_total =
+        criteria_weight_total
+            + this.getIntegrity_impact().getIntCodeForEnum().doubleValue();
+
+    availability_impact_weighted_score =
+        this.getAvailability_impact().getIntCodeForEnum().doubleValue()
+            * this.getAvailability_impact_weight().getIntCodeForEnum()
+                .doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.availability_impact,
+        availability_impact_weighted_score);
+    criteria_total = criteria_total + availability_impact_weighted_score;
+    criteria_weight_total =
+        criteria_weight_total
+            + this.getAvailability_impact().getIntCodeForEnum().doubleValue();
+
+    long lastModifiedSinceDays =
+        StringUtil.dateDaysDiff(this.getLast_modified_date());
+    if (lastModifiedSinceDays < new Integer(
+        DaysDiffEnum.VERY_RECENT.getEnumString())) { // 60
+      last_modified_date_overdue_weighted_score = 0.0;
+    } else if (lastModifiedSinceDays >= new Integer(
+        DaysDiffEnum.VERY_RECENT.getEnumString()) // 60 to 80
+        && lastModifiedSinceDays < new Integer(
+            DaysDiffEnum.RECENT.getEnumString())) {
+      last_modified_date_overdue_weighted_score =
+          this.getLast_modified_date_weight().getIntCodeForEnum().doubleValue()
+              * new Integer(DaysDiffEnum.VERY_RECENT_SCORE.getEnumString());
+    } else if (lastModifiedSinceDays >= new Integer(
+        DaysDiffEnum.RECENT.getEnumString()) // 80 to 100
+        && lastModifiedSinceDays < new Integer(
+            DaysDiffEnum.LESS_RECENT.getEnumString())) {
+      last_modified_date_overdue_weighted_score =
+          this.getLast_modified_date_weight().getIntCodeForEnum().doubleValue()
+              * new Integer(DaysDiffEnum.RECENT_SCORE.getEnumString());
+    } else if (lastModifiedSinceDays >= new Integer(
+        DaysDiffEnum.LESS_RECENT.getEnumString()) // 100 to 120
+        && lastModifiedSinceDays < new Integer(
+            DaysDiffEnum.LONG_AGO.getEnumString())) {
+      last_modified_date_overdue_weighted_score =
+          this.getLast_modified_date_weight().getIntCodeForEnum().doubleValue()
+              * new Integer(DaysDiffEnum.LESS_RECENT_SCORE.getEnumString());
+    } else if (lastModifiedSinceDays >= new Integer(
+        DaysDiffEnum.LONG_AGO.getEnumString()) // 100 to 120
+        && lastModifiedSinceDays < new Integer(
+            DaysDiffEnum.VERY_LONG_AGO.getEnumString())) {
+      last_modified_date_overdue_weighted_score =
+          this.getLast_modified_date_weight().getIntCodeForEnum().doubleValue()
+              * new Integer(DaysDiffEnum.LONG_AGO_SCORE.getEnumString());
+    } else if (lastModifiedSinceDays > new Integer(
+        DaysDiffEnum.VERY_LONG_AGO.getEnumString())) {
+      last_modified_date_overdue_weighted_score =
+          this.getLast_modified_date_weight().getIntCodeForEnum().doubleValue()
+              * new Integer(DaysDiffEnum.VERY_LONG_AGO_SCORE.getEnumString());
+    }
+    calculationMap.put(RiskMetricsCalcEnum.last_modified_date_overdue,
+        last_modified_date_overdue_weighted_score);
+    criteria_total = criteria_total + last_modified_date_overdue_weighted_score;
+
+    calculationMap.put(RiskMetricsCalcEnum.criteria_total, criteria_total);
+
+    criteria_weight_total =
+        criteria_weight_total
+            + this.getLast_modified_date_weight().getIntCodeForEnum();
+
+    calculationMap.put(RiskMetricsCalcEnum.criteria_weight_total,
+        criteria_weight_total);
+
+    category_score = criteria_total / criteria_weight_total;
+
+    calculationMap.put(RiskMetricsCalcEnum.category_score, category_score);
+
+    category_weighted_score =
+        category_score
+            * this.getScore_weight().getIntCodeForEnum().doubleValue();
+    calculationMap.put(RiskMetricsCalcEnum.category_weighted_score,
+        category_weighted_score);
+
+    this.setScore(new BigDecimal(category_weighted_score));
+
+    return calculationMap;
+
+  } // end calculation
 
   public String getSummary() {
     return summary;

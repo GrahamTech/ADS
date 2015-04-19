@@ -24,10 +24,10 @@ public enum PartialToCompleteEnum {
     return null;
   }
 
-  public static Integer getIntCodeForEnum(PartialToCompleteEnum theEnum) {
+  public Integer getIntCodeForEnum() {
     Integer code;
 
-    switch (theEnum) {
+    switch (this) {
     case UNKNOWN:
       code = new Integer(4);
       break;

@@ -24,10 +24,10 @@ public enum HighToLowEnum {
     return null;
   }
 
-  public static Integer getIntCodeForEnum(HighToLowEnum theEnum) {
+  public Integer getIntCodeForEnum() {
     Integer code;
 
-    switch (theEnum) {
+    switch (this) {
     case HIGH:
       code = new Integer(4);
       break;

@@ -25,10 +25,10 @@ public enum AccessVectorEnum {
     return null;
   }
 
-  public static Integer getIntCodeForEnum(AccessVectorEnum theEnum) {
+  public Integer getIntCodeForEnum() {
     Integer code;
 
-    switch (theEnum) {
+    switch (this) {
     case UNKNOWN:
       code = new Integer(4);
       break;

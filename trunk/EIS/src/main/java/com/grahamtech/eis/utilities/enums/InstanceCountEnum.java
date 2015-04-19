@@ -25,10 +25,10 @@ public enum InstanceCountEnum {
     return null;
   }
 
-  public static Integer getIntCodeForEnum(InstanceCountEnum theEnum) {
+  public Integer getIntCodeForEnum() {
     Integer code;
 
-    switch (theEnum) {
+    switch (this) {
     case UNKNOWN:
       code = new Integer(4);
       break;
