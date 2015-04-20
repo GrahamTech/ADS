@@ -198,11 +198,20 @@ public class BaseController {
   NVDEntryMessage getNVDEntryMessageById(@PathVariable String id) {
     NVDEntryMessage message =
         myNVDEntryMessageDAO.findById(new Long(id).longValue());
+    return message;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_NVD_ENTRY_MESSAGE_SCORES, method = RequestMethod.GET)
+  public @ResponseBody
+  Map<RiskMetricsCalcEnum, Double> getNVDEntryMessageScoresById(
+      @PathVariable String id) {
+    NVDEntryMessage message =
+        myNVDEntryMessageDAO.findById(new Long(id).longValue());
 
     Map<RiskMetricsCalcEnum, Double> map =
         RiskModule.getWeightedScores_Risk(message);
 
-    return message;
+    return map;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_NVD_ENTRY_MESSAGE, method = RequestMethod.POST)
@@ -269,9 +278,19 @@ public class BaseController {
   public @ResponseBody
   Project getProjectById(@PathVariable String id) {
     Project project = myProjectDAO.findById(new Long(id).longValue());
+
+    return project;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_PROJECT_SCORES, method = RequestMethod.GET)
+  public @ResponseBody
+  Map<RiskMetricsCalcEnum, Double> getProjectScoresById(@PathVariable String id) {
+    Project project = myProjectDAO.findById(new Long(id).longValue());
+
     Map<RiskMetricsCalcEnum, Double> map =
         RiskModule.getWeightedScore_Project(project);
-    return project;
+
+    return map;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_PROJECT, method = RequestMethod.POST)
@@ -467,9 +486,20 @@ public class BaseController {
   ProjectSystem getProjectSystemById(@PathVariable String id) {
     ProjectSystem projSystem =
         myProjectSystemDAO.findById(new Long(id).longValue());
-    // Map<RiskMetricsCalcEnum, Double> map =
-    // RiskModule.getWeightedScore_System(projSystem);
     return projSystem;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_PROJECT_SYSTEM_SCORES, method = RequestMethod.GET)
+  public @ResponseBody
+  Map<RiskMetricsCalcEnum, Double> getProjectSystemScoresById(
+      @PathVariable String id) {
+    ProjectSystem projSystem =
+        myProjectSystemDAO.findById(new Long(id).longValue());
+
+    Map<RiskMetricsCalcEnum, Double> map =
+        RiskModule.getWeightedScore_System(projSystem);
+
+    return map;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_PROJECT_SYSTEM, method = RequestMethod.POST)
@@ -666,9 +696,21 @@ public class BaseController {
   SystemVulnerability getSystemVulnerabilityById(@PathVariable String id) {
     SystemVulnerability sysVul =
         mySystemVulnerabilitiesDAO.findById(new Long(id).longValue());
+
+    return sysVul;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_SYSTEM_VULNERABILITY_SCORES, method = RequestMethod.GET)
+  public @ResponseBody
+  Map<RiskMetricsCalcEnum, Double> getSystemVulnerabilityScoresById(
+      @PathVariable String id) {
+    SystemVulnerability sysVul =
+        mySystemVulnerabilitiesDAO.findById(new Long(id).longValue());
+
     Map<RiskMetricsCalcEnum, Double> map =
         RiskModule.getWeightedScores_Risk(sysVul);
-    return sysVul;
+
+    return map;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_SYSTEM_VULNERABILITY, method = RequestMethod.POST)
@@ -736,9 +778,21 @@ public class BaseController {
   SystemProduct getSystemProductById(@PathVariable String id) {
     SystemProduct sysProd =
         mySystemProductDAO.findById(new Long(id).longValue());
+
+    return sysProd;
+  }
+
+  @RequestMapping(value = RestURIConstants.GET_SYSTEM_PRODUCT_SCORES, method = RequestMethod.GET)
+  public @ResponseBody
+  Map<RiskMetricsCalcEnum, Double> getSystemProductScoresById(
+      @PathVariable String id) {
+    SystemProduct sysProd =
+        mySystemProductDAO.findById(new Long(id).longValue());
+
     Map<RiskMetricsCalcEnum, Double> map =
         RiskModule.getWeightedScores_Risk(sysProd);
-    return sysProd;
+
+    return map;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_SYSTEM_PRODUCT, method = RequestMethod.POST)

@@ -29,6 +29,8 @@ public class RestURIConstants {
   
   public static final String GET_SYSTEM_PRODUCTS = "/get/systemProducts";
   public static final String GET_SYSTEM_PRODUCT = "/get/systemProduct/{id}";
+  public static final String GET_SYSTEM_PRODUCT_SCORES =
+      "/get/systemProduct/scores/{id}";
   public static final String UPDATE_SYSTEM_PRODUCT =
       "/update/systemProduct/{id}";
   public static final String DELETE_SYSTEM_PRODUCT =
@@ -40,6 +42,8 @@ public class RestURIConstants {
       "/get/systemVulnerabilities";
   public static final String GET_SYSTEM_VULNERABILITY =
       "/get/systemVulnerability/{id}";
+  public static final String GET_SYSTEM_VULNERABILITY_SCORES =
+      "/get/systemVulnerability/scores/{id}";
   public static final String UPDATE_SYSTEM_VULNERABILITY =
       "/update/systemVulnerability/{id}";
   public static final String DELETE_SYSTEM_VULNERABILITY =
@@ -64,6 +68,8 @@ public class RestURIConstants {
 
   public static final String GET_PROJECT_SYSTEMS = "/get/projectSystems";
   public static final String GET_PROJECT_SYSTEM = "/get/projectSystem/{id}";
+  public static final String GET_PROJECT_SYSTEM_SCORES =
+      "/get/projectSystem/scores/{id}";
   public static final String UPDATE_PROJECT_SYSTEM =
       "/update/projectSystem/{id}";
   public static final String DELETE_PROJECT_SYSTEM =
@@ -90,7 +96,8 @@ public class RestURIConstants {
  "/create/projectDetail";
 
   public static final String GET_PROJECTS = "/get/projects";
-  public static final String GET_PROJECT = "/get/projects/{id}";
+  public static final String GET_PROJECT = "/get/project/{id}";
+  public static final String GET_PROJECT_SCORES = "/get/project/scores/{id}";
   public static final String UPDATE_PROJECT = "/update/projects/{id}";
   public static final String DELETE_PROJECT = "/delete/projects/{id}";
   public static final String CREATE_PROJECT = "/create/projects";
@@ -98,6 +105,8 @@ public class RestURIConstants {
   public static final String GET_NVD_ENTRY_MESSAGES = "/get/nvdEntryMessages";
   public static final String GET_NVD_ENTRY_MESSAGE =
       "/get/nvdEntryMessage/{id}";
+  public static final String GET_NVD_ENTRY_MESSAGE_SCORES =
+      "/get/nvdEntryMessage/scores/{id}";
   public static final String UPDATE_NVD_ENTRY_MESSAGE =
       "/update/nvdEntryMessage/{id}";
   public static final String DELETE_NVD_ENTRY_MESSAGE =

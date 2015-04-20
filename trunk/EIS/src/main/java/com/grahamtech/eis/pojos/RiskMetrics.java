@@ -5,6 +5,8 @@ import java.util.Date;
 //import java.util.Map;
 //import java.util.TreeMap;
 
+import java.util.Map;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -17,15 +19,18 @@ import javax.persistence.TemporalType;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.grahamtech.eis.utilities.ConstantsUtil;
+import com.grahamtech.eis.utilities.RiskModule;
 import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.AccessVectorEnum;
 //import com.grahamtech.eis.utilities.enums.DaysDiffEnum;
 import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 import com.grahamtech.eis.utilities.enums.InstanceCountEnum;
 import com.grahamtech.eis.utilities.enums.PartialToCompleteEnum;
+import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
 //import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
 import com.grahamtech.eis.utilities.enums.VeryHighToVeryLowEnum;
 
@@ -105,7 +110,16 @@ public abstract class RiskMetrics implements java.io.Serializable {
     this.summary = summary;
   }
 
+  public BigDecimal calculateScore(RiskMetrics obj) {
+    Map<RiskMetricsCalcEnum, Double> map =
+        RiskModule.getWeightedScores_Risk(obj);
+    return new BigDecimal(map.get(RiskMetricsCalcEnum.category_weighted_score));
+  }
+
   public BigDecimal getScore() {
+    if (score == null || score.doubleValue() == 0.0) {
+      score = calculateScore(this);
+    }
     return score;
   }
 

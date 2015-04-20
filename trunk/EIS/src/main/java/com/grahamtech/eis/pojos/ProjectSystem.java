@@ -2,9 +2,11 @@ package com.grahamtech.eis.pojos;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 //import java.util.Map;
 import java.util.Set;
 //import java.util.TreeMap;
+
 
 
 
@@ -37,6 +39,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 //import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.grahamtech.eis.utilities.RiskModule;
+import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
 
 @Entity
 @Table(name = "project_systems")
@@ -189,7 +193,16 @@ public class ProjectSystem implements java.io.Serializable {
     this.longitude = longitude;
   }
 
+  public BigDecimal calculateScore(ProjectSystem obj) {
+    Map<RiskMetricsCalcEnum, Double> map =
+        RiskModule.getWeightedScore_System(obj);
+    return new BigDecimal(map.get(RiskMetricsCalcEnum.system_score));
+  }
+
   public BigDecimal getScore() {
+    if (score == null || score.doubleValue() == 0.0) {
+      score = calculateScore(this);
+    }
     return score;
   }
 

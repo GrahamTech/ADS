@@ -6,7 +6,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
+//import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.grahamtech.eis.pojos.NVDEntryMessage;
 import com.grahamtech.eis.pojos.Project;
 import com.grahamtech.eis.pojos.ProjectSystem;
@@ -162,7 +162,11 @@ public final class RiskModule {
     calculationMap.put(RiskMetricsCalcEnum.criteria_weight_total,
         criteria_weight_total);
 
-    category_score = criteria_total / criteria_weight_total;
+    if (criteria_weight_total != 0) {
+      category_score = criteria_total / criteria_weight_total;
+    } else {
+      category_score = 0.0;
+    }
 
     calculationMap.put(RiskMetricsCalcEnum.category_score, category_score);
 
@@ -278,7 +282,12 @@ public final class RiskModule {
     calculationMap.put(RiskMetricsCalcEnum.system_weighted_score,
         system_weighted_score);
 
-    Double system_score = system_weighted_score / riskCount;
+    Double system_score;
+    if (riskCount != 0) {
+      system_score = system_weighted_score / riskCount;
+    } else {
+      system_score = 0.0;
+    }
     calculationMap.put(RiskMetricsCalcEnum.system_score, system_score);
 
     try {
@@ -299,7 +308,7 @@ public final class RiskModule {
     Map<RiskMetricsCalcEnum, Double> calculationMap =
         new TreeMap<RiskMetricsCalcEnum, Double>();
 
-    Double system_score_totals = 0.0;
+    Double system_score_totals = new Double(0.0);
     for (ProjectSystem projectSystem : myObj.getProjectSystemSet()) {
       Map<RiskMetricsCalcEnum, Double> map =
           RiskModule.getWeightedScore_System(projectSystem);
@@ -363,13 +372,14 @@ public final class RiskModule {
         project_rollup_score);
 
     try {
-      myObj.getProjectDetail().setRollup_score(
+      myObj.setRollup_score(
           StringUtil.formatBigDecimalFromDouble(project_rollup_score));
     } catch (NumberFormatException e) {
       logger.info("\nERROR - project_rollup_score: " + e.toString());
     }
 
-    JSONPObject jsonPObject = new JSONPObject("calculationMap", calculationMap);
+    // JSONPObject jsonPObject = new JSONPObject("calculationMap",
+    // calculationMap);
 
     return calculationMap;
   } // end getWeightedScore project

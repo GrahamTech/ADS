@@ -47,8 +47,7 @@ public class ProjectDetail implements java.io.Serializable {
   private BigDecimal latitude;
   private BigDecimal longitude;
 
-  private BigDecimal rollup_score;
-  private BigDecimal risk_score;
+  private BigDecimal risk_score; // budget, schedule, fte util
   @Enumerated(EnumType.STRING)
   private VeryHighToVeryLowEnum project_weight;
 
@@ -231,14 +230,6 @@ public class ProjectDetail implements java.io.Serializable {
         ConstantsUtil.DATE_FORMAT);
   }
 
-  public VeryHighToVeryLowEnum getProject_weight() {
-    return project_weight;
-  }
-
-  public void setProject_weight(VeryHighToVeryLowEnum project_weight) {
-    this.project_weight = project_weight;
-  }
-
   public VeryHighToVeryLowEnum getBudget_variance_weight() {
     return budget_variance_weight;
   }
@@ -256,22 +247,6 @@ public class ProjectDetail implements java.io.Serializable {
       VeryHighToVeryLowEnum fte_utilization_rate_variance_weight) {
     this.fte_utilization_rate_variance_weight =
         fte_utilization_rate_variance_weight;
-  }
-
-  public BigDecimal getRollup_score() {
-    return rollup_score;
-  }
-
-  public void setRollup_score(BigDecimal rollup_score) {
-    this.rollup_score = rollup_score;
-  }
-
-  public BigDecimal getRisk_score() {
-    return risk_score;
-  }
-
-  public void setRisk_score(BigDecimal risk_score) {
-    this.risk_score = risk_score;
   }
 
   public VeryHighToVeryLowEnum getSchedule_variance_weight() {
@@ -308,4 +283,19 @@ public class ProjectDetail implements java.io.Serializable {
     this.fte_utilization_rate_variance = fte_utilization_rate_variance;
   }
 
+  public BigDecimal getRisk_score() {
+    return risk_score;
+  }
+
+  public void setRisk_score(BigDecimal risk_score) {
+    this.risk_score = risk_score;
+  }
+
+  public VeryHighToVeryLowEnum getProject_weight() {
+    return project_weight;
+  }
+
+  public void setProject_weight(VeryHighToVeryLowEnum project_weight) {
+    this.project_weight = project_weight;
+  }
 }

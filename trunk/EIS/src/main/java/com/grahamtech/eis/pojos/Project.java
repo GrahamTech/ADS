@@ -2,8 +2,12 @@ package com.grahamtech.eis.pojos;
 
 //import java.math.BigDecimal;
 //import java.util.Map;
+import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Set;
 //import java.util.TreeMap;
+
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,13 +19,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-//import javax.persistence.Transient;
-
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.grahamtech.eis.utilities.RiskModule;
+import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
 //import com.fasterxml.jackson.databind.util.JSONPObject;
 //import com.grahamtech.eis.utilities.RiskModule;
 //import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
@@ -41,6 +42,8 @@ public class Project implements java.io.Serializable {
   private String project_name;
   @Column(name = "project_status")
   private String project_status;
+
+  private BigDecimal rollup_score;
 
   @ManyToOne
   @JoinColumn(name = "project_details_fk")
@@ -63,102 +66,10 @@ public class Project implements java.io.Serializable {
   @JoinColumn(name = "flagged_fk_project")
   @JsonBackReference
   private FlaggedAsset flaggedAsset;
-  
-  // @Transient
-  // private JSONPObject jsonPObject;
-
-  // public JSONPObject getJsonPObject() {
-  // return jsonPObject;
-  // }
-  //
-  // public void setJsonPObject(JSONPObject jsonPObject) {
-  // this.jsonPObject = jsonPObject;
-  // }
 
   public Project() {
     // default constructor
   }
-
-  // public Map<RiskMetricsCalcEnum, Double> getWeightedScore() {
-  // Map<RiskMetricsCalcEnum, Double> calculationMap =
-  // new TreeMap<RiskMetricsCalcEnum, Double>();
-  //
-  // Double system_score_totals = 0.0;
-  // for (ProjectSystem projectSystem : this.getProjectSystemSet()) {
-  // Map<RiskMetricsCalcEnum, Double> map =
-  // RiskModule.getWeightedScore_System(projectSystem);
-  // system_score_totals =
-  // system_score_totals + map.get(RiskMetricsCalcEnum.system_score);
-  // }
-  // calculationMap.put(RiskMetricsCalcEnum.system_score_totals,
-  // system_score_totals);
-  //
-  // Double project_criteria_weight_totals =
-  // this.getProjectDetail().getBudget_variance_weight().getIntCodeForEnum()
-  // .doubleValue()
-  // + this.getProjectDetail().getSchedule_variance_weight()
-  // .getIntCodeForEnum().doubleValue()
-  // + this.getProjectDetail().getFte_utilization_rate_variance_weight()
-  // .getIntCodeForEnum().doubleValue();
-  // calculationMap.put(RiskMetricsCalcEnum.project_criteria_weight_totals,
-  // project_criteria_weight_totals);
-  //
-  // Double project_criteria_score_totals =
-  // this.getProjectDetail().getBudget_variance().getIntCodeForEnum()
-  // .doubleValue()
-  // + this.getProjectDetail().getSchedule_variance()
-  // .getIntCodeForEnum().doubleValue()
-  // + this.getProjectDetail().getFte_utilization_rate_variance()
-  // .getIntCodeForEnum().doubleValue();
-  // calculationMap.put(RiskMetricsCalcEnum.project_criteria_score_totals,
-  // project_criteria_score_totals);
-  //
-  // Double project_criteria_weighted_score_totals =
-  // (this.getProjectDetail().getBudget_variance().getIntCodeForEnum()
-  // .doubleValue() * this.getProjectDetail()
-  // .getBudget_variance_weight().getIntCodeForEnum().doubleValue())
-  // + (this.getProjectDetail().getSchedule_variance()
-  // .getIntCodeForEnum().doubleValue() * this.getProjectDetail()
-  // .getSchedule_variance_weight().getIntCodeForEnum()
-  // .doubleValue())
-  // + (this.getProjectDetail().getFte_utilization_rate_variance()
-  // .getIntCodeForEnum().doubleValue() * this.getProjectDetail()
-  // .getFte_utilization_rate_variance_weight().getIntCodeForEnum()
-  // .doubleValue());
-  // calculationMap.put(
-  // RiskMetricsCalcEnum.project_criteria_weighted_score_totals,
-  // project_criteria_weighted_score_totals);
-  //
-  // Double project_category_score =
-  // project_criteria_weighted_score_totals / project_criteria_weight_totals;
-  // calculationMap.put(RiskMetricsCalcEnum.project_category_score,
-  // project_category_score);
-  //
-  // Double project_project_category_weighted_score =
-  // project_category_score
-  // * this.getProjectDetail().getProject_weight().getIntCodeForEnum()
-  // .doubleValue();
-  // calculationMap.put(
-  // RiskMetricsCalcEnum.project_project_category_weighted_score,
-  // project_project_category_weighted_score);
-  //
-  // Double project_rollup_score =
-  // (project_project_category_weighted_score + system_score_totals) / 2;
-  // calculationMap.put(RiskMetricsCalcEnum.project_rollup_score,
-  // project_rollup_score);
-  //
-  // try {
-  // this.getProjectDetail().setRollup_score(
-  // new BigDecimal(project_rollup_score));
-  // } catch (NumberFormatException e) {
-  // logger.info("\nERROR - project_rollup_score: " + e.toString());
-  // }
-  //
-  // JSONPObject jsonPObject = new JSONPObject("calculationMap",
-  // calculationMap);
-  //
-  // return calculationMap;
-  // } //end getWeightedScore project
 
   public Project(String project_name, StatusEnum project_status) {
     this.project_name = project_name;
@@ -237,6 +148,23 @@ public class Project implements java.io.Serializable {
 
   public void setUserProfileAttribute(UserProfile userProfileAttribute) {
     this.userProfileAttribute = userProfileAttribute;
+  }
+
+  public BigDecimal calculateScore(Project obj) {
+    Map<RiskMetricsCalcEnum, Double> map =
+        RiskModule.getWeightedScore_Project(obj);
+    return new BigDecimal(map.get(RiskMetricsCalcEnum.project_rollup_score));
+  }
+
+  public BigDecimal getScore() {
+    if (rollup_score == null || rollup_score.doubleValue() == 0.0) {
+      rollup_score = calculateScore(this);
+    }
+    return rollup_score;
+  }
+
+  public void setRollup_score(BigDecimal rollup_score) {
+    this.rollup_score = rollup_score;
   }
 
 }
