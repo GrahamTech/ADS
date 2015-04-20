@@ -4,30 +4,37 @@ use eisdb;
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS eisdb.nvd_entry_message;
-CREATE TABLE IF NOT EXISTS eisdb.nvd_entry_message (
-	entry_message_id int (11) NOT NULL AUTO_INCREMENT,
-	cve_id varchar (45) NOT NULL UNIQUE,
-	published_date TIMESTAMP,
-	generated_on_date TIMESTAMP,
-	source varchar (75),
-	summary varchar (775),
-	score decimal(6,2),
-	score_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK'),
-	access_vector_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW'),
-	access_complexity_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE'),
-	authentication_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	confidentiality_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	integrity_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	availability_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	last_modified_date TIMESTAMP,
-	last_modified_date_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	PRIMARY KEY (entry_message_id)
+CREATE TABLE eisdb.nvd_entry_message (
+  entry_message_id int(11) NOT NULL AUTO_INCREMENT,
+  cve_id varchar(45) NOT NULL,
+  last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  published_date timestamp NOT NULL,
+  generated_on_date timestamp NOT NULL,
+  source varchar(75) DEFAULT '',
+  summary varchar(775) DEFAULT '',
+  score decimal(6,2) DEFAULT 0.0,
+  score_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+  access_vector enum('UNKNOWN','LOCAL','NETWORK','ADJACENT_NETWORK') DEFAULT 'UNKNOWN',
+  access_vector_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+  access_complexity enum('UNKNOWN','HIGH','MEDIUM','LOW') DEFAULT 'UNKNOWN',
+  access_complexity_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+  authentication enum('UNKNOWN','NONE','SINGLE_INSTANCE','MULTIPLE_INSTANCE') DEFAULT 'UNKNOWN',
+  authentication_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+  confidentiality_impact enum('UNKNOWN','NONE','PARTIAL','COMPLETE') DEFAULT 'UNKNOWN',
+  confidentiality_impact_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+  integrity_impact enum('UNKNOWN','NONE','PARTIAL','COMPLETE') DEFAULT 'UNKNOWN',
+  integrity_impact_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+  availability_impact enum('UNKNOWN','NONE','PARTIAL','COMPLETE') DEFAULT 'UNKNOWN',
+  availability_impact_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+  last_modified_date_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+  #flagged_by_fk_nvd int(11) DEFAULT 0,
+  #system_id_fk int(11) DEFAULT 0,
+  PRIMARY KEY (entry_message_id),
+  UNIQUE KEY cve_id (cve_id)
+  #KEY flagged_by_fk_nvd (flagged_by_fk_nvd),
+  #KEY system_id_fk (system_id_fk)
+  #CONSTRAINT flagged_by_fk_nvd FOREIGN KEY (flagged_by_fk_nvd) REFERENCES flagged_assets (flagged_id),
+  #CONSTRAINT system_id_fk FOREIGN KEY (system_id_fk) REFERENCES project_systems (system_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS eisdb.nvd_entry_vulnerable_software;
@@ -44,7 +51,7 @@ CREATE TABLE IF NOT EXISTS eisdb.email_templates (
 	email_subject varchar (75) NOT NULL,
 	email_body varchar (516) NOT NULL,
 	email_from varchar (75),
-	last_modified_date TIMESTAMP,
+	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (email_template_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -53,16 +60,16 @@ CREATE TABLE IF NOT EXISTS eisdb.contact_us (
 	contact_us_id int (11) NOT NULL AUTO_INCREMENT,
 	email varchar (75) NOT NULL,
 	name varchar (45),
-	category enum ('GENERAL', 'SUGGESTION', 'BUG') NOT NULL,
+	category enum ('GENERAL', 'SUGGESTION', 'BUG') NOT NULL  default 'GENERAL',
 	user_comment varchar (256) NOT NULL,
-	last_modified_date TIMESTAMP NOT NULL,
+	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (contact_us_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS eisdb.roles;
 CREATE TABLE IF NOT EXISTS eisdb.roles (
 	role_id int (11) NOT NULL AUTO_INCREMENT,
-	role_name enum ('ADMINISTRATOR', 'EXECUTIVE', 'MANAGER', 'INTERNAL_SYSTEM', 'EXTERNAL_SYSTEM', 'READ_ONLY', 'RESTRICTED') NOT NULL,
+	role_name enum ('ADMINISTRATOR', 'EXECUTIVE', 'MANAGER', 'INTERNAL_SYSTEM', 'EXTERNAL_SYSTEM', 'READ_ONLY', 'RESTRICTED') NOT NULL default 'RESTRICTED',
 	role_description varchar (255) NOT NULL,
 	role_status enum('ACTIVE', 'INACTIVE'),
 	PRIMARY KEY (role_id)
@@ -73,7 +80,7 @@ CREATE TABLE IF NOT EXISTS eisdb.user_profiles (
 	user_profile_id int (11) NOT NULL AUTO_INCREMENT,
 	email varchar(100) NOT NULL UNIQUE,
 	primary_role varchar(45) NOT NULL,
-	login_status enum ('PENDING', 'PRELIMINARY_LOGIN', 'ACTIVE', 'INACTIVE'),
+	login_status enum ('PENDING', 'PRELIMINARY_LOGIN', 'ACTIVE', 'INACTIVE') NOT NULL default 'INACTIVE',
 	first_name varchar (45),
 	middle_name varchar (45),
 	last_name varchar (45),
@@ -93,7 +100,7 @@ CREATE TABLE IF NOT EXISTS eisdb.user_profiles (
 	challenge_question_two_answer varchar (75),
 	challenge_question_three varchar (75),
 	challenge_question_three_answer varchar (75),
-	notification_frequency enum ('OPT_OUT', 'DAILY', 'WEEKLY', 'BI_WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY'),
+	notification_frequency enum ('OPT_OUT', 'DAILY', 'WEEKLY', 'BI_WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY') NOT NULL default 'OPT_OUT',
 	PRIMARY KEY (user_profile_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -108,47 +115,49 @@ DROP TABLE IF EXISTS eisdb.risk_preferences;
 CREATE TABLE IF NOT EXISTS eisdb.risk_preferences (
 	risk_preference_id int (11) NOT NULL AUTO_INCREMENT,
 	risk_preference_name varchar (45) NOT NULL,
-	preference_status enum('ACTIVE', 'INACTIVE') NOT NULL,
-	last_modified_date TIMESTAMP NOT NULL,
+	preference_status enum('ACTIVE', 'INACTIVE') NOT NULL default 'ACTIVE',
+	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	
 	overall_project_risk_tolerance decimal(6,2),
 	overall_project_risk_weight decimal(6,2),
-	overall_project_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	overall_project_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
 	
 	project_budget_variance_tolerance decimal(6,2),
 	project_budget_variance_weight decimal(6,2),
-	project_budget_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	project_budget_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
 	
 	project_schedule_variance_tolerance decimal(6,2),
 	project_schedule_variance_weight decimal(6,2),
-	project_schedule_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	project_schedule_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
 	
 	project_fte_utilization_variance_tolerance decimal(6,2),
 	project_fte_utilization_variance_weight decimal(6,2),
-	project_fte_utilization_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	project_fte_utilization_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
 	
 	project_partner_risk_tolerance decimal(6,2),
 	project_partner_risk_weight decimal(6,2),
-	project_partner_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	project_partner_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
 	project_product_risk_tolerance decimal(6,2),
 	project_product_risk_weight decimal(6,2),
-	project_product_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	project_product_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
 	
-	score decimal(6,2),
-	score_weight decimal(6,2),
-	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK') NOT NULL,
-	access_vector_weight decimal(6,2),
-	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW') NOT NULL,
-	access_complexity_weight decimal(6,2),
-	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE') NOT NULL,
-	authentication_weight decimal(6,2),
-	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
-	confidentiality_impact_weight decimal(6,2),
-	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
-	integrity_impact_weight decimal(6,2),
-	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') NOT NULL,
-	availability_impact_weight decimal(6,2),
-	
+  source varchar(75) DEFAULT 'keyword alert',
+  summary varchar(775) DEFAULT 'keyword alert',
+  score decimal(6,2) DEFAULT 0.0,
+  score_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
+  access_vector enum('UNKNOWN','LOCAL','NETWORK','ADJACENT_NETWORK') NOT NULL DEFAULT 'UNKNOWN',
+  access_vector_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
+  access_complexity enum('UNKNOWN','HIGH','MEDIUM','LOW') NOT NULL DEFAULT 'UNKNOWN',
+  access_complexity_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
+  authentication enum('UNKNOWN','NONE','SINGLE_INSTANCE','MULTIPLE_INSTANCE') NOT NULL DEFAULT 'UNKNOWN',
+  authentication_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
+  confidentiality_impact enum('UNKNOWN','NONE','PARTIAL','COMPLETE') NOT NULL DEFAULT 'UNKNOWN',
+  confidentiality_impact_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
+  integrity_impact enum('UNKNOWN','NONE','PARTIAL','COMPLETE') NOT NULL DEFAULT 'UNKNOWN',
+  integrity_impact_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
+  availability_impact enum('UNKNOWN','NONE','PARTIAL','COMPLETE') NOT NULL DEFAULT 'UNKNOWN',
+  availability_impact_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
+  last_modified_date_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
 	PRIMARY KEY (risk_preference_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -156,7 +165,7 @@ DROP TABLE IF EXISTS eisdb.projects;
 CREATE TABLE IF NOT EXISTS eisdb.projects (
 	project_id int (11) NOT NULL AUTO_INCREMENT,
 	project_name varchar (75) NOT NULL UNIQUE,
-	project_status enum ('ACTIVE', 'ARCHIVED'),
+	project_status enum ('ACTIVE', 'ARCHIVED') default 'ACTIVE',
 	PRIMARY KEY (project_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -164,29 +173,29 @@ DROP TABLE IF EXISTS eisdb.project_details;
 CREATE TABLE IF NOT EXISTS eisdb.project_details (
 	project_details_id int (11) NOT NULL AUTO_INCREMENT,
 	org_details varchar (255) NOT NULL,
-	country_code enum('USA'),
-	state_province enum ('AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MH', 'MA', 'MI', 'FM', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'VI', 'WA', 'WV', 'WI', 'WY'),
+	country_code enum('USA') default 'USA',
+	state_province enum ('AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MH', 'MA', 'MI', 'FM', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'VI', 'WA', 'WV', 'WI', 'WY') default 'MD',
 	lessons_learned varchar (516),
 	rollup_score decimal(6,2),
 	risk_score decimal(6,2),
-	project_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	budget_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN'),
-	budget_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	schedule_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN'),
-	schedule_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	fte_utilization_rate_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN'),
-	fte_utilization_rate_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
+	project_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	budget_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') default 'UNKNOWN',
+	budget_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	schedule_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') default 'UNKNOWN',
+	schedule_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	fte_utilization_rate_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') default 'UNKNOWN',
+	fte_utilization_rate_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
 	latitude decimal(18,14),
 	longitude decimal(18,14),
 	risk_context_plans_count int (11),
-	risk_context_plans_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH'),
+	risk_context_plans_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH') default 'GAP',
 	risk_identification_plans_count int (11),
-	risk_identification_plans_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH'),
+	risk_identification_plans_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH') default 'GAP',
 	risk_analysis_plans_count int (11),
-	risk_analysis_plans_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH'),
+	risk_analysis_plans_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH') default 'GAP',
 	risk_plans_communicated_count int (11),
-	risk_plans_communicated_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH'),
-	last_modified_date TIMESTAMP NOT NULL,
+	risk_plans_communicated_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH') default 'GAP',
+	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (project_details_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -196,24 +205,10 @@ CREATE TABLE IF NOT EXISTS eisdb.project_systems (
 	system_name varchar (75) NOT NULL,
 	latitude decimal(18,14),
 	longitude decimal(18,14),
-	#Roll-up Metrics
-	summary varchar (255),
 	score decimal(6,2),
-	score_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK'),
-	access_vector_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW'),
-	access_complexity_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE'),
-	authentication_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	confidentiality_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	integrity_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	availability_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	last_modified_date TIMESTAMP,
-	last_modified_date_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
+	score_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+	summary varchar (255),
+	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (system_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -224,7 +219,7 @@ CREATE TABLE IF NOT EXISTS eisdb.project_partners (
 	project_partner_details varchar (255) NOT NULL,
 	on_site enum('ACTIVE', 'INACTIVE') NOT NULL,
 	project_participation_status enum('PENDING', 'ACTIVE', 'INACTIVE') NOT NULL,
-	last_modified_date TIMESTAMP NOT NULL,
+	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	score decimal(6,2),
 	corp_leadership_history_rating enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
 	financial_viability_rating enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
@@ -241,28 +236,28 @@ DROP TABLE IF EXISTS eisdb.system_products;
 CREATE TABLE IF NOT EXISTS eisdb.system_products (
 	product_id int (11) NOT NULL AUTO_INCREMENT,
 	product_name varchar (75) NOT NULL,
-	product_state enum ('ACTIVE', 'ARCHIVED') NOT NULL,
+	product_state enum ('ACTIVE', 'ARCHIVED') NOT NULL default 'ACTIVE',
 	lessons_learned varchar (516),
-	published_date TIMESTAMP,
-	generated_on_date TIMESTAMP,
+	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	published_date TIMESTAMP NOT NULL,
+	generated_on_date TIMESTAMP NOT NULL,
 	source varchar (75),
 	summary varchar (775),
 	score decimal(6,2),
-	score_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK'),
-	access_vector_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW'),
-	access_complexity_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE'),
-	authentication_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	confidentiality_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	integrity_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	availability_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	last_modified_date TIMESTAMP,
-	last_modified_date_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
+	score_weight enum ('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK') default 'UNKNOWN',
+	access_vector_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW') default 'UNKNOWN',
+	access_complexity_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE') default 'UNKNOWN',
+	authentication_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') default 'UNKNOWN',
+	confidentiality_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') default 'UNKNOWN',
+	integrity_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') default 'UNKNOWN',
+	availability_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	last_modified_date_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
 	PRIMARY KEY (product_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -270,28 +265,28 @@ DROP TABLE IF EXISTS eisdb.system_vulnerabilities;
 CREATE TABLE IF NOT EXISTS eisdb.system_vulnerabilities (
 	vulnerability_id int (11) NOT NULL AUTO_INCREMENT,
 	vulnerability_name varchar (75) NOT NULL,
-	vulnerability_type enum('API_Abuse', 'Authentication', 'Authorization', 'Availability', 'Code_Permission', 'Code_Quality', 'Configuration', 'Cryptographic', 'Encoding', 'Environmental', 'Error_Handling', 'General_Logic_Error', 'Input_Validation', 'Logging_and_Auditing', 'Password_Management', 'Path', 'Protocol_Errors', 'Range_and_Type_Error', 'Sensitive_Data_Protection', 'Session_Management', 'Synchronization_and_Timing', 'Unsafe_Mobile_Code', 'Use_of_Dangerous_API', 'Unknown') NOT NULL,
+	vulnerability_type enum('API_Abuse', 'Authentication', 'Authorization', 'Availability', 'Code_Permission', 'Code_Quality', 'Configuration', 'Cryptographic', 'Encoding', 'Environmental', 'Error_Handling', 'General_Logic_Error', 'Input_Validation', 'Logging_and_Auditing', 'Password_Management', 'Path', 'Protocol_Errors', 'Range_and_Type_Error', 'Sensitive_Data_Protection', 'Session_Management', 'Synchronization_and_Timing', 'Unsafe_Mobile_Code', 'Use_of_Dangerous_API', 'UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
 	lessons_learned varchar (516),
-	published_date TIMESTAMP,
-	generated_on_date TIMESTAMP,
+	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	published_date TIMESTAMP NOT NULL,
+	generated_on_date TIMESTAMP NOT NULL,
 	source varchar (75),
 	summary varchar (775),
 	score decimal(6,2),
-	score_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK'),
-	access_vector_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW'),
-	access_complexity_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE'),
-	authentication_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	confidentiality_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	integrity_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE'),
-	availability_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
-	last_modified_date TIMESTAMP,
-	last_modified_date_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN'),
+	score_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	access_vector enum ('UNKNOWN', 'LOCAL', 'NETWORK', 'ADJACENT_NETWORK') default 'UNKNOWN',
+	access_vector_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	access_complexity enum ('UNKNOWN', 'HIGH', 'MEDIUM', 'LOW') default 'UNKNOWN',
+	access_complexity_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	authentication enum ('UNKNOWN', 'NONE', 'SINGLE_INSTANCE', 'MULTIPLE_INSTANCE') default 'UNKNOWN',
+	authentication_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	confidentiality_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') default 'UNKNOWN',
+	confidentiality_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	integrity_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') default 'UNKNOWN',
+	integrity_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	availability_impact enum ('UNKNOWN', 'NONE', 'PARTIAL', 'COMPLETE') default 'UNKNOWN',
+	availability_impact_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
+	last_modified_date_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
 	PRIMARY KEY (vulnerability_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -299,9 +294,9 @@ DROP TABLE IF EXISTS eisdb.flagged_assets;
 CREATE TABLE IF NOT EXISTS eisdb.flagged_assets (
 	flagged_id int (11) NOT NULL AUTO_INCREMENT,
 	flagged_reason varchar (255) NOT NULL,
-	flagged_risk_state enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	flagged_risk_state enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
 	flagged_date TIMESTAMP NOT NULL,
-	unflagged_risk_state enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL,
+	unflagged_risk_state enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
 	unflagged_date TIMESTAMP NOT NULL,
 	PRIMARY KEY (flagged_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -490,8 +485,8 @@ VALUES
 '1',
 '1');
 
-INSERT INTO `eisdb`.`risk_preferences` (`risk_preference_id`, `risk_preference_name`, `preference_status`, `last_modified_date`, `overall_project_risk_tolerance`, `overall_project_risk_weight`, `overall_project_risk_priority`, `project_budget_variance_tolerance`, `project_budget_variance_weight`, `project_budget_variance_priority`, `project_schedule_variance_tolerance`, `project_schedule_variance_weight`, `project_schedule_variance_priority`, `project_fte_utilization_variance_tolerance`, `project_fte_utilization_variance_weight`, `project_fte_utilization_variance_priority`, `project_partner_risk_tolerance`, `project_partner_risk_weight`, `project_partner_risk_priority`, `project_product_risk_tolerance`, `project_product_risk_weight`, `project_product_risk_priority`, `risk_preference_owner_fk`, `last_modified_by_fk`, `project_fk_prefs`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`) VALUES ('1', 'Risk Name 001', 'ACTIVE', '20150101', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '1', '1', '1', '.70', '.25', 'ADJACENT_NETWORK', '.0', 'HIGH', '.05', 'MULTIPLE_INSTANCE', '.20', 'COMPLETE', '.20', 'COMPLETE', '.20', 'COMPLETE', '.10');
-INSERT INTO `eisdb`.`risk_preferences` (`risk_preference_id`, `risk_preference_name`, `preference_status`, `last_modified_date`, `overall_project_risk_tolerance`, `overall_project_risk_weight`, `overall_project_risk_priority`, `project_budget_variance_tolerance`, `project_budget_variance_weight`, `project_budget_variance_priority`, `project_schedule_variance_tolerance`, `project_schedule_variance_weight`, `project_schedule_variance_priority`, `project_fte_utilization_variance_tolerance`, `project_fte_utilization_variance_weight`, `project_fte_utilization_variance_priority`, `project_partner_risk_tolerance`, `project_partner_risk_weight`, `project_partner_risk_priority`, `project_product_risk_tolerance`, `project_product_risk_weight`, `project_product_risk_priority`, `risk_preference_owner_fk`, `last_modified_by_fk`, `project_fk_prefs`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`) VALUES ('2', 'Risk Name 001', 'INACTIVE', '20150101', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '1', '1', '1', '.70', '.25', 'ADJACENT_NETWORK', '.0', 'HIGH', '.05', 'MULTIPLE_INSTANCE', '.20', 'COMPLETE', '.20', 'COMPLETE', '.20', 'COMPLETE', '.10');
+INSERT INTO `eisdb`.`risk_preferences` (`risk_preference_id`, `risk_preference_name`, `preference_status`, `last_modified_date`, `last_modified_date_weight`, `overall_project_risk_tolerance`, `overall_project_risk_weight`, `overall_project_risk_priority`, `project_budget_variance_tolerance`, `project_budget_variance_weight`, `project_budget_variance_priority`, `project_schedule_variance_tolerance`, `project_schedule_variance_weight`, `project_schedule_variance_priority`, `project_fte_utilization_variance_tolerance`, `project_fte_utilization_variance_weight`, `project_fte_utilization_variance_priority`, `project_partner_risk_tolerance`, `project_partner_risk_weight`, `project_partner_risk_priority`, `project_product_risk_tolerance`, `project_product_risk_weight`, `project_product_risk_priority`, `risk_preference_owner_fk`, `last_modified_by_fk`, `project_fk_prefs`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`) VALUES ('1', 'Risk Name 001', 'ACTIVE', '20150101', 'MEDIUM', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '1', '1', '1', '.70', 'MEDIUM', 'ADJACENT_NETWORK', 'MEDIUM', 'HIGH', 'MEDIUM', 'MULTIPLE_INSTANCE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM');
+INSERT INTO `eisdb`.`risk_preferences` (`risk_preference_id`, `risk_preference_name`, `preference_status`, `last_modified_date`, `last_modified_date_weight`, `overall_project_risk_tolerance`, `overall_project_risk_weight`, `overall_project_risk_priority`, `project_budget_variance_tolerance`, `project_budget_variance_weight`, `project_budget_variance_priority`, `project_schedule_variance_tolerance`, `project_schedule_variance_weight`, `project_schedule_variance_priority`, `project_fte_utilization_variance_tolerance`, `project_fte_utilization_variance_weight`, `project_fte_utilization_variance_priority`, `project_partner_risk_tolerance`, `project_partner_risk_weight`, `project_partner_risk_priority`, `project_product_risk_tolerance`, `project_product_risk_weight`, `project_product_risk_priority`, `risk_preference_owner_fk`, `last_modified_by_fk`, `project_fk_prefs`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`) VALUES ('2', 'Risk Name 001', 'INACTIVE', '20150101', 'MEDIUM', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '1', '1', '1', '.70', 'MEDIUM', 'ADJACENT_NETWORK', 'MEDIUM', 'HIGH', 'MEDIUM', 'MULTIPLE_INSTANCE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM');
 
 INSERT INTO `eisdb`.`projects` (`project_id`, `project_name`, `project_status`, `flagged_fk_project`, `user_profile_fk`, `project_details_fk`) VALUES ('1', 'Project A', 'ACTIVE', '1', '1', '1');
 INSERT INTO `eisdb`.`projects` (`project_id`, `project_name`, `project_status`, `flagged_fk_project`, `user_profile_fk`, `project_details_fk`) VALUES ('2', 'Project B', 'ACTIVE', '1', '1', '2');
@@ -499,17 +494,26 @@ INSERT INTO `eisdb`.`projects` (`project_id`, `project_name`, `project_status`, 
 INSERT INTO `eisdb`.`project_details` (`project_details_id`, `org_details`, `country_code`, `state_province`, `rollup_score`, `risk_score`, `project_weight`, `lessons_learned`, `budget_variance`, `budget_variance_weight`, `schedule_variance`, `schedule_variance_weight`, `fte_utilization_rate_variance`, `fte_utilization_rate_variance_weight`, `latitude`, `longitude`, `risk_context_plans_count`, `risk_context_plans_rating`, `risk_identification_plans_count`, `risk_identification_plans_rating`, `risk_analysis_plans_count`, `risk_analysis_plans_rating`, `risk_plans_communicated_count`, `risk_plans_communicated_rating`, `last_modified_date`, `last_modified_by_fk_details`, `primary_poc_manager_fk`, `primary_poc_executive_fk`) VALUES ('1', 'project A details', 'USA', 'MD', '2.0', '4.2', 'MEDIUM', 'my lessons learned', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '20150101', '1', '1', '1');
 INSERT INTO `eisdb`.`project_details` (`project_details_id`, `org_details`, `country_code`, `state_province`, `rollup_score`, `risk_score`, `project_weight`, `lessons_learned`, `budget_variance`, `budget_variance_weight`, `schedule_variance`, `schedule_variance_weight`, `fte_utilization_rate_variance`, `fte_utilization_rate_variance_weight`, `latitude`, `longitude`, `risk_context_plans_count`, `risk_context_plans_rating`, `risk_identification_plans_count`, `risk_identification_plans_rating`, `risk_analysis_plans_count`, `risk_analysis_plans_rating`, `risk_plans_communicated_count`, `risk_plans_communicated_rating`, `last_modified_date`, `last_modified_by_fk_details`, `primary_poc_manager_fk`, `primary_poc_executive_fk`) VALUES ('2', 'project B details', 'USA', 'VA', '2.0', '2.2', 'MEDIUM', 'my lessons learned', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '20150101', '1', '1', '1');
 
-INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('1', 'Partner A', 'partner B details', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
-INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('2', 'Partner B', 'partner B details', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
+INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `score`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('1', 'Partner A', 'partner B details', '2.22', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
+INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `score`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('2', 'Partner B', 'partner B details', '2.22', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
 
 INSERT INTO `eisdb`.`project_systems` (`system_id`, `system_name`, `summary`, `last_modified_date`, `score`, `score_weight`, `latitude`, `longitude`, `flagged_by_fk_systems`, `project_fk_systems`, `last_modified_by_fk_systems`) VALUES ('1', 'System A', 'System A description', '20150101', '1.2', 'MEDIUM', '38.8981', '77.0208', '1', '1', '1');
 INSERT INTO `eisdb`.`project_systems` (`system_id`, `system_name`, `summary`, `last_modified_date`, `score`, `score_weight`, `latitude`, `longitude`, `flagged_by_fk_systems`, `project_fk_systems`, `last_modified_by_fk_systems`) VALUES ('2', 'System B', 'System B description', '20150101', '1.2', 'MEDIUM', '38.8981', '77.0208', '1', '1', '1');
 
-INSERT INTO `eisdb`.`flagged_assets` (`flagged_id`, `flagged_reason`, `flagged_risk_state`, `flagged_date`, `unflagged_risk_state`, `unflagged_date`, `flagged_by_fk_assets`, `unflagged_by_fk_assets`) VALUES ('1', 'Schedule needs attention', 'HIGH', '20150101', 'unknown', '20150101', '1', '');
-INSERT INTO `eisdb`.`flagged_assets` (`flagged_id`, `flagged_reason`, `flagged_risk_state`, `flagged_date`, `unflagged_risk_state`, `unflagged_date`, `flagged_by_fk_assets`, `unflagged_by_fk_assets`) VALUES ('2', 'Schedule needs attention', 'HIGH', '20150101', 'unknown', '20150101', '1', '');
+INSERT INTO `eisdb`.`flagged_assets` (`flagged_id`, `flagged_reason`, `flagged_risk_state`, `flagged_date`, `unflagged_risk_state`, `unflagged_date`, `flagged_by_fk_assets`, `unflagged_by_fk_assets`) VALUES ('1', 'Schedule needs attention', 'HIGH', '20150101', 'UNKNOWN', '20150101', '1', '');
+INSERT INTO `eisdb`.`flagged_assets` (`flagged_id`, `flagged_reason`, `flagged_risk_state`, `flagged_date`, `unflagged_risk_state`, `unflagged_date`, `flagged_by_fk_assets`, `unflagged_by_fk_assets`) VALUES ('2', 'Schedule needs attention', 'HIGH', '20150101', 'UNKNOWN', '20150101', '1', '');
 
 INSERT INTO `eisdb`.`email_templates` (`email_template_id`, `email_template_name`, `email_subject`, `email_body`, `email_from`, `last_modified_date`) VALUES ('1', 'New Account Request', 'New EIS Account Request', 'Please create an account for user X given justification XYZ', 'somePerson@xyz.com', '20150101');
 
 INSERT INTO `eisdb`.`contact_us` (`contact_us_id`, `email`, `name`, `category`, `user_comment`, `last_modified_date`) VALUES ('1', 'somePerson@xyz.com', 'Person A', 'comment', 'Great system. Very useful.', '20150101');
+
+INSERT INTO `eisdb`.`nvd_entry_message` (`entry_message_id`, `cve_id`, `published_date`, `generated_on_date`, `source`, `summary`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`, `last_modified_date`, `last_modified_date_weight`, `flagged_by_fk_nvd`, `system_id_fk`)
+VALUES ('1', 'CVE-2001-0922', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+'http://nvd.nist.gov',
+'McAfee ePolicy Orchestrator (ePO) before 4.6.9 and 5.x before 5.1.2 uses the same secret key across different customers installations, which allows attackers to obtain the administrator password by leveraging knowledge of the encrypted password.',
+'2.29', 'MEDIUM', 'LOCAL', 'MEDIUM', 'HIGH', 'MEDIUM', 'NONE', 'MEDIUM', 'PARTIAL', 'MEDIUM', 'PARTIAL', 'MEDIUM', 'COMPLETE', 'MEDIUM', CURRENT_TIMESTAMP, 'MEDIUM', '1', '1');
+
+INSERT INTO `eisdb`.`nvd_entry_vulnerable_software` (`vulnerable_software_id`, `vulnerable_software_name`, `entry_message_id_fk`)
+VALUES ('1', 'Test Vulnerability Name 001', '1');
 
 SET FOREIGN_KEY_CHECKS = 1;

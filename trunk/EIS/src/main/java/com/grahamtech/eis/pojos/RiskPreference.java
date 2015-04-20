@@ -2,7 +2,6 @@ package com.grahamtech.eis.pojos;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,11 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.grahamtech.eis.utilities.ConstantsUtil;
 import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.HighToLowEnum;
@@ -24,7 +18,7 @@ import com.grahamtech.eis.utilities.enums.StatusEnum;
 
 @Entity
 @Table(name = "risk_preferences")
-public class RiskPreference implements Serializable {
+public class RiskPreference extends RiskMetrics implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -35,10 +29,6 @@ public class RiskPreference implements Serializable {
   private String risk_preference_name;
   @Enumerated(EnumType.STRING)
   private StatusEnum preference_status;
-  @Column(name = "last_modified_date", columnDefinition = "DATETIME")
-  @Temporal(TemporalType.TIMESTAMP)
-  @JsonSerialize(using = DateSerializer.class)
-  private Date last_modified_date;
   private BigDecimal overall_project_risk_tolerance;
   private BigDecimal overall_project_risk_weight;
   @Enumerated(EnumType.STRING)
@@ -86,14 +76,6 @@ public class RiskPreference implements Serializable {
 
   public void setPreference_status(StatusEnum preference_status) {
     this.preference_status = preference_status;
-  }
-
-  public Date getLast_modified_date() {
-    return last_modified_date;
-  }
-
-  public void setLast_modified_date(Date last_modified_date) {
-    this.last_modified_date = last_modified_date;
   }
 
   public BigDecimal getOverall_project_risk_tolerance() {

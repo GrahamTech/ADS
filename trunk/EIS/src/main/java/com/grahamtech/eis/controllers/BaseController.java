@@ -19,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
+
 import com.grahamtech.eis.daos.MyFlaggedAssetsDAO;
 import com.grahamtech.eis.daos.MyNVDEntryMessageDAO;
 import com.grahamtech.eis.daos.MyProjectDAO;
@@ -52,7 +54,9 @@ import com.grahamtech.eis.pojos.SystemVulnerability;
 //import com.grahamtech.eis.pojos.SystemProduct;
 //import com.grahamtech.eis.pojos.SystemVulnerability;
 import com.grahamtech.eis.pojos.UserProfile;
+import com.grahamtech.eis.utilities.RiskModule;
 import com.grahamtech.eis.utilities.StringUtil;
+import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
 //import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.RolesEnum;
 
@@ -192,7 +196,13 @@ public class BaseController {
   @RequestMapping(value = RestURIConstants.GET_NVD_ENTRY_MESSAGE, method = RequestMethod.GET)
   public @ResponseBody
   NVDEntryMessage getNVDEntryMessageById(@PathVariable String id) {
-    return myNVDEntryMessageDAO.findById(new Long(id).longValue());
+    NVDEntryMessage message =
+        myNVDEntryMessageDAO.findById(new Long(id).longValue());
+
+    Map<RiskMetricsCalcEnum, Double> map =
+        RiskModule.getWeightedScores_Risk(message);
+
+    return message;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_NVD_ENTRY_MESSAGE, method = RequestMethod.POST)
@@ -258,7 +268,10 @@ public class BaseController {
   @RequestMapping(value = RestURIConstants.GET_PROJECT, method = RequestMethod.GET)
   public @ResponseBody
   Project getProjectById(@PathVariable String id) {
-    return myProjectDAO.findById(new Long(id).longValue());
+    Project project = myProjectDAO.findById(new Long(id).longValue());
+    Map<RiskMetricsCalcEnum, Double> map =
+        RiskModule.getWeightedScore_Project(project);
+    return project;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_PROJECT, method = RequestMethod.POST)
@@ -452,7 +465,11 @@ public class BaseController {
   @RequestMapping(value = RestURIConstants.GET_PROJECT_SYSTEM, method = RequestMethod.GET)
   public @ResponseBody
   ProjectSystem getProjectSystemById(@PathVariable String id) {
-    return myProjectSystemDAO.findById(new Long(id).longValue());
+    ProjectSystem projSystem =
+        myProjectSystemDAO.findById(new Long(id).longValue());
+    // Map<RiskMetricsCalcEnum, Double> map =
+    // RiskModule.getWeightedScore_System(projSystem);
+    return projSystem;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_PROJECT_SYSTEM, method = RequestMethod.POST)
@@ -647,7 +664,11 @@ public class BaseController {
   @RequestMapping(value = RestURIConstants.GET_SYSTEM_VULNERABILITY, method = RequestMethod.GET)
   public @ResponseBody
   SystemVulnerability getSystemVulnerabilityById(@PathVariable String id) {
-    return mySystemVulnerabilitiesDAO.findById(new Long(id).longValue());
+    SystemVulnerability sysVul =
+        mySystemVulnerabilitiesDAO.findById(new Long(id).longValue());
+    Map<RiskMetricsCalcEnum, Double> map =
+        RiskModule.getWeightedScores_Risk(sysVul);
+    return sysVul;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_SYSTEM_VULNERABILITY, method = RequestMethod.POST)
@@ -713,7 +734,11 @@ public class BaseController {
   @RequestMapping(value = RestURIConstants.GET_SYSTEM_PRODUCT, method = RequestMethod.GET)
   public @ResponseBody
   SystemProduct getSystemProductById(@PathVariable String id) {
-    return mySystemProductDAO.findById(new Long(id).longValue());
+    SystemProduct sysProd =
+        mySystemProductDAO.findById(new Long(id).longValue());
+    Map<RiskMetricsCalcEnum, Double> map =
+        RiskModule.getWeightedScores_Risk(sysProd);
+    return sysProd;
   }
 
   @RequestMapping(value = RestURIConstants.UPDATE_SYSTEM_PRODUCT, method = RequestMethod.POST)

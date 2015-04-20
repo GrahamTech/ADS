@@ -46,36 +46,6 @@ public class SystemProduct extends RiskMetrics implements java.io.Serializable {
   @Column(name = "source")
   private String source;
 
-  // START RISK METRICS
-  // @Column(name = "summary")
-  // private String summary;
-  // @Column(name = "score")
-  // private BigDecimal score;
-  // @Column(name = "access_vector")
-  // @Enumerated(EnumType.STRING)
-  // private AccessVectorEnum access_vector; // access-vector
-  // @Column(name = "access_complexity")
-  // @Enumerated(EnumType.STRING)
-  // private HighToLowEnum access_complexity; // access-complexity
-  // @Column(name = "authentication")
-  // @Enumerated(EnumType.STRING)
-  // private InstanceCountEnum authentication; // authentication
-  // @Column(name = "confidentiality_impact")
-  // @Enumerated(EnumType.STRING)
-  // private PartialToCompleteEnum confidentiality_impact; //
-  // confidentiality-impact
-  // @Column(name = "integrity_impact")
-  // @Enumerated(EnumType.STRING)
-  // private PartialToCompleteEnum integrity_impact; // integrity-impact
-  // @Column(name = "availability_impact")
-  // @Enumerated(EnumType.STRING)
-  // private PartialToCompleteEnum availability_impact; // availability-impact
-  // @Column(name = "last_modified_date", columnDefinition = "DATETIME")
-  // @Temporal(TemporalType.TIMESTAMP)
-  // @JsonSerialize(using = DateSerializer.class)
-  // private Date last_modified_date; // last-modified-datetime
-  // END RISK METRICS
-
   @Column(name = "generated_on_date", columnDefinition = "DATETIME")
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)

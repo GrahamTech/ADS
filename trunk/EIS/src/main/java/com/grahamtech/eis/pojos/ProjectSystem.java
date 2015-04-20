@@ -1,9 +1,12 @@
 package com.grahamtech.eis.pojos;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.Date;
+//import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+//import java.util.TreeMap;
+
+
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -21,15 +24,27 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
+//import com.grahamtech.eis.utilities.RiskModule;
+//import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 
 @Entity
 @Table(name = "project_systems")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Access(AccessType.FIELD)
 public class ProjectSystem implements java.io.Serializable {
+  // private static final Logger logger = LoggerFactory
+  // .getLogger(ProjectSystem.class);
 
   private static final long serialVersionUID = 1L;
   @Id
@@ -39,40 +54,12 @@ public class ProjectSystem implements java.io.Serializable {
   private String system_name;
   private BigDecimal latitude;
   private BigDecimal longitude;
-  @Column(name = "score")
+  private String summary;
   private BigDecimal score;
-
-  // START RISK METRICS
-  // @Column(name = "summary")
-  // private String summary;
-  // @Enumerated(EnumType.STRING)
-  // private VeryHighToVeryLowEnum system_weight;
-  // @Column(name = "score")
-  // private BigDecimal score;
-  // @Column(name = "access_vector")
-  // @Enumerated(EnumType.STRING)
-  // private AccessVectorEnum access_vector; // access-vector
-  // @Column(name = "access_complexity")
-  // @Enumerated(EnumType.STRING)
-  // private HighToLowEnum access_complexity; // access-complexity
-  // @Column(name = "authentication")
-  // @Enumerated(EnumType.STRING)
-  // private InstanceCountEnum authentication; // authentication
-  // @Column(name = "confidentiality_impact")
-  // @Enumerated(EnumType.STRING)
-  // private PartialToCompleteEnum confidentiality_impact; //
-  // confidentiality-impact
-  // @Column(name = "integrity_impact")
-  // @Enumerated(EnumType.STRING)
-  // private PartialToCompleteEnum integrity_impact; // integrity-impact
-  // @Column(name = "availability_impact")
-  // @Enumerated(EnumType.STRING)
-  // private PartialToCompleteEnum availability_impact; // availability-impact
-  // @Column(name = "last_modified_date", columnDefinition = "DATETIME")
-  // @Temporal(TemporalType.TIMESTAMP)
-  // @JsonSerialize(using = DateSerializer.class)
-  // private Date last_modified_date; // last-modified-datetime
-  // END RISK METRICS
+  @Column(name = "last_modified_date", columnDefinition = "DATETIME")
+  @Temporal(TemporalType.TIMESTAMP)
+  @JsonSerialize(using = DateSerializer.class)
+  private Date last_modified_date;
 
   @ManyToOne
   @JoinColumn(name = "project_fk_systems", insertable = false, updatable = false)
@@ -103,102 +90,6 @@ public class ProjectSystem implements java.io.Serializable {
 
   public ProjectSystem() {
     // default constructor
-  }
-
-  public Map<RiskMetricsCalcEnum, Double> getWeightedScore() {
-    Map<RiskMetricsCalcEnum, Double> calculationMap =
-        new TreeMap<RiskMetricsCalcEnum, Double>();
-
-    int riskCount = 0;
-    Double system_categories_weighted_totals = 0.0;
-    Double category_weight_totals_nvd = 0.0;
-    Double category_weight_totals_vul = 0.0;
-    Double category_weight_totals_prod = 0.0;
-    Double category_score_totals = 0.0;
-    Double category_weighted_score_totals = 0.0;
-
-    for (NVDEntryMessage nvdEntryMessage : this.getSystemNVDEntryMessageSet()) {
-      Map<RiskMetricsCalcEnum, Double> map =
-          nvdEntryMessage.getWeightedScores();
-      
-      if (category_weight_totals_nvd == 0.0) {
-        // will be the same so only do it once.
-        category_weight_totals_nvd =
-            map.get(RiskMetricsCalcEnum.criteria_weight_total);
-      }
-
-      category_score_totals =
-          category_score_totals
-              + map.get(RiskMetricsCalcEnum.category_score_totals);
-
-      category_weighted_score_totals =
-          category_weighted_score_totals
-              + map.get(RiskMetricsCalcEnum.category_weighted_score_totals);
-
-      riskCount++;
-    }// end for each
-
-    for (SystemProduct systemProduct : this.getSystemProductSet()) {
-      Map<RiskMetricsCalcEnum, Double> map = systemProduct.getWeightedScores();
-
-      if (category_weight_totals_prod == 0) {
-        // will be the same so only do it once.
-        category_weight_totals_prod =
-            map.get(RiskMetricsCalcEnum.criteria_weight_total);
-      }
-
-      category_score_totals =
-          category_score_totals
-              + map.get(RiskMetricsCalcEnum.category_score_totals);
-
-      category_weighted_score_totals =
-          category_weighted_score_totals
-              + map.get(RiskMetricsCalcEnum.category_weighted_score_totals);
-
-      riskCount++;
-    }// end for each
-
-    for (SystemVulnerability systemVulnerability : this
-        .getSystemVulnerabilitySet()) {
-      Map<RiskMetricsCalcEnum, Double> map =
-          systemVulnerability.getWeightedScores();
-
-      if (category_weight_totals_vul == 0) {
-        // will be the same so only do it once.
-        category_weight_totals_vul =
-            map.get(RiskMetricsCalcEnum.criteria_weight_total);
-      }
-
-      category_score_totals =
-          category_score_totals
-              + map.get(RiskMetricsCalcEnum.category_score_totals);
-
-      category_weighted_score_totals =
-          category_weighted_score_totals
-              + map.get(RiskMetricsCalcEnum.category_weighted_score_totals);
-
-      riskCount++;
-    }// end for each
-
-    system_categories_weighted_totals =
-        category_weight_totals_nvd + category_weight_totals_prod
-            + category_weight_totals_vul;
-    calculationMap.put(RiskMetricsCalcEnum.system_categories_weighted_totals, system_categories_weighted_totals);
-    
-    calculationMap.put(RiskMetricsCalcEnum.category_score_totals, category_score_totals);
-    
-    calculationMap.put(RiskMetricsCalcEnum.category_weighted_score_totals, category_weighted_score_totals);
-    
-    Double system_weighted_score =
-        category_weighted_score_totals * system_categories_weighted_totals;
-    calculationMap.put(RiskMetricsCalcEnum.system_weighted_score, system_weighted_score);
-    
-    Double system_score = system_weighted_score / riskCount;
-    calculationMap.put(RiskMetricsCalcEnum.system_score, system_score);
-
-    this.setScore(new BigDecimal(system_score));
-
-    return calculationMap;
   }
 
   public ProjectSystem(String system_name) {
@@ -304,6 +195,22 @@ public class ProjectSystem implements java.io.Serializable {
 
   public void setScore(BigDecimal score) {
     this.score = score;
+  }
+
+  public String getSummary() {
+    return summary;
+  }
+
+  public void setSummary(String summary) {
+    this.summary = summary;
+  }
+
+  public Date getLast_modified_date() {
+    return last_modified_date;
+  }
+
+  public void setLast_modified_date(Date last_modified_date) {
+    this.last_modified_date = last_modified_date;
   }
 
 }

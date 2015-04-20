@@ -237,4 +237,23 @@ public final class StringUtil {
     // second.
     return Math.round(diff);
   }
+
+  public static BigDecimal formatBigDecimalFromDouble(Double theDouble) {
+    int decimalPlaces = 2;
+    BigDecimal bd = new BigDecimal(theDouble);
+
+    // setScale is immutable
+    bd = bd.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+    return bd;
+  }
+
+  public static Double formatDoubleFromBigDecimal(BigDecimal bd) {
+    int decimalPlaces = 2;
+
+    // setScale is immutable
+    bd = bd.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+    Double formattedDouble = bd.doubleValue();
+
+    return formattedDouble;
+  }
 }
