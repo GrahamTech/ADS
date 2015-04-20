@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.grahamtech.eis.utilities.ConstantsUtil;
 import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.CountriesEnum;
-import com.grahamtech.eis.utilities.enums.HighToLowEnum;
 import com.grahamtech.eis.utilities.enums.StrengthRatingEnum;
 import com.grahamtech.eis.utilities.enums.UsStatesEnum;
 import com.grahamtech.eis.utilities.enums.VeryHighToVeryLowEnum;
@@ -44,37 +43,43 @@ public class ProjectDetail implements java.io.Serializable {
   private CountriesEnum country_code;
   @Enumerated(EnumType.STRING)
   private UsStatesEnum state_province;
+  private String lessons_learned;
+  private BigDecimal latitude;
+  private BigDecimal longitude;
+
   private BigDecimal rollup_score;
   private BigDecimal risk_score;
   @Enumerated(EnumType.STRING)
   private VeryHighToVeryLowEnum project_weight;
-  private String lessons_learned;
-  @Enumerated(EnumType.STRING)
-  private HighToLowEnum budget_variance;
+
+  private BigDecimal budget_variance; // dollars
   @Enumerated(EnumType.STRING)
   private VeryHighToVeryLowEnum budget_variance_weight;
-  @Enumerated(EnumType.STRING)
-  private HighToLowEnum schedule_variance;
+
+  private BigDecimal schedule_variance; // days
   @Enumerated(EnumType.STRING)
   private VeryHighToVeryLowEnum schedule_variance_weight;
-  @Enumerated(EnumType.STRING)
-  private HighToLowEnum fte_utilization_rate_variance;
+
+  private BigDecimal fte_utilization_rate_variance; // percent
   @Enumerated(EnumType.STRING)
   private VeryHighToVeryLowEnum fte_utilization_rate_variance_weight;
-  private BigDecimal latitude;
-  private BigDecimal longitude;
+
   private int risk_context_plans_count;
   @Enumerated(EnumType.STRING)
   public StrengthRatingEnum risk_context_plans_rating;
+
   private int risk_identification_plans_count;
   @Enumerated(EnumType.STRING)
   public StrengthRatingEnum risk_identification_plans_rating;
+
   private int risk_analysis_plans_count;
   @Enumerated(EnumType.STRING)
   public StrengthRatingEnum risk_analysis_plans_rating;
+
   private int risk_plans_communicated_count;
   @Enumerated(EnumType.STRING)
   public StrengthRatingEnum risk_plans_communicated_rating;
+
   @Column(name = "last_modified_date", columnDefinition = "DATETIME")
   @Temporal(TemporalType.TIMESTAMP)
   @JsonSerialize(using = DateSerializer.class)
@@ -122,31 +127,6 @@ public class ProjectDetail implements java.io.Serializable {
 
   public void setLessons_learned(String lessons_learned) {
     this.lessons_learned = lessons_learned;
-  }
-
-  public HighToLowEnum getBudget_variance() {
-    return budget_variance;
-  }
-
-  public void setBudget_variance(HighToLowEnum budget_variance) {
-    this.budget_variance = budget_variance;
-  }
-
-  public HighToLowEnum getSchedule_variance() {
-    return schedule_variance;
-  }
-
-  public void setSchedule_variance(HighToLowEnum schedule_variance) {
-    this.schedule_variance = schedule_variance;
-  }
-
-  public HighToLowEnum getFte_utilization_rate_variance() {
-    return fte_utilization_rate_variance;
-  }
-
-  public void setFte_utilization_rate_variance(
-      HighToLowEnum fte_utilization_rate_variance) {
-    this.fte_utilization_rate_variance = fte_utilization_rate_variance;
   }
 
   public BigDecimal getLatitude() {
@@ -301,6 +281,31 @@ public class ProjectDetail implements java.io.Serializable {
   public void setSchedule_variance_weight(
       VeryHighToVeryLowEnum schedule_variance_weight) {
     this.schedule_variance_weight = schedule_variance_weight;
+  }
+
+  public BigDecimal getBudget_variance() {
+    return budget_variance;
+  }
+
+  public void setBudget_variance(BigDecimal budget_variance) {
+    this.budget_variance = budget_variance;
+  }
+
+  public BigDecimal getSchedule_variance() {
+    return schedule_variance;
+  }
+
+  public void setSchedule_variance(BigDecimal schedule_variance) {
+    this.schedule_variance = schedule_variance;
+  }
+
+  public BigDecimal getFte_utilization_rate_variance() {
+    return fte_utilization_rate_variance;
+  }
+
+  public void setFte_utilization_rate_variance(
+      BigDecimal fte_utilization_rate_variance) {
+    this.fte_utilization_rate_variance = fte_utilization_rate_variance;
   }
 
 }

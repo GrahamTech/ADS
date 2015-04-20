@@ -119,27 +119,22 @@ CREATE TABLE IF NOT EXISTS eisdb.risk_preferences (
 	last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	
 	overall_project_risk_tolerance decimal(6,2),
-	overall_project_risk_weight decimal(6,2),
-	overall_project_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
+	overall_project_risk_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
 	
 	project_budget_variance_tolerance decimal(6,2),
-	project_budget_variance_weight decimal(6,2),
-	project_budget_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
+	project_budget_variance_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
 	
 	project_schedule_variance_tolerance decimal(6,2),
-	project_schedule_variance_weight decimal(6,2),
-	project_schedule_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
+	project_schedule_variance_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
 	
 	project_fte_utilization_variance_tolerance decimal(6,2),
-	project_fte_utilization_variance_weight decimal(6,2),
-	project_fte_utilization_variance_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
+	project_fte_utilization_variance_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
 	
 	project_partner_risk_tolerance decimal(6,2),
-	project_partner_risk_weight decimal(6,2),
-	project_partner_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
+	project_partner_risk_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
+	
 	project_product_risk_tolerance decimal(6,2),
-	project_product_risk_weight decimal(6,2),
-	project_product_risk_priority enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') NOT NULL default 'UNKNOWN',
+	project_product_risk_weight enum('VERY_HIGH','HIGH','MEDIUM','LOW','VERY_LOW','UNKNOWN') DEFAULT 'UNKNOWN',
 	
   source varchar(75) DEFAULT 'keyword alert',
   summary varchar(775) DEFAULT 'keyword alert',
@@ -176,17 +171,19 @@ CREATE TABLE IF NOT EXISTS eisdb.project_details (
 	country_code enum('USA') default 'USA',
 	state_province enum ('AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MH', 'MA', 'MI', 'FM', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'VI', 'WA', 'WV', 'WI', 'WY') default 'MD',
 	lessons_learned varchar (516),
+	latitude decimal(18,14),
+	longitude decimal(18,14),
+	
 	rollup_score decimal(6,2),
 	risk_score decimal(6,2),
 	project_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
-	budget_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') default 'UNKNOWN',
+	budget_variance decimal(6,2),
 	budget_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
-	schedule_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') default 'UNKNOWN',
+	schedule_variance decimal(6,2),
 	schedule_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
-	fte_utilization_rate_variance enum('HIGH', 'MEDIUM', 'LOW', 'UNKNOWN') default 'UNKNOWN',
+	fte_utilization_rate_variance decimal(6,2),
 	fte_utilization_rate_variance_weight enum('VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW', 'UNKNOWN') default 'UNKNOWN',
-	latitude decimal(18,14),
-	longitude decimal(18,14),
+	
 	risk_context_plans_count int (11),
 	risk_context_plans_rating enum ('GAP', 'VULNERABILITY', 'STRENGTH') default 'GAP',
 	risk_identification_plans_count int (11),
@@ -485,14 +482,18 @@ VALUES
 '1',
 '1');
 
-INSERT INTO `eisdb`.`risk_preferences` (`risk_preference_id`, `risk_preference_name`, `preference_status`, `last_modified_date`, `last_modified_date_weight`, `overall_project_risk_tolerance`, `overall_project_risk_weight`, `overall_project_risk_priority`, `project_budget_variance_tolerance`, `project_budget_variance_weight`, `project_budget_variance_priority`, `project_schedule_variance_tolerance`, `project_schedule_variance_weight`, `project_schedule_variance_priority`, `project_fte_utilization_variance_tolerance`, `project_fte_utilization_variance_weight`, `project_fte_utilization_variance_priority`, `project_partner_risk_tolerance`, `project_partner_risk_weight`, `project_partner_risk_priority`, `project_product_risk_tolerance`, `project_product_risk_weight`, `project_product_risk_priority`, `risk_preference_owner_fk`, `last_modified_by_fk`, `project_fk_prefs`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`) VALUES ('1', 'Risk Name 001', 'ACTIVE', '20150101', 'MEDIUM', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '1', '1', '1', '.70', 'MEDIUM', 'ADJACENT_NETWORK', 'MEDIUM', 'HIGH', 'MEDIUM', 'MULTIPLE_INSTANCE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM');
-INSERT INTO `eisdb`.`risk_preferences` (`risk_preference_id`, `risk_preference_name`, `preference_status`, `last_modified_date`, `last_modified_date_weight`, `overall_project_risk_tolerance`, `overall_project_risk_weight`, `overall_project_risk_priority`, `project_budget_variance_tolerance`, `project_budget_variance_weight`, `project_budget_variance_priority`, `project_schedule_variance_tolerance`, `project_schedule_variance_weight`, `project_schedule_variance_priority`, `project_fte_utilization_variance_tolerance`, `project_fte_utilization_variance_weight`, `project_fte_utilization_variance_priority`, `project_partner_risk_tolerance`, `project_partner_risk_weight`, `project_partner_risk_priority`, `project_product_risk_tolerance`, `project_product_risk_weight`, `project_product_risk_priority`, `risk_preference_owner_fk`, `last_modified_by_fk`, `project_fk_prefs`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`) VALUES ('2', 'Risk Name 001', 'INACTIVE', '20150101', 'MEDIUM', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '.50', '.50', 'low', '.50', '.50', 'MEDIUM', '.50', '.50', 'HIGH', '1', '1', '1', '.70', 'MEDIUM', 'ADJACENT_NETWORK', 'MEDIUM', 'HIGH', 'MEDIUM', 'MULTIPLE_INSTANCE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM');
+INSERT INTO `eisdb`.`risk_preferences` (`risk_preference_id`, `risk_preference_name`, `preference_status`, `last_modified_date`, `last_modified_date_weight`, `overall_project_risk_tolerance`, `overall_project_risk_weight`, `project_budget_variance_tolerance`, `project_budget_variance_weight`, `project_schedule_variance_tolerance`, `project_schedule_variance_weight`, `project_fte_utilization_variance_tolerance`, `project_fte_utilization_variance_weight`, `project_partner_risk_tolerance`, `project_partner_risk_weight`, `project_product_risk_tolerance`, `project_product_risk_weight`, `risk_preference_owner_fk`, `last_modified_by_fk`, `project_fk_prefs`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`)
+VALUES ('1', 'Risk Name 001', 'ACTIVE', '20150101', 'MEDIUM', '.10', 'MEDIUM', '.20', 'MEDIUM', '.30', 'MEDIUM', '.40', 'MEDIUM', '.50', 'MEDIUM', '.60', 'MEDIUM', '1', '1', '1', '.70', 'MEDIUM', 'ADJACENT_NETWORK', 'MEDIUM', 'HIGH', 'MEDIUM', 'MULTIPLE_INSTANCE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM');
+INSERT INTO `eisdb`.`risk_preferences` (`risk_preference_id`, `risk_preference_name`, `preference_status`, `last_modified_date`, `last_modified_date_weight`, `overall_project_risk_tolerance`, `overall_project_risk_weight`, `project_budget_variance_tolerance`, `project_budget_variance_weight`, `project_schedule_variance_tolerance`, `project_schedule_variance_weight`, `project_fte_utilization_variance_tolerance`, `project_fte_utilization_variance_weight`, `project_partner_risk_tolerance`, `project_partner_risk_weight`, `project_product_risk_tolerance`, `project_product_risk_weight`, `risk_preference_owner_fk`, `last_modified_by_fk`, `project_fk_prefs`, `score`, `score_weight`, `access_vector`, `access_vector_weight`, `access_complexity`, `access_complexity_weight`, `authentication`, `authentication_weight`, `confidentiality_impact`, `confidentiality_impact_weight`, `integrity_impact`, `integrity_impact_weight`, `availability_impact`, `availability_impact_weight`)
+VALUES ('2', 'Risk Name 002', 'INACTIVE', '20150101', 'MEDIUM', '.10', 'MEDIUM', '.20', 'MEDIUM', '.30', 'MEDIUM', '.40', 'MEDIUM', '.50', 'MEDIUM', '.60', 'MEDIUM', '1', '1', '1', '.70', 'MEDIUM', 'ADJACENT_NETWORK', 'MEDIUM', 'HIGH', 'MEDIUM', 'MULTIPLE_INSTANCE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM', 'COMPLETE', 'MEDIUM');
 
 INSERT INTO `eisdb`.`projects` (`project_id`, `project_name`, `project_status`, `flagged_fk_project`, `user_profile_fk`, `project_details_fk`) VALUES ('1', 'Project A', 'ACTIVE', '1', '1', '1');
 INSERT INTO `eisdb`.`projects` (`project_id`, `project_name`, `project_status`, `flagged_fk_project`, `user_profile_fk`, `project_details_fk`) VALUES ('2', 'Project B', 'ACTIVE', '1', '1', '2');
 
-INSERT INTO `eisdb`.`project_details` (`project_details_id`, `org_details`, `country_code`, `state_province`, `rollup_score`, `risk_score`, `project_weight`, `lessons_learned`, `budget_variance`, `budget_variance_weight`, `schedule_variance`, `schedule_variance_weight`, `fte_utilization_rate_variance`, `fte_utilization_rate_variance_weight`, `latitude`, `longitude`, `risk_context_plans_count`, `risk_context_plans_rating`, `risk_identification_plans_count`, `risk_identification_plans_rating`, `risk_analysis_plans_count`, `risk_analysis_plans_rating`, `risk_plans_communicated_count`, `risk_plans_communicated_rating`, `last_modified_date`, `last_modified_by_fk_details`, `primary_poc_manager_fk`, `primary_poc_executive_fk`) VALUES ('1', 'project A details', 'USA', 'MD', '2.0', '4.2', 'MEDIUM', 'my lessons learned', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '20150101', '1', '1', '1');
-INSERT INTO `eisdb`.`project_details` (`project_details_id`, `org_details`, `country_code`, `state_province`, `rollup_score`, `risk_score`, `project_weight`, `lessons_learned`, `budget_variance`, `budget_variance_weight`, `schedule_variance`, `schedule_variance_weight`, `fte_utilization_rate_variance`, `fte_utilization_rate_variance_weight`, `latitude`, `longitude`, `risk_context_plans_count`, `risk_context_plans_rating`, `risk_identification_plans_count`, `risk_identification_plans_rating`, `risk_analysis_plans_count`, `risk_analysis_plans_rating`, `risk_plans_communicated_count`, `risk_plans_communicated_rating`, `last_modified_date`, `last_modified_by_fk_details`, `primary_poc_manager_fk`, `primary_poc_executive_fk`) VALUES ('2', 'project B details', 'USA', 'VA', '2.0', '2.2', 'MEDIUM', 'my lessons learned', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '38.8981', '77.0208', '1', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '20150101', '1', '1', '1');
+INSERT INTO `eisdb`.`project_details` (`project_details_id`, `org_details`, `country_code`, `state_province`, `rollup_score`, `risk_score`, `project_weight`, `lessons_learned`, `budget_variance`, `budget_variance_weight`, `schedule_variance`, `schedule_variance_weight`, `fte_utilization_rate_variance`, `fte_utilization_rate_variance_weight`, `latitude`, `longitude`, `risk_context_plans_count`, `risk_context_plans_rating`, `risk_identification_plans_count`, `risk_identification_plans_rating`, `risk_analysis_plans_count`, `risk_analysis_plans_rating`, `risk_plans_communicated_count`, `risk_plans_communicated_rating`, `last_modified_date`, `last_modified_by_fk_details`, `primary_poc_manager_fk`, `primary_poc_executive_fk`)
+VALUES ('1', 'project A details', 'USA', 'MD', '2.0', '4.2', 'MEDIUM', 'my lessons learned', '1123.22', 'MEDIUM', '-14', 'MEDIUM', '.70', 'MEDIUM', '38.8981', '77.0208', '1', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '20150101', '1', '1', '1');
+INSERT INTO `eisdb`.`project_details` (`project_details_id`, `org_details`, `country_code`, `state_province`, `rollup_score`, `risk_score`, `project_weight`, `lessons_learned`, `budget_variance`, `budget_variance_weight`, `schedule_variance`, `schedule_variance_weight`, `fte_utilization_rate_variance`, `fte_utilization_rate_variance_weight`, `latitude`, `longitude`, `risk_context_plans_count`, `risk_context_plans_rating`, `risk_identification_plans_count`, `risk_identification_plans_rating`, `risk_analysis_plans_count`, `risk_analysis_plans_rating`, `risk_plans_communicated_count`, `risk_plans_communicated_rating`, `last_modified_date`, `last_modified_by_fk_details`, `primary_poc_manager_fk`, `primary_poc_executive_fk`)
+VALUES ('2', 'project B details', 'USA', 'VA', '2.0', '2.2', 'MEDIUM', 'my lessons learned', '125,000', 'MEDIUM', '7', 'MEDIUM', '.35', 'MEDIUM', '38.8981', '77.0208', '1', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '3', 'STRENGTH', '20150101', '1', '1', '1');
 
 INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `score`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('1', 'Partner A', 'partner B details', '2.22', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
 INSERT INTO `eisdb`.`project_partners` (`project_partner_id`, `project_partner_name`, `project_partner_details`, `score`, `on_site`, `project_participation_status`, `lessons_learned`, `last_modified_date`, `corp_leadership_history_rating`, `financial_viability_rating`, `market_and_labeling_rating`, `physical_security_rating`, `cyber_security_rating`, `insider_threat_rating`, `regional_stability_rating`, `flagged_by_fk_partners`, `last_modified_by_fk_partners`, `project_fk_partners`) VALUES ('2', 'Partner B', 'partner B details', '2.22', 'ACTIVE', 'ACTIVE', 'my lessons learned', '20150101', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', 'MEDIUM', '1', '1', '1');
