@@ -80,7 +80,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Controller
-// @RequestMapping("/")
+@RequestMapping("/gt")
 public class BaseController {
   private static final Logger logger = LoggerFactory
       .getLogger(BaseController.class);
@@ -110,6 +110,36 @@ public class BaseController {
 
   @Autowired
   private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
+
+  @RequestMapping(value = RestURIConstants.PROJECTS_HOME, method = RequestMethod.GET)
+  public ModelAndView projectsIndex() {
+    ModelAndView model = new ModelAndView("/projects/index");
+    return model;
+  }
+
+  @RequestMapping(value = RestURIConstants.PRODUCTS_HOME, method = RequestMethod.GET)
+  public ModelAndView productIndex() {
+    ModelAndView model = new ModelAndView("/products/index");
+    return model;
+  }
+
+  @RequestMapping(value = RestURIConstants.RISK_ANALYSIS_HOME, method = RequestMethod.GET)
+  public ModelAndView riskAnalysisIndex() {
+    ModelAndView model = new ModelAndView("/riskAnalysis/index");
+    return model;
+  }
+
+  @RequestMapping(value = RestURIConstants.GEOSPATIAL_HOME, method = RequestMethod.GET)
+  public ModelAndView geospatialIndex() {
+    ModelAndView model = new ModelAndView("/geospatial/index");
+    return model;
+  }
+
+  @RequestMapping(value = RestURIConstants.METRICS_HOME, method = RequestMethod.GET)
+  public ModelAndView metricsIndex() {
+    ModelAndView model = new ModelAndView("/metrics/index");
+    return model;
+  }
 
   @RequestMapping(value = RestURIConstants.GET_FLAGGED_ASSETS, method = RequestMethod.GET)
   public @ResponseBody

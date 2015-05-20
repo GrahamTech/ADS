@@ -151,4 +151,10 @@ public class RestURIConstants {
   // FileUpload Controller
   public static final String FILE_UPLOAD = "/fileupload";
   
+  public static final String PROJECTS_HOME = "/projects";
+  public static final String PRODUCTS_HOME = "/products";
+  public static final String RISK_ANALYSIS_HOME = "/riskAnalysis";
+  public static final String GEOSPATIAL_HOME = "/geospatial";
+  public static final String METRICS_HOME = "/metrics";
+
 }

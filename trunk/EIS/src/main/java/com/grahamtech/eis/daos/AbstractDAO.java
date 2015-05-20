@@ -57,7 +57,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   public T findById(final Long id) {
     log.debug("About to find instance of " + entityClass + " with id: " + id);
     try {
-      final T instance = (T) getHibernateTemplate().get(this.entityClass, id);
+      final T instance = getHibernateTemplate().get(this.entityClass, id);
       return instance;
     } catch (final RuntimeException re) {
       log.error(
@@ -105,7 +105,7 @@ public class AbstractDAO<T> extends HibernateDaoSupport implements IDAO<T> {
   public T merge(final T detachedInstance) throws RuntimeException {
     log.debug("Merging instance of type " + entityClass);
     try {
-      final T result = (T) getHibernateTemplate().merge(detachedInstance);
+      final T result = getHibernateTemplate().merge(detachedInstance);
       log.debug("Merged succesfully");
       return result;
     } catch (final RuntimeException re) {

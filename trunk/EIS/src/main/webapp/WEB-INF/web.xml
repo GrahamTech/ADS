@@ -15,9 +15,20 @@
 			org.springframework.web.servlet.DispatcherServlet
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
-		<async-supported>true</async-supported>
+ 		<async-supported>true</async-supported>
 	</servlet>
  
+	<!-- <servlet>
+	    <servlet-name>Resource Servlet</servlet-name>
+	    <servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
+	    <load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+	    <servlet-name>Resource Servlet</servlet-name>
+	    <url-pattern>/resources/**</url-pattern>
+	</servlet-mapping> -->
+	
 	<servlet-mapping>
 		<servlet-name>mvc-dispatcher</servlet-name>
 		<url-pattern>/</url-pattern>
@@ -28,6 +39,27 @@
 		<param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
 	</context-param>
  
+ <!-- <servlet-mapping>
+  <servlet-name>default</servlet-name>
+  <url-pattern>*.css</url-pattern>
+ </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.js</url-pattern>
+ </servlet-mapping>
+ 
+ <servlet-mapping>
+  <servlet-name>default</servlet-name>
+  <url-pattern>*.png</url-pattern>
+ </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.html</url-pattern>
+ </servlet-mapping> -->
+ 
+	
 	<listener>
 		<listener-class>
 			org.springframework.web.context.ContextLoaderListener
