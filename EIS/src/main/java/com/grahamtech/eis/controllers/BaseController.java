@@ -1,6 +1,7 @@
 package com.grahamtech.eis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 //import org.springframework.beans.factory.annotation.Autowired;
+
+
+
 
 
 
@@ -32,6 +36,7 @@ import com.grahamtech.eis.daos.MyRolesDAO;
 import com.grahamtech.eis.daos.MySystemProductDAO;
 import com.grahamtech.eis.daos.MySystemVulnerabilitiesDAO;
 import com.grahamtech.eis.daos.MyUserProfileDAO;
+import com.grahamtech.eis.pojos.AdverseReactions;
 import com.grahamtech.eis.pojos.FlaggedAsset;
 import com.grahamtech.eis.pojos.NVDEntryMessage;
 import com.grahamtech.eis.pojos.Project;
@@ -54,6 +59,7 @@ import com.grahamtech.eis.pojos.SystemVulnerability;
 //import com.grahamtech.eis.pojos.SystemProduct;
 //import com.grahamtech.eis.pojos.SystemVulnerability;
 import com.grahamtech.eis.pojos.UserProfile;
+import com.grahamtech.eis.services.RestClient;
 import com.grahamtech.eis.utilities.RiskModule;
 import com.grahamtech.eis.utilities.StringUtil;
 import com.grahamtech.eis.utilities.enums.RiskMetricsCalcEnum;
@@ -63,6 +69,7 @@ import com.grahamtech.eis.utilities.enums.RolesEnum;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 //import java.security.GeneralSecurityException;
 //import java.util.HashMap;
 //import java.util.HashSet;
@@ -110,6 +117,35 @@ public class BaseController {
 
   @Autowired
   private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
+
+    // http://localhost:8080/EIS/gt/get/drug/events
+  // https://api.fda.gov/drug/event.json
+    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS, method = RequestMethod.GET)
+  public @ResponseBody
+    ResponseEntity<String> getAdverseReactionsCount() {
+    RestClient restClient = new RestClient();
+
+    // String fromStringDate_yyyyMMdd = "20140101";
+    // String toStringDate_yyyyMMdd = "20150101";
+    // String queryString =
+    // "?search=receivedate:[" + fromStringDate_yyyyMMdd + "+TO+"
+    // + toStringDate_yyyyMMdd + "]&count=receivedate";
+	// String queryString =
+	// "?search=patient.drug.openfda.pharm_class_epc:"
+	// + "nonsteroidal%2Banti-inflammatory%2Bdrug"
+	// + "&count=patient.reaction.reactionmeddrapt.exact";
+	String queryString = "";
+    String externalURL =
+        RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+            + queryString;
+
+	ResponseEntity<String> events =
+ restClient.getDrugEvents_display(
+		externalURL,
+            RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+
+    return events;
+  }
 
   @RequestMapping(value = RestURIConstants.PROJECTS_HOME, method = RequestMethod.GET)
   public ModelAndView projectsIndex() {

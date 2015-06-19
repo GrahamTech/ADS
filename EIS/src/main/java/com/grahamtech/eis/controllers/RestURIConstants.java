@@ -11,6 +11,12 @@ public class RestURIConstants {
    * /user/delete/{id} PUT To delete the Employee object from the data storage
    * based on the id
    */
+    public static final String GET_DRUG_EVENTS = "/get/drug/events";
+  public static final String ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL =
+      "https://api.fda.gov/drug/event.json";
+  public static final String ADVERSE_DRUG_EVENT_REPORTS_API_KEY =
+      "YQG9X0JzsVSlL7WE8vx9KNiXM3jpyZz1jbhqpTGu";
+  
   public static final String GET_PROFILES = "/get/profiles";
   public static final String GET_PROFILE = "/get/profile/{id}";
   public static final String UPDATE_PROFILE = "/update/profile/{id}";
