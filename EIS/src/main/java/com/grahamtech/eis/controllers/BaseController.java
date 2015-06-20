@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
 import com.grahamtech.eis.daos.MyFlaggedAssetsDAO;
 import com.grahamtech.eis.daos.MyNVDEntryMessageDAO;
 import com.grahamtech.eis.daos.MyProjectDAO;
@@ -119,18 +120,32 @@ public class BaseController {
   @Autowired
   private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
 
-    // http://localhost:8080/EIS/gt/get/drug/events/store
+    // http://localhost:8080/EIS/gt/get/drug/events/3
     // https://api.fda.gov/drug/event.json
-    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_STORE_AND_DISPLAY, method = RequestMethod.GET)
+    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS, method = RequestMethod.GET)
     public @ResponseBody
-    AdverseDrugEvent getAdverseDrugEventsStoreAndReturnJSON() {
+    AdverseDrugEvent getAdverseDrugEventsStoreAndReturnJSON(
+	    @PathVariable String rowLimit) {
 	RestClient restClient = new RestClient();
-	String queryString = "";
+	String queryString = "?limit=" + rowLimit;
 	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
 		+ queryString;
-	AdverseDrugEvent events = restClient
-		.getDrugEvents_storeAndDisplay_object(externalURL,
-			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+	AdverseDrugEvent events = restClient.getDrugEvents(externalURL);
+	return events;
+    }
+
+    // http://localhost:8080/EIS/gt/get/drug/events/apikey/3
+    // https://api.fda.gov/drug/event.json
+    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY, method = RequestMethod.GET)
+    public @ResponseBody
+    AdverseDrugEvent getAdverseDrugEvents_apiKey(@PathVariable String rowLimit) {
+	RestClient restClient = new RestClient();
+	String queryString = "?limit=" + rowLimit;
+	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+		+ queryString;
+	AdverseDrugEvent events = restClient.getDrugEvents_apiKey(externalURL,
+		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
+		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
 	return events;
     }
 
@@ -173,32 +188,33 @@ public class BaseController {
 
     // http://localhost:8080/EIS/gt/get/drug/events
   // https://api.fda.gov/drug/event.json
-    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS, method = RequestMethod.GET)
-  public @ResponseBody
-    ResponseEntity<String> getAdverseDrugEventsReturnJSON() {
-    RestClient restClient = new RestClient();
-
-    // String fromStringDate_yyyyMMdd = "20140101";
-    // String toStringDate_yyyyMMdd = "20150101";
-    // String queryString =
-    // "?search=receivedate:[" + fromStringDate_yyyyMMdd + "+TO+"
-    // + toStringDate_yyyyMMdd + "]&count=receivedate";
-	// String queryString =
-	// "?search=patient.drug.openfda.pharm_class_epc:"
-	// + "nonsteroidal%2Banti-inflammatory%2Bdrug"
-	// + "&count=patient.reaction.reactionmeddrapt.exact";
-	String queryString = "";
-    String externalURL =
-        RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
-            + queryString;
-
-	ResponseEntity<String> events =
- restClient.getDrugEvents_display(
-		externalURL,
-            RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
-
-    return events;
-  }
+    // @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS, method =
+    // RequestMethod.GET)
+    // public @ResponseBody
+    // ResponseEntity<String> getAdverseDrugEventsReturnJSON() {
+    // RestClient restClient = new RestClient();
+    //
+    // // String fromStringDate_yyyyMMdd = "20140101";
+    // // String toStringDate_yyyyMMdd = "20150101";
+    // // String queryString =
+    // // "?search=receivedate:[" + fromStringDate_yyyyMMdd + "+TO+"
+    // // + toStringDate_yyyyMMdd + "]&count=receivedate";
+    // // String queryString =
+    // // "?search=patient.drug.openfda.pharm_class_epc:"
+    // // + "nonsteroidal%2Banti-inflammatory%2Bdrug"
+    // // + "&count=patient.reaction.reactionmeddrapt.exact";
+    // String queryString = "";
+    // String externalURL =
+    // RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+    // + queryString;
+    //
+    // ResponseEntity<String> events =
+    // restClient.getDrugEvents_display(
+    // externalURL,
+    // RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+    //
+    // return events;
+    // }
 
   @RequestMapping(value = RestURIConstants.PROJECTS_HOME, method = RequestMethod.GET)
   public ModelAndView projectsIndex() {

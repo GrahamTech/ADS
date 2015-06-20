@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 //import org.springframework.web.util.UriTemplate;
 
 
+import com.grahamtech.eis.controllers.RestURIConstants;
 import com.grahamtech.eis.pojos.AdverseDrugEvent;
 import com.grahamtech.eis.utilities.ClientErrorHandler;
 
@@ -40,8 +41,7 @@ public class RestClient implements java.io.Serializable {
     // default constructor
   }
 
-    public AdverseDrugEvent getDrugEvents_storeAndDisplay_object(
-	    String uri, String apiKey) {
+    public AdverseDrugEvent getDrugEvents(String uri) {
 	RestTemplate restTemplate = new RestTemplate();
 
 	List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
@@ -70,6 +70,42 @@ public class RestClient implements java.io.Serializable {
 
 	return responseEntity;
   }
+
+    // use API key if making 40 or more requests per minute or > 1000 requests
+    // per
+    // day / per IP
+    public AdverseDrugEvent getDrugEvents_apiKey(String uri,
+	    String apiKeyHeader, String apiKey) {
+
+	RestTemplate restTemplate = new RestTemplate();
+
+	List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+	messageConverters.add(new MappingJackson2HttpMessageConverter());
+	restTemplate.setMessageConverters(messageConverters);
+
+	restTemplate.setErrorHandler(new ClientErrorHandler());
+	HttpHeaders headers = new HttpHeaders();
+	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	headers.add(apiKeyHeader, apiKey);
+	HttpEntity<String> entity = new HttpEntity<String>("parameters",
+		headers);
+
+	ResponseEntity<AdverseDrugEvent> responseEntity = null;
+	try {
+	    responseEntity = restTemplate.exchange(uri, HttpMethod.GET, entity,
+		    AdverseDrugEvent.class);
+	    System.out.println(responseEntity.getBody());
+
+	    // MediaType contentType = responseEntity.getHeaders()
+	    // .getContentType();
+	    // HttpStatus statusCode = responseEntity.getStatusCode();
+	} catch (Exception ex) {
+	    logger.error("Exception thrown for the restTemplate exchange: "
+		    + ex.toString());
+	}
+
+	return responseEntity.getBody();
+    }
 
     // public List<ResponseEntity<AdverseDrugEvent[]>>
     // getDrugEvents_storeAndDisplay_list(
@@ -130,84 +166,88 @@ public class RestClient implements java.io.Serializable {
     // return responseEntityArray;
     // }
 
-    // use API key if making 40 or more requests per minute or > 1000 requests
-    // per
-    // day / per IP
-    public ResponseEntity<String> getDrugEvents_display(String uri,
-	    String apiKey) {
-	RestTemplate restTemplate = new RestTemplate();
-	restTemplate.setErrorHandler(new ClientErrorHandler());
-	HttpHeaders headers = new HttpHeaders();
-	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-	HttpEntity<String> entity = new HttpEntity<String>("parameters",
-		headers);
-
-	ResponseEntity<String> responseEntity = null;
-	try {
-	    responseEntity = restTemplate.exchange(uri, HttpMethod.GET, entity,
-		    String.class);
-	    // List listResponse = Arrays.asList(restTemplate.exchange(uri,
-	    // HttpMethod.GET, entity, Object[].class));
-
-	    System.out.println(responseEntity.getBody());
-	} catch (Exception ex) {
-	    logger.error("Exception thrown for the restTemplate exchange: "
-		    + ex.toString());
-	}
-
-	return responseEntity;
-    }
-
-    public List<AdverseDrugEvent> getDrugEvents(String SERVER_URI, String apiKey) {
-	// String uri = "https://api.fda.gov/drug/event.json";
-	// "https://api.fda.gov/drug/event.json?search={dateRange}&count=receivedate";
-	// String dateRange = "receivedate:[20140101 TO 20150101]";
-	// URI expanded = new UriTemplate(uri).expand(dateRange);
-	// try {
-	// uri = URLDecoder.decode(expanded.toString(), "UTF8");
-	// } catch (UnsupportedEncodingException e) {
-	// TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// final String uri =
-	// "https://api.fda.gov/drug/event.json?search=patient.drug.openfda.pharm_class_epc:nonsteroidal%2Banti-inflammatory%2Bdrug&count=patient.reaction.reactionmeddrapt.exact";
-
-    RestTemplate restTemplate = new RestTemplate();
-    MultiValueMap<String, Object> headers =
-        new LinkedMultiValueMap<String, Object>();
-    headers.add("Accept", "application/json");
-    headers.add("Content-Type", "application/json");
-
-    final String urlPlusAPIKey = SERVER_URI + "&api+key={api-key}";
-
-    String termId = "NAUSEA";
-    String requestBody = "{\"term\":\"" + termId + "\"}";
-    HttpEntity request = new HttpEntity(requestBody, headers);
-
-    Object events = restTemplate.getForObject(SERVER_URI, Object.class);
-	// AdverseDrugEvent events =
-	// restTemplate.getForObject(SERVER_URI, AdverseDrugEvent.class);
-	// List<AdverseDrugEvent> events =
-    // restTemplate.getForObject(SERVER_URI, List.class);
-    // List<LinkedHashMap> events = restTemplate.getForObject(SERVER_URI,
-    // List.class, apiKey);
-    // List<LinkedHashMap> events = restTemplate.getForObject(SERVER_URI,
-    // List.class, "results");
-
-	List<AdverseDrugEvent> eventsList = new LinkedList<AdverseDrugEvent>();
-    // System.out.println(events.size());
-    // int counter = 0;
-    // for (LinkedHashMap event : events) {
-    // System.out.println("Term=" + event.get("term") + ",Count="
-    // + event.get("count"));
+    // // use API key if making 40 or more requests per minute or > 1000
+    // requests
+    // // per
+    // // day / per IP
+    // public ResponseEntity<String> getDrugEvents_display(String uri,
+    // String apiKey) {
+    // RestTemplate restTemplate = new RestTemplate();
+    // restTemplate.setErrorHandler(new ClientErrorHandler());
+    // HttpHeaders headers = new HttpHeaders();
+    // headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+    // HttpEntity<String> entity = new HttpEntity<String>("parameters",
+    // headers);
     //
-	// AdverseDrugEvent adverseReaction = new AdverseDrugEvent();
-    // adverseReaction.setEvent_id(counter++);
-    // adverseReaction.setTerm((String) event.get("term"));
-    // adverseReaction.setReaction_count((long) event.get("count"));
-    // eventsList.add(adverseReaction);
+    // ResponseEntity<String> responseEntity = null;
+    // try {
+    // responseEntity = restTemplate.exchange(uri, HttpMethod.GET, entity,
+    // String.class);
+    // // List listResponse = Arrays.asList(restTemplate.exchange(uri,
+    // // HttpMethod.GET, entity, Object[].class));
+    //
+    // System.out.println(responseEntity.getBody());
+    // } catch (Exception ex) {
+    // logger.error("Exception thrown for the restTemplate exchange: "
+    // + ex.toString());
+    // }
+    //
+    // return responseEntity;
     // }
 
-    return eventsList;
-  }
+    // public List<AdverseDrugEvent> getDrugEvents(String SERVER_URI, String
+    // apiKey) {
+    // // String uri = "https://api.fda.gov/drug/event.json";
+    // //
+    // "https://api.fda.gov/drug/event.json?search={dateRange}&count=receivedate";
+    // // String dateRange = "receivedate:[20140101 TO 20150101]";
+    // // URI expanded = new UriTemplate(uri).expand(dateRange);
+    // // try {
+    // // uri = URLDecoder.decode(expanded.toString(), "UTF8");
+    // // } catch (UnsupportedEncodingException e) {
+    // // TODO Auto-generated catch block
+    // // e.printStackTrace();
+    // // }
+    // // final String uri =
+    // //
+    // "https://api.fda.gov/drug/event.json?search=patient.drug.openfda.pharm_class_epc:nonsteroidal%2Banti-inflammatory%2Bdrug&count=patient.reaction.reactionmeddrapt.exact";
+    //
+    // RestTemplate restTemplate = new RestTemplate();
+    // MultiValueMap<String, Object> headers =
+    // new LinkedMultiValueMap<String, Object>();
+    // headers.add("Accept", "application/json");
+    // headers.add("Content-Type", "application/json");
+    //
+    // final String urlPlusAPIKey = SERVER_URI + "&api+key={api-key}";
+    //
+    // String termId = "NAUSEA";
+    // String requestBody = "{\"term\":\"" + termId + "\"}";
+    // HttpEntity request = new HttpEntity(requestBody, headers);
+    //
+    // Object events = restTemplate.getForObject(SERVER_URI, Object.class);
+    // // AdverseDrugEvent events =
+    // // restTemplate.getForObject(SERVER_URI, AdverseDrugEvent.class);
+    // // List<AdverseDrugEvent> events =
+    // // restTemplate.getForObject(SERVER_URI, List.class);
+    // // List<LinkedHashMap> events = restTemplate.getForObject(SERVER_URI,
+    // // List.class, apiKey);
+    // // List<LinkedHashMap> events = restTemplate.getForObject(SERVER_URI,
+    // // List.class, "results");
+    //
+    // List<AdverseDrugEvent> eventsList = new LinkedList<AdverseDrugEvent>();
+    // // System.out.println(events.size());
+    // // int counter = 0;
+    // // for (LinkedHashMap event : events) {
+    // // System.out.println("Term=" + event.get("term") + ",Count="
+    // // + event.get("count"));
+    // //
+    // // AdverseDrugEvent adverseReaction = new AdverseDrugEvent();
+    // // adverseReaction.setEvent_id(counter++);
+    // // adverseReaction.setTerm((String) event.get("term"));
+    // // adverseReaction.setReaction_count((long) event.get("count"));
+    // // eventsList.add(adverseReaction);
+    // // }
+    //
+    // return eventsList;
+    // }
 }

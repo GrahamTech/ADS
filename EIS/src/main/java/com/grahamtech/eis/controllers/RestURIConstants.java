@@ -11,12 +11,16 @@ public class RestURIConstants {
    * /user/delete/{id} PUT To delete the Employee object from the data storage
    * based on the id
    */
-    public static final String GET_DRUG_EVENTS = "/get/drug/events";
-    public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY = "/get/drug/events/store";
-    public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY_LIST = "/get/drug/events/store/list";
-    public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY_ARRAY = "/get/drug/events/store/array";
+    // public static final String GET_DRUG_EVENTS = "/get/drug/events";
+    public static final String GET_DRUG_EVENTS = "/get/drug/events/{rowLimit}";
+    public static final String GET_DRUG_EVENTS_CALL_WITH_API_KEY = "/get/drug/events/apikey/{rowLimit}";
+    // public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY_LIST =
+    // "/get/drug/events/store/list";
+    // public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY_ARRAY =
+    // "/get/drug/events/store/array";
   public static final String ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL =
       "https://api.fda.gov/drug/event.json";
+    public static final String ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER = "api_key";
   public static final String ADVERSE_DRUG_EVENT_REPORTS_API_KEY =
       "YQG9X0JzsVSlL7WE8vx9KNiXM3jpyZz1jbhqpTGu";
   
