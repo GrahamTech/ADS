@@ -1,5 +1,6 @@
 package com.grahamtech.eis.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,6 +21,8 @@ public class Patient implements java.io.Serializable {
 	return "Patient [reactions= " + this.getReactionArray() + "]";
     }
 
+    @JsonIgnore
+    @JsonProperty(value="reactionArray")
     public String getReactionArray() {
 	StringBuffer strBuffer = new StringBuffer();
 	int count = 0;

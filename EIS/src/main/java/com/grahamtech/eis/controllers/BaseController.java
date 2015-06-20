@@ -138,12 +138,15 @@ public class BaseController {
     // https://api.fda.gov/drug/event.json
     @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY, method = RequestMethod.GET)
     public @ResponseBody
-    AdverseDrugEvent getAdverseDrugEvents_apiKey(@PathVariable String rowLimit) {
+    ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey(
+	    @PathVariable String rowLimit) {
 	RestClient restClient = new RestClient();
 	String queryString = "?limit=" + rowLimit;
 	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
 		+ queryString;
-	AdverseDrugEvent events = restClient.getDrugEvents_apiKey(externalURL,
+	ResponseEntity<AdverseDrugEvent> events = restClient
+		.getDrugEvents_apiKey(
+			externalURL,
 		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
 		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
 	return events;

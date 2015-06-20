@@ -14,9 +14,9 @@ public class Reaction implements java.io.Serializable {
 
     }
 
+    @Override
     public String toString() {
-	return "Reaction [reaction= "
-		+ this.getReactionmeddrapt() + "]";
+	return "Reaction [reaction= " + this.getReactionmeddrapt() + "]";
     }
 
     public String getReactionmeddrapt() {
