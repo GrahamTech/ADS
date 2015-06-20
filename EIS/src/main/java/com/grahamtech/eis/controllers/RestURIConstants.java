@@ -12,6 +12,9 @@ public class RestURIConstants {
    * based on the id
    */
     public static final String GET_DRUG_EVENTS = "/get/drug/events";
+    public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY = "/get/drug/events/store";
+    public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY_LIST = "/get/drug/events/store/list";
+    public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY_ARRAY = "/get/drug/events/store/array";
   public static final String ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL =
       "https://api.fda.gov/drug/event.json";
   public static final String ADVERSE_DRUG_EVENT_REPORTS_API_KEY =
