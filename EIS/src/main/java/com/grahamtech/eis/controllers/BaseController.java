@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
 import com.grahamtech.eis.daos.MyFlaggedAssetsDAO;
 import com.grahamtech.eis.daos.MyNVDEntryMessageDAO;
 import com.grahamtech.eis.daos.MyProjectDAO;
@@ -36,7 +37,7 @@ import com.grahamtech.eis.daos.MyRolesDAO;
 import com.grahamtech.eis.daos.MySystemProductDAO;
 import com.grahamtech.eis.daos.MySystemVulnerabilitiesDAO;
 import com.grahamtech.eis.daos.MyUserProfileDAO;
-import com.grahamtech.eis.pojos.AdverseReactions;
+import com.grahamtech.eis.pojos.AdverseDrugEvent;
 import com.grahamtech.eis.pojos.FlaggedAsset;
 import com.grahamtech.eis.pojos.NVDEntryMessage;
 import com.grahamtech.eis.pojos.Project;
@@ -118,11 +119,63 @@ public class BaseController {
   @Autowired
   private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
 
+    // http://localhost:8080/EIS/gt/get/drug/events/store
+    // https://api.fda.gov/drug/event.json
+    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_STORE_AND_DISPLAY, method = RequestMethod.GET)
+    public @ResponseBody
+    AdverseDrugEvent getAdverseDrugEventsStoreAndReturnJSON() {
+	RestClient restClient = new RestClient();
+	String queryString = "";
+	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+		+ queryString;
+	AdverseDrugEvent events = restClient
+		.getDrugEvents_storeAndDisplay_object(externalURL,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+	return events;
+    }
+
+    // @RequestMapping(value =
+    // RestURIConstants.GET_DRUG_EVENTS_STORE_AND_DISPLAY_LIST, method =
+    // RequestMethod.GET)
+    // public @ResponseBody
+    // List<ResponseEntity<AdverseDrugEvent[]>>
+    // getAdverseDrugEventsStoreAndReturnJSON2() {
+    // RestClient restClient = new RestClient();
+    // String queryString = "";
+    // String externalURL =
+    // RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+    // + queryString;
+    //
+    // List<ResponseEntity<AdverseDrugEvent[]>> events = restClient
+    // .getDrugEvents_storeAndDisplay_list(externalURL,
+    // RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+    //
+    // return events;
+    // }
+    //
+    // @RequestMapping(value =
+    // RestURIConstants.GET_DRUG_EVENTS_STORE_AND_DISPLAY_ARRAY, method =
+    // RequestMethod.GET)
+    // public @ResponseBody
+    // AdverseDrugEvent[] getAdverseDrugEventsStoreAndReturnJSON_ARRAY() {
+    // RestClient restClient = new RestClient();
+    // String queryString = "";
+    // String externalURL =
+    // RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+    // + queryString;
+    //
+    // AdverseDrugEvent[] events = restClient
+    // .getDrugEvents_storeAndDisplay_array(externalURL,
+    // RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+    //
+    // return events;
+    // }
+
     // http://localhost:8080/EIS/gt/get/drug/events
   // https://api.fda.gov/drug/event.json
     @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS, method = RequestMethod.GET)
   public @ResponseBody
-    ResponseEntity<String> getAdverseReactionsCount() {
+    ResponseEntity<String> getAdverseDrugEventsReturnJSON() {
     RestClient restClient = new RestClient();
 
     // String fromStringDate_yyyyMMdd = "20140101";
