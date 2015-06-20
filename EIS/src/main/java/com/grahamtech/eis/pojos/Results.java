@@ -41,8 +41,8 @@ public class Results implements java.io.Serializable {
 	return "Results [safetyreportid= " + this.getSafetyreportid()
 		+ ", sender=" + this.getSender() + ", serious= "
 		+ this.getSerious() + ", companynumb= "
- + this.getCompanynumb()
-		+ "patient= " + this.getPatient().toString() + "]";
+ + this.getCompanynumb() + "patient= "
+ + this.getPatient().toString() + "]";
     }
 
     // public long getEvent_id() {

@@ -16,8 +16,8 @@ public class Sender implements java.io.Serializable {
 
     @Override
     public String toString() {
-	return "Sender [senderorganization="
-		+ this.getSenderorganization() + "]";
+	return "Sender [senderorganization=" + this.getSenderorganization()
+		+ "]";
     }
 
     public String getSenderorganization() {

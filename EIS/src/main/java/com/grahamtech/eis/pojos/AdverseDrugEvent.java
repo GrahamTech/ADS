@@ -9,6 +9,7 @@ package com.grahamtech.eis.pojos;
 //import javax.persistence.Transient;
 
 import com.grahamtech.eis.pojos.Results;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,12 +30,13 @@ public class AdverseDrugEvent implements java.io.Serializable {
 
     @Override
     public String toString() {
-	return "Adverse Drug Event [results length = "
-		+ this.getResults().length + ", results = "
+	return "Adverse Drug Event [results = "
 		+ this.getResultsArray() + ", meta = "
-		+ this.getMeta() + "]";
+ + this.getMeta() + "]";
     }
 
+    @JsonIgnore
+    @JsonProperty(value="resultsArray")
     public String getResultsArray() {
 	StringBuffer strBuffer = new StringBuffer();
 	int count = 0;

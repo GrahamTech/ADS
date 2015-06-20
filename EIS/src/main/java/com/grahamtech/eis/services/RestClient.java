@@ -74,7 +74,7 @@ public class RestClient implements java.io.Serializable {
     // use API key if making 40 or more requests per minute or > 1000 requests
     // per
     // day / per IP
-    public AdverseDrugEvent getDrugEvents_apiKey(String uri,
+    public ResponseEntity<AdverseDrugEvent> getDrugEvents_apiKey(String uri,
 	    String apiKeyHeader, String apiKey) {
 
 	RestTemplate restTemplate = new RestTemplate();
@@ -104,7 +104,7 @@ public class RestClient implements java.io.Serializable {
 		    + ex.toString());
 	}
 
-	return responseEntity.getBody();
+	return responseEntity;
     }
 
     // public List<ResponseEntity<AdverseDrugEvent[]>>
