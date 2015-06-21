@@ -47,7 +47,7 @@
 	</bean> 
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close"><!-- destroy-method="close" -->
 	    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-	    <property name="url" value="jdbc:mysql://localhost:3306/eisdb"/>
+	    <property name="url" value="jdbc:mysql://localhost:3306/adsdb"/>
 	    <property name="username" value="root"/>
 	    <property name="password" value="$Password001"/>
 	</bean> 
@@ -55,6 +55,11 @@
 	<bean id="transactionManager"
 	    class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 	    <property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="myAdverseDrugEventDAO" class="com.grahamtech.eis.daos.MyAdverseDrugEventDAO">
+	    <constructor-arg>
+	        <ref bean="sessionFactory" />
+	    </constructor-arg>
 	</bean>
 	<bean id="myUserProfileDAO" class="com.grahamtech.eis.daos.MyUserProfileDAO">
 	    <constructor-arg>

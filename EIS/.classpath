@@ -258,5 +258,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/webflow/spring-js/2.4.1.RELEASE/spring-js-2.4.1.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-all/1.3/hamcrest-all-1.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mockito/mockito-core/1.9.5/mockito-core-1.9.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/jayway/jsonpath/json-path-assert/2.0.0/json-path-assert-2.0.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/jayway/jsonpath/json-path/2.0.0/json-path-2.0.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

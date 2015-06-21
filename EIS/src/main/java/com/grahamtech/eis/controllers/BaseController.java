@@ -27,6 +27,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
+
+import com.grahamtech.eis.daos.MyAdverseDrugEventDAO;
 import com.grahamtech.eis.daos.MyFlaggedAssetsDAO;
 import com.grahamtech.eis.daos.MyNVDEntryMessageDAO;
 import com.grahamtech.eis.daos.MyProjectDAO;
@@ -38,6 +41,7 @@ import com.grahamtech.eis.daos.MyRolesDAO;
 import com.grahamtech.eis.daos.MySystemProductDAO;
 import com.grahamtech.eis.daos.MySystemVulnerabilitiesDAO;
 import com.grahamtech.eis.daos.MyUserProfileDAO;
+import com.grahamtech.eis.pojos.AdversDrugEventResultFlattened;
 import com.grahamtech.eis.pojos.AdverseDrugEvent;
 import com.grahamtech.eis.pojos.FlaggedAsset;
 import com.grahamtech.eis.pojos.NVDEntryMessage;
@@ -45,6 +49,7 @@ import com.grahamtech.eis.pojos.Project;
 import com.grahamtech.eis.pojos.ProjectDetail;
 import com.grahamtech.eis.pojos.ProjectPartner;
 import com.grahamtech.eis.pojos.ProjectSystem;
+import com.grahamtech.eis.pojos.Results;
 import com.grahamtech.eis.pojos.RiskPreference;
 import com.grahamtech.eis.pojos.Role;
 import com.grahamtech.eis.pojos.SystemProduct;
@@ -97,8 +102,8 @@ public class BaseController {
   // private CRUDUtil crudUtil = new CRUDUtil();
 
   @Autowired
-  private MyUserProfileDAO myUserProfileDAO;
-  @Autowired
+    private MyUserProfileDAO myUserProfileDAO;
+    @Autowired
   private MyProjectDAO myProjectDAO;
   @Autowired
   private MySystemProductDAO mySystemProductDAO;
@@ -116,23 +121,11 @@ public class BaseController {
   private MyProjectDetailDAO myProjectDetailDAO;
   @Autowired
   private MyNVDEntryMessageDAO myNVDEntryMessageDAO;
-
   @Autowired
-  private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
+    private MyFlaggedAssetsDAO myFlaggedAssetsDAO;
 
-    // http://localhost:8080/EIS/gt/get/drug/events/3
-    // https://api.fda.gov/drug/event.json
-    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS, method = RequestMethod.GET)
-    public @ResponseBody
-    AdverseDrugEvent getAdverseDrugEventsStoreAndReturnJSON(
-	    @PathVariable String rowLimit) {
-	RestClient restClient = new RestClient();
-	String queryString = "?limit=" + rowLimit;
-	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
-		+ queryString;
-	AdverseDrugEvent events = restClient.getDrugEvents(externalURL);
-	return events;
-    }
+    @Autowired
+    private MyAdverseDrugEventDAO myAdverseDrugEventDAO;
 
     // http://localhost:8080/EIS/gt/get/drug/events/apikey/3
     // https://api.fda.gov/drug/event.json
@@ -149,8 +142,68 @@ public class BaseController {
 			externalURL,
 		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
 		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+
 	return events;
     }
+
+    // http://localhost:8080/EIS/gt/get/drug/events/and/store/apikey/3
+    // https://api.fda.gov/drug/event.json
+    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_AND_STORE_CALL_WITH_API_KEY, method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<AdverseDrugEvent> getAdverseDrugEventsAndStore_apiKey(
+	    @PathVariable String rowLimit) {
+	RestClient restClient = new RestClient();
+	String queryString = "?limit=" + rowLimit;
+	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+		+ queryString;
+	ResponseEntity<AdverseDrugEvent> events = restClient
+		.getDrugEvents_apiKey(
+			externalURL,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+
+	String success = storeEvents(events.getBody());
+	logger.info(success);
+
+	return events;
+    }
+
+    private String storeEvents(AdverseDrugEvent restObject) {
+	StringBuffer strBuffer = new StringBuffer();
+	int bufferLength = strBuffer.length();
+	try {
+	    for (Results result : restObject.getResults()) {
+		myAdverseDrugEventDAO.save(new AdversDrugEventResultFlattened(
+			result));
+	    }
+	} catch (ConstraintViolationException ec) {
+	    strBuffer
+		    .append(" ConstraintViolationException updating the entity: AdverseDrugEvent");
+	} catch (RuntimeException e) {
+	    strBuffer
+		    .append(" RuntimeException updating the entity: AdverseDrugEvent");
+	}
+	if (strBuffer.length() == bufferLength) {
+	    strBuffer.append("Created successfully: AdverseDrugEvent");
+	}
+	return strBuffer.toString();
+    }
+
+    // http://localhost:8080/EIS/gt/get/drug/events/3
+    // https://api.fda.gov/drug/event.json
+    // @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS, method =
+    // RequestMethod.GET)
+    // public @ResponseBody
+    // AdverseDrugEvent getAdverseDrugEventsStoreAndReturnJSON(
+    // @PathVariable String rowLimit) {
+    // RestClient restClient = new RestClient();
+    // String queryString = "?limit=" + rowLimit;
+    // String externalURL =
+    // RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+    // + queryString;
+    // AdverseDrugEvent events = restClient.getDrugEvents(externalURL);
+    // return events;
+    // }
 
     // @RequestMapping(value =
     // RestURIConstants.GET_DRUG_EVENTS_STORE_AND_DISPLAY_LIST, method =
