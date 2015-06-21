@@ -11,9 +11,11 @@ public class RestURIConstants {
    * /user/delete/{id} PUT To delete the Employee object from the data storage
    * based on the id
    */
-    // public static final String GET_DRUG_EVENTS = "/get/drug/events";
-    public static final String GET_DRUG_EVENTS = "/get/drug/events/{rowLimit}";
+    // public static final String GET_DRUG_EVENTS =
+    // "/get/drug/events/{rowLimit}";
     public static final String GET_DRUG_EVENTS_CALL_WITH_API_KEY = "/get/drug/events/apikey/{rowLimit}";
+    public static final String GET_DRUG_EVENTS_AND_STORE_CALL_WITH_API_KEY = "/get/drug/events/and/store/apikey/{rowLimit}";
+
     // public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY_LIST =
     // "/get/drug/events/store/list";
     // public static final String GET_DRUG_EVENTS_STORE_AND_DISPLAY_ARRAY =
