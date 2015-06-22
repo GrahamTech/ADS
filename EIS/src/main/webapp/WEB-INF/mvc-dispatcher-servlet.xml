@@ -56,63 +56,14 @@
 	    class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 	    <property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	<bean id="myAdverseDrugEventDAO" class="com.grahamtech.eis.daos.MyAdverseDrugEventDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="myUserProfileDAO" class="com.grahamtech.eis.daos.MyUserProfileDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="myProjectDAO" class="com.grahamtech.eis.daos.MyProjectDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="myNVDEntryMessageDAO" class="com.grahamtech.eis.daos.MyNVDEntryMessageDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
 	
-	<bean id="myRolesDAO" class="com.grahamtech.eis.daos.MyRolesDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="myRiskPreferenceDAO" class="com.grahamtech.eis.daos.MyRiskPreferenceDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="myProjectDetailDAO" class="com.grahamtech.eis.daos.MyProjectDetailDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean> 
-	<bean id="myProjectPartnerDAO" class="com.grahamtech.eis.daos.MyProjectPartnerDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="myProjectSystemDAO" class="com.grahamtech.eis.daos.MyProjectSystemDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="mySystemVulnerabilitiesDAO" class="com.grahamtech.eis.daos.MySystemVulnerabilitiesDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="mySystemProductDAO" class="com.grahamtech.eis.daos.MySystemProductDAO">
-	    <constructor-arg>
-	        <ref bean="sessionFactory" />
-	    </constructor-arg>
-	</bean>
-	<bean id="myFlaggedAssetsDAO" class="com.grahamtech.eis.daos.MyFlaggedAssetsDAO">
+<!-- 	<bean id="handlerMapping" name="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/> -->
+<!-- 	<bean id="handlerAdapter" name="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/> -->
+	
+<!-- 	<bean id="myAdverseDrugEventDAOMock" name="myAdverseDrugEventDAOMock" class="org.mockito.Mockito" factory-method="mock"> -->
+<!-- 	    <constructor-arg value="com.grahamtech.eis.daos.MyAdverseDrugEventDAO"/> -->
+<!-- 	</bean> -->
+	<bean id="myAdverseDrugEventDAO" class="com.grahamtech.eis.daos.MyAdverseDrugEventDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>

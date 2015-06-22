@@ -26,6 +26,10 @@ public class RestURIConstants {
   public static final String ADVERSE_DRUG_EVENT_REPORTS_API_KEY =
       "YQG9X0JzsVSlL7WE8vx9KNiXM3jpyZz1jbhqpTGu";
   
+    public static final String GET_DRUG_EVENTS_FROM_DATA_STORE = "/get/drug/events/from/data/store";
+
+    // ////////////////////////////
+
   public static final String GET_PROFILES = "/get/profiles";
   public static final String GET_PROFILE = "/get/profile/{id}";
   public static final String UPDATE_PROFILE = "/update/profile/{id}";
