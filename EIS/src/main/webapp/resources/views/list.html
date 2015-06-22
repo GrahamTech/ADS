@@ -1,0 +1,40 @@
+<section class="reportList">
+
+    <blockquote class="blockq adLable"> Technology Demonstration </blockquote>
+    
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+        nisi ut aliquip ex ea commodo consequat.</p>
+
+    <div class="row"style="background:#f7f7f7; margin:0 auto; padding:1% 0;">
+        <div class="col-sm-10">
+            <span style="font-size: 18px;">Existing Records</span>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn-success btn"> Add Record
+            </button>
+        </div>
+    </div>
+    Report Search<input type="text" ng-model="searchReport">
+    <table class="table table-striped">
+    	<thead>
+        	<tr>
+            	<th>Report Id</th>
+                <th>Sender</th>
+                <th>Severity</th>
+                <th>Company Number</th>
+            </tr>
+        </thead>
+        <tbody>
+        	<tr ng-repeat="item in artists | filter:searchReport">
+            	<td><a href="#/details/{{artists.indexOf(item)}}">{{item.results.safetyreportid}}</a></td>
+                <td>{{item.results.sender}}</td>
+                <td>{{item.results.serious}}</td>
+                <td>{{item.results.companynumb}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+   
+</section>

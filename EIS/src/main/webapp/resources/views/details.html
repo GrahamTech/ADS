@@ -1,0 +1,42 @@
+<section class="reportDetails">
+    <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                	<div class="row">
+                		<div class="col-sm-6">
+                        {{item.results.safetyreportid}}
+                		</div>
+                        <div class="col-sm-6">
+                        {{item.results.sender}}
+                		</div>
+                  	</div>
+                </div>
+                <div class="col-sm-6">
+                	<div class="row">
+                		<div class="col-sm-6">
+                        {{item.results.serious}}
+                		</div>
+                        <div class="col-sm-6">
+                        {{item.results.companynumb}}
+                		</div>
+                  	</div>
+                </div>
+         	</div>
+	</div>
+    <h2> Associated Reactions</h2>
+    <p ng-repeat="reaction in ...">{{item.results.patient.reaction.reactionmeddrapt}}</p>
+  
+                
+                
+  <div class="artist cf" ng-model="reports">
+    <a href="#/details/{{prevItem}}" class="btn btn-left">&lt;</a>
+    <a href="#/details/{{nextItem}}" class="btn btn-right">&gt;</a>
+    <h1>{{reports[whichItem].name}}</h1>
+    <div class="info">
+      <h3>{{reports[whichItem].reknown}}</h3>
+      <img ng-src="images/{{reports[whichItem].shortname}}_tn.jpg" alt="Photo of {{artists[whichItem].name}}">
+      <div class="bio">{{reports[whichItem].bio}}</div>
+    </div>
+  </div>
+  <a href="index.html">&laquo; Back to search</a>
+</section>
