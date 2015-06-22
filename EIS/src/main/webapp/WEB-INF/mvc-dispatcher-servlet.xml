@@ -31,12 +31,9 @@
 		</property>
 	</bean>
 	
-	<!--  org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean -->
-	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">        
     	<property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan" value="com.grahamtech.eis.pojos"/>
-        <!--  <property name="configLocation" value="classpath:hibernate.cfg.xml" /> -->
         <property name="hibernateProperties">
             <props>
               <prop key="hibernate.connection.pool_size">10</prop>
@@ -57,12 +54,6 @@
 	    <property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-<!-- 	<bean id="handlerMapping" name="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/> -->
-<!-- 	<bean id="handlerAdapter" name="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/> -->
-	
-<!-- 	<bean id="myAdverseDrugEventDAOMock" name="myAdverseDrugEventDAOMock" class="org.mockito.Mockito" factory-method="mock"> -->
-<!-- 	    <constructor-arg value="com.grahamtech.eis.daos.MyAdverseDrugEventDAO"/> -->
-<!-- 	</bean> -->
 	<bean id="myAdverseDrugEventDAO" class="com.grahamtech.eis.daos.MyAdverseDrugEventDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
