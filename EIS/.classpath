@@ -209,8 +209,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry excluding="resources/" kind="src" path="src/main/webapp"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/webapp/resources"/>
-	<classpathentry kind="src" path="src/test"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjrt/1.7.4/aspectjrt-1.7.4.jar">
 		<attributes>
@@ -263,5 +265,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/mockito/mockito-core/1.9.5/mockito-core-1.9.5.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/jayway/jsonpath/json-path-assert/2.0.0/json-path-assert-2.0.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/jayway/jsonpath/json-path/2.0.0/json-path-2.0.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/assertj/assertj-core/2.0.0/assertj-core-2.0.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
