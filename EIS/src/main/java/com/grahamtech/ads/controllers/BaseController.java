@@ -32,7 +32,7 @@ public class BaseController {
     @Autowired
     private MyAdverseDrugEventDAO myAdverseDrugEventDAO;
 
-    // http://localhost:8080/EIS/gt/get/drug/events/apikey/3
+    // http://localhost:8080/ADS/gt/get/drug/events/apikey/3
     // https://api.fda.gov/drug/event.json
     @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY, method = RequestMethod.GET)
     public @ResponseBody
@@ -51,7 +51,7 @@ public class BaseController {
 	return events;
     }
 
-    // http://localhost:8080/EIS/gt/get/drug/events/and/store/apikey/3
+    // http://localhost:8080/ADS/gt/get/drug/events/and/store/apikey/3
     // https://api.fda.gov/drug/event.json
     @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_AND_STORE_CALL_WITH_API_KEY, method = RequestMethod.GET)
     public @ResponseBody
@@ -98,7 +98,7 @@ public class BaseController {
     // the same getter/setter names in the ModelAttribute object. Use 'entity'
     // to bind in you JSP file
 
-    // http://localhost:8080/EIS/gt/create/db/event
+    // http://localhost:8080/ADS/gt/create/db/event
     @RequestMapping(value = RestURIConstants.CREATE_DB_EVENT, method = RequestMethod.POST)
     public @ResponseBody
     List<AdversDrugEventResultFlattened> createDBEvent(
@@ -122,7 +122,7 @@ public class BaseController {
 	return readDBEvents();
     }
 
-    // http://localhost:8080/EIS/gt/read/db/events
+    // http://localhost:8080/ADS/gt/read/db/events
     @RequestMapping(value = RestURIConstants.READ_DB_EVENTS, method = RequestMethod.GET)
     public @ResponseBody
     List<AdversDrugEventResultFlattened> readDBEvents() {
@@ -131,7 +131,7 @@ public class BaseController {
 	return list;
     }
 
-    // http://localhost:8080/EIS/gt/read/db/event/{id}
+    // http://localhost:8080/ADS/gt/read/db/event/{id}
     @RequestMapping(value = RestURIConstants.READ_DB_EVENT_BY_ID, method = RequestMethod.GET)
     public @ResponseBody
     AdversDrugEventResultFlattened readDBEventById(@PathVariable String id) {
@@ -141,7 +141,7 @@ public class BaseController {
 	return event;
     }
 
-    // http://localhost:8080/EIS/gt/update/db/event/{id}
+    // http://localhost:8080/ADS/gt/update/db/event/{id}
     @RequestMapping(value = RestURIConstants.UPDATE_DB_EVENT_BY_ID, method = RequestMethod.POST)
     public @ResponseBody
     List<AdversDrugEventResultFlattened> updateNVDEntryMessage(
@@ -163,7 +163,7 @@ public class BaseController {
 	return readDBEvents();
     }
 
-    // http://localhost:8080/EIS/gt/delete/db/event/{id}
+    // http://localhost:8080/ADS/gt/delete/db/event/{id}
     @RequestMapping(value = RestURIConstants.DELETE_DB_EVENT_BY_ID, method = RequestMethod.GET)
     public @ResponseBody
     List<AdversDrugEventResultFlattened> deleteDBEventById(@PathVariable long id) {
@@ -185,7 +185,7 @@ public class BaseController {
 	return readDBEvents();
     }
 
-    // http://localhost:8080/EIS/gt/index
+    // http://localhost:8080/ADS/gt/index
     @RequestMapping(value = RestURIConstants.INDEX, method = RequestMethod.GET)
     public ModelAndView index() {
 	ModelAndView model = new ModelAndView("index");

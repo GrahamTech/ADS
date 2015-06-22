@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <body>
-<h1>EIS Internationalization</h1>
+<h1>Internationalization</h1>
  
 Language : <a href="?language=en">English</a>&nbsp;|&nbsp;<a href="?language=es">Spanish</a>
  
