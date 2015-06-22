@@ -15,7 +15,7 @@
         http://www.springframework.org/schema/mvc 
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
  	
-	<context:component-scan base-package="com.grahamtech.eis.controllers" />
+	<context:component-scan base-package="com.grahamtech.ads.controllers" />
 	<mvc:annotation-driven/>
 <!-- 	<mvc:default-servlet-handler/> -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
@@ -33,7 +33,7 @@
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">        
     	<property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="com.grahamtech.eis.pojos"/>
+        <property name="packagesToScan" value="com.grahamtech.ads.pojos"/>
         <property name="hibernateProperties">
             <props>
               <prop key="hibernate.connection.pool_size">10</prop>
@@ -54,7 +54,7 @@
 	    <property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="myAdverseDrugEventDAO" class="com.grahamtech.eis.daos.MyAdverseDrugEventDAO">
+	<bean id="myAdverseDrugEventDAO" class="com.grahamtech.ads.daos.MyAdverseDrugEventDAO">
 	    <constructor-arg>
 	        <ref bean="sessionFactory" />
 	    </constructor-arg>
