@@ -1,0 +1,35 @@
+<section class="reportEdit">
+	<a href="index.html">&laquo; Back to search</a>
+	<blockquote class="blockq adLable"> Edit Report {{results[whichItem].safetyreportid}}</blockquote>
+    <div class="artist cf" ng-model="reports" style="margin:20px;">
+        <a href="#/edit/{{prevItem}}" class="btn btn-left" style="background:#2955A1; color:#fff; padding:5px 10px; font-weight:bold; margin-right:10px;">&lt;</a>
+        <a href="#/edit/{{nextItem}}" class="btn btn-right" style="background:#2955A1; color:#fff; padding:5px 10px; font-weight:bold;">&gt;</a>
+    </div>
+	<form>
+    
+    <div class="container">
+            <div class="row" style="margin:20px 0;">
+                <div class="col-sm-6">
+                <input type="hidden" name="eventId" value="{{results.event_id}}" />
+                <!--<input type="hidden" name="event_id" ng-value="event_id" /> -->
+                <b>Safety Report ID:</b> <input type="text" ng-model="results[whichItem].safetyreportid"/>
+                </div>
+                <div class="col-sm-6">
+                <b>Sender:</b> <input type="text" ng-model="results[whichItem].sender.senderorganization"/>
+                </div>
+            </div>
+            <div class="row" style="margin:20px 0;">
+                <div class="col-sm-6">
+                <b>Severity:</b> <input type="text" ng-model="results[whichItem].serious" />
+                </div>
+                <div class="col-sm-6">
+                <b>Company Number:</b><input type="text" ng-model="results[whichItem].companynumb"/>
+                </div>
+            </div>
+            <b>Associated Reactions </b> 
+	</div>
+  
+    <p><input type="button" ng-click="edit()" id="btnAdd" value="Submit"/></p>
+	</form>
+
+</section>

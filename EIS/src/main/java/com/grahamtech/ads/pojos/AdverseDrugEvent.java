@@ -64,6 +64,16 @@ public class AdverseDrugEvent implements java.io.Serializable {
 	// default constructor
     }
 
+    public AdverseDrugEvent(Results[] results, Meta meta) {
+	this.results = results;
+	this.meta = meta;
+    }
+
+    public AdverseDrugEvent(Results[] results) {
+	this.results = results;
+	this.meta = new Meta("2015-01-21");
+    }
+
     public Meta getMeta() {
 	return meta;
     }

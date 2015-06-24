@@ -13,6 +13,10 @@ public class Meta implements java.io.Serializable {
     public Meta() {
 	// default constructor
     }
+
+    public Meta(String last_updated) {
+	this.last_updated = last_updated;
+    }
     public String toString() {
 	return "Meta [last_updated= " + this.getLast_updated() + "]";
     }

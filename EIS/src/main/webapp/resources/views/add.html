@@ -1,0 +1,30 @@
+<section class="reportAdd">
+	<a href="index.html">&laquo; Back to search</a>
+	<blockquote class="blockq adLable"> Add a Report </blockquote>
+	<form>
+    <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <input type="hidden" name="event_id" value="{{results.event_id}}" />
+                    <!--<input type="hidden" name="event_id" ng-value="event_id" /> -->
+                    <b>Safety Report ID:</b> <input type="text" ng-model="safetyreportid" />
+               	</div>
+                <div class="col-sm-6">
+                    <b>Sender:</b> <input type="text" ng-model="sender" />
+                </div>
+        	</div>
+            <div class="row">
+                <div class="col-sm-6">       
+                    <b>Severity:</b> <input type="text" ng-model="serious" />
+              	</div>
+                <div class="col-sm-6">
+                	<b>Company Number:</b> <input type="text" ng-model="companynumb" />
+               	</div>   
+         	</div>
+            <b>Associated Reactions</b> 
+	</div>
+  
+    <input type="button" ng-click="add()" id="btnAdd" value="Add"/></p>
+	</form>
+
+</section>

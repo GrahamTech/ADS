@@ -1,0 +1,44 @@
+<section class="reportList">
+
+    <blockquote class="blockq adLable"> Technology Demonstration </blockquote>
+    
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+        nisi ut aliquip ex ea commodo consequat.</p>
+
+    <div class="row"style="background:#f7f7f7; margin:0 auto; padding:1% 0;">
+        <div class="col-sm-10">
+            <span style="font-size: 18px;">Existing Records</span>
+        </div>
+        <div class="col-sm-2">
+            <a href="#/add" class="btn btn-success">Add Record</a>
+           
+        </div>
+    </div>
+    <div style="margin:20px 0;">
+    	<span style="padding-right:5px;">Report Search</span> <input type="text" ng-model="searchReport">
+    </div>
+    <table class="table table-striped">
+    	<thead>
+        	<tr>
+            	<th>Report Id</th>
+                <th>Sender</th>
+                <th>Severity</th>
+                <th>Company Number</th>
+            </tr>
+        </thead>
+        <tbody>
+        	<tr ng-repeat="result in results | filter:searchReport ">
+            	<td><a href="#/details/{{results.indexOf(result)}}">{{result.safetyreportid}}</a></td>
+                <td>{{result.senderOrganization}}</td>
+                <td>{{result.serious}}</td>
+                <td>{{result.companynumb}}</td>
+                <td><a href="#/edit/{{results.indexOf(result)}}">edit</a></td>
+                <td><input type="button" ng-click="remove()" id="btnAdd" value="Delete"/></td>
+            </tr>
+        </tbody>
+    </table>
+
+   
+</section>
