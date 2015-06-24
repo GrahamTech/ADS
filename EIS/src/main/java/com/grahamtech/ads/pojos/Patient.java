@@ -16,9 +16,13 @@ public class Patient implements java.io.Serializable {
 
     }
 
+    public Patient(Reaction[] reaction) {
+	this.reaction = reaction;
+    }
+
     @Override
     public String toString() {
-	return "Patient [reactions= " + this.getReactionArray() + "]";
+	return this.getReactionArray();
     }
 
     @JsonIgnore

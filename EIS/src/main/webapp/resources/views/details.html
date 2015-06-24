@@ -1,0 +1,31 @@
+<section class="reportDetails">
+	<a href="index.html">&laquo; Back to search</a>
+	<blockquote class="blockq adLable"> Details on Report: {{results[whichItem].safetyreportid}}</blockquote>
+    
+    <div class="artist cf" ng-model="reports" style="margin:20px;">
+        <a href="#/details/{{prevItem}}" class="btn btn-left" style="background:#2955A1; color:#fff; padding:5px 10px; font-weight:bold; margin-right:10px;">&lt;</a>
+        <a href="#/details/{{nextItem}}" class="btn btn-right" style="background:#2955A1; color:#fff; padding:5px 10px; font-weight:bold;">&gt;</a>
+    </div>
+    <div class="container">
+          
+            <div class="row">
+                <div class="col-sm-6">
+                <b>Safety Report ID:</b> {{results[whichItem].safetyreportid}}
+                </div>
+                <div class="col-sm-6">
+                <b>Sender:</b> {{results[whichItem].sender.senderorganization}}
+                </div>
+      		</div>
+            <div class="row">
+                <div class="col-sm-6">
+                <b>Severity:</b> {{results[whichItem].serious}}
+                </div>
+                <div class="col-sm-6">
+                <b>Company Number:</b> {{results[whichItem].companynumb}}
+                </div>
+      		</div>
+              <b>Associated Reactions </b> 
+	</div>
+
+  
+</section>

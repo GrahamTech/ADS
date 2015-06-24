@@ -36,6 +36,15 @@ public class Results implements java.io.Serializable {
 	// default constructor
     }
 
+    public Results(String safetyreportid, Sender sender, String serious,
+	    String companynumb, Patient patient) {
+	this.companynumb = safetyreportid;
+	this.sender = sender;
+	this.serious = serious;
+	this.companynumb = companynumb;
+	this.patient = patient;
+    }
+
     @Override
     public String toString() {
 	return "Results [safetyreportid= " + this.getSafetyreportid()

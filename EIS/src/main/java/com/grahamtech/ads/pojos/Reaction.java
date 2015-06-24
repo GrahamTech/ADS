@@ -11,12 +11,15 @@ public class Reaction implements java.io.Serializable {
     private String reactionmeddrapt;
 
     public Reaction() {
+    }
 
+    public Reaction(String reactionmeddrapt) {
+	this.reactionmeddrapt = reactionmeddrapt;
     }
 
     @Override
     public String toString() {
-	return "Reaction [reaction= " + this.getReactionmeddrapt() + "]";
+	return "reactionmeddrapt=" + this.getReactionmeddrapt() + ". ";
     }
 
     public String getReactionmeddrapt() {

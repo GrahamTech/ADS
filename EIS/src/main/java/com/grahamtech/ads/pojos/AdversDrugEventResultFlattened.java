@@ -24,8 +24,11 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
     private long event_id;
-    @Column(name = "sender")
-    private String sender;
+
+    @Column(name = "safetyreportid")
+    private String safetyreportid;
+    @Column(name = "senderorganization")
+    private String senderorganization;
     @Column(name = "serious")
     private long serious;
     @Column(name = "companynumb")
@@ -37,17 +40,20 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
 	// default constructor
     }
 
-    public AdversDrugEventResultFlattened(long event_id, String sender,
+    public AdversDrugEventResultFlattened(long event_id, String safetyreportid,
+	    String sender,
 	    long serious, String companynumb, String patient_reactions) {
+	this.safetyreportid = safetyreportid;
 	this.setCompanynumb(companynumb);
 	this.setEvent_id(event_id);
 	this.setPatient_reactions(patient_reactions);
-	this.setSender(sender);
+	this.setSenderOrganization(sender);
 	this.setSerious(serious);
     }
 
     public AdversDrugEventResultFlattened(Results result) {
-	this.setSender(result.getSender().getSenderorganization());
+	this.setSafetyreportid(result.getSafetyreportid());
+	this.setSenderOrganization(result.getSender().getSenderorganization());
 	this.setCompanynumb(result.getCompanynumb());
 	this.setSerious(new Long(result.getSerious()).longValue());
 	this.setPatient_reactions(result.getPatient().getReactionArray());
@@ -61,12 +67,20 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
 	this.event_id = event_id;
     }
 
-    public String getSender() {
-	return sender;
+    public String getSafetyreportid() {
+	return safetyreportid;
     }
 
-    public void setSender(String sender) {
-	this.sender = sender;
+    public void setSafetyreportid(String safetyreportid) {
+	this.safetyreportid = safetyreportid;
+    }
+
+    public String getSenderOrganization() {
+	return senderorganization;
+    }
+
+    public void setSenderOrganization(String senderorganization) {
+	this.senderorganization = senderorganization;
     }
 
     public long getSerious() {
