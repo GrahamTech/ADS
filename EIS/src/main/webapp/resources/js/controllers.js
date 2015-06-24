@@ -82,7 +82,7 @@ reportControllers.controller('AddController',
 ]);
 
 reportControllers.controller('DetailsController', ['$scope', '$http','$routeParams', function($scope, $http, $routeParams) {
-  $http.get('http://localhost:8080/ADS/gt/get/drug/events/apikey/4').success(function(data) {
+  $http.get('js/ade.json').success(function(data) {
     $scope.results = data.results;
     $scope.whichItem = $routeParams.itemId;
 
@@ -102,7 +102,7 @@ reportControllers.controller('DetailsController', ['$scope', '$http','$routePara
 }]);
 
 reportControllers.controller('EditController', ['$scope', '$http','$routeParams', function($scope, $http, $routeParams) {
-  $http.get('http://localhost:8080/ADS/gt/get/drug/events/apikey/4').success(function(data) {
+  $http.get('js/ade.json').success(function(data) {
     $scope.results = data.results;
     $scope.whichItem = $routeParams.itemId;
 
@@ -123,9 +123,9 @@ reportControllers.controller('EditController', ['$scope', '$http','$routeParams'
 
 
 reportControllers.controller('ListController', ['$scope', '$http', function($scope, $http) {
-  $http.get('http://localhost:8080/ADS/gt/read/db/events').success(function(data) {
+  $http.get('http://localhost:8080/ADS/gt/get/drug/events/apikey/5').success(function(data) {
 	
-    $scope.results = data;
+    $scope.results = data.results;
 	$scope.redirect = function(report){
 			$window.location.href = '/edit/' + report.Id;
 		}
