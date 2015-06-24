@@ -236,14 +236,15 @@ public class BaseController {
     }
 
     // http://localhost:8080/ADS/gt/delete/db/event/{id}
-    @RequestMapping(value = RestURIConstants.DELETE_DB_EVENT_BY_ID, method = RequestMethod.GET)
+    @RequestMapping(value = RestURIConstants.DELETE_DB_EVENT_BY_ID, method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
-    List<AdversDrugEventResultFlattened> deleteDBEventById(@PathVariable long id) {
+    List<AdversDrugEventResultFlattened> deleteDBEventById(@RequestParam(value = "event_id", required = false) String event_id, @RequestBody AdversDrugEventResultFlattened entity) {
+	logger.info("Event ID: " + event_id);
+	//logger.info("ID: " + id);
+	
 	StringBuffer strBuffer = new StringBuffer();
 	int bufferLength = strBuffer.length();
 	try {
-	    AdversDrugEventResultFlattened entity = new AdversDrugEventResultFlattened();
-	    entity.setEvent_id(id);
 	    myAdverseDrugEventDAO.delete(entity);
 	} catch (RuntimeException e) {
 	    strBuffer

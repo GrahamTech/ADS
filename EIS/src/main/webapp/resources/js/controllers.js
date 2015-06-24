@@ -10,8 +10,9 @@ reportControllers.factory('reportService', ['$http', function($http){
 			if(currentId != null && parseInt(currentId, 10) > 0){
 				if(window.confirm('Are you sure you want to delete this record?')){
 					return $http({
-						url: 'yourURL/' + report.event_id,
+						url: 'http://localhost:8080/ADS/gt/delete/db/event',
 						method: 'POST',
+						params: {event_id : currentId},
 						data: {event_id : currentId}
 						//may only need one or the other (data is passing event_id as well)
 					})
@@ -20,7 +21,7 @@ reportControllers.factory('reportService', ['$http', function($http){
 		},
 		saveReport: function (report){
 			$http({
-				url: 'yourURL/' + report.event_id,
+				url: 'yourURL/',
 				method: "POST",
 				data: report
 				
@@ -122,20 +123,25 @@ reportControllers.controller('EditController', ['$scope', '$http','$routeParams'
 }]);
 
 
-reportControllers.controller('ListController', ['$scope', '$http', function($scope, $http) {
-  $http.get('http://localhost:8080/ADS/gt/get/drug/events/apikey/5').success(function(data) {
-	
-    $scope.results = data.results;
-	$scope.redirect = function(report){
-			$window.location.href = '/edit/' + report.Id;
+reportControllers.controller('ListController', ['$scope', '$http','reportService', function($scope, $http,reportService) {
+	  $http.get('http://localhost:8080/ADS/gt/read/db/events').success(function(data) {
+		
+	    $scope.results = data;
+		$scope.redirect = function(report){
+				$window.location.href = '/edit/' + report.Id;
+			}
+		$scope.remove = function(report){
+			reportService.removeReport(report).success(function(data){
+				load();
+				function load(){
+					reportService.getAll.success(function(data){
+						$scope.reports = data;
+					});
+				}
+			});
 		}
-	$scope.remove = function(report){
-		reportService.removeReport(report).success(function(data){
-			load();
-		});
-	}
-	
-	console.log($scope.results);
-    //$scope.reportOrder = 'results.safetyreportid';
-  });
-}]);
+		
+		console.log($scope.results);
+	    //$scope.reportOrder = 'results.safetyreportid';
+	  });
+	}]);

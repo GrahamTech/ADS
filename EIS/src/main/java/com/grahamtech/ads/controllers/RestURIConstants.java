@@ -16,7 +16,8 @@ public class RestURIConstants {
     public static final String READ_DB_EVENT_BY_ID = "/read/db/event/{id}";
     public static final String UPDATE_DB_EVENT_BY_ID = "/update/db/event/{id}";
     public static final String UPDATE_DB_EVENT_BY_ID_AND_PARAMS = "/update/db/event/params/{id}";
-    public static final String DELETE_DB_EVENT_BY_ID = "/delete/db/event/{id}";
+    //public static final String DELETE_DB_EVENT_BY_ID = "/delete/db/event/{id}";
+    public static final String DELETE_DB_EVENT_BY_ID = "/delete/db/event";
 
     public static final String INDEX = "/index";
 }
