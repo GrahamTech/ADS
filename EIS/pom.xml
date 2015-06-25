@@ -19,7 +19,7 @@
 		<xdoclet.version>1.2.1</xdoclet.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<webappDirectory.location>/Applications/apache-tomcat-7.0.62/webapps</webappDirectory.location>
-		<tomcat.webapp.directory>${env.TOMCAT_HOME}/webapps</tomcat.webapp.directory>
+		<webappDirectory.location>/opt/apache-tomcat-7.0.59/webapps</webappDirectory.location>
 	</properties>
  
 		<dependencies>

@@ -193,10 +193,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry excluding="resources/" kind="src" path="src/main/webapp"/>
+	<classpathentry kind="src" path="src/main/webapp/resources"/>
+	<classpathentry excluding="resources/|grahamtech/" kind="src" path="src/main/webapp"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="src" path="src/test/java"/>
-	<classpathentry kind="src" path="src/main/webapp/resources"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjrt/1.7.4/aspectjrt-1.7.4.jar">
 		<attributes>

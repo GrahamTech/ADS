@@ -19,7 +19,7 @@ public class Reaction implements java.io.Serializable {
 
     @Override
     public String toString() {
-	return "reactionmeddrapt=" + this.getReactionmeddrapt() + ". ";
+	return "reactionmeddrapt:" + this.getReactionmeddrapt() + ", ";
     }
 
     public String getReactionmeddrapt() {

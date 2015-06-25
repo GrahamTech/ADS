@@ -3,7 +3,6 @@ package com.grahamtech.ads.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +15,7 @@ import com.grahamtech.ads.daos.MyAdverseDrugEventDAO;
 import com.grahamtech.ads.pojos.AdversDrugEventResultFlattened;
 import com.grahamtech.ads.pojos.AdverseDrugEvent;
 import com.grahamtech.ads.pojos.Results;
+import com.grahamtech.ads.pojos.StatusMessage;
 import com.grahamtech.ads.services.RestClient;
 
 import java.util.ArrayList;
@@ -41,6 +41,8 @@ public class BaseController {
     public @ResponseBody
     ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey(
 	    @PathVariable String rowLimit) {
+	logger.debug("Row limit: " + rowLimit);
+
 	RestClient restClient = new RestClient();
 	String queryString = "?limit=" + rowLimit;
 	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
@@ -51,6 +53,29 @@ public class BaseController {
 		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
 		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
 
+	logger.debug(events.toString());
+	return events;
+    }
+
+    // http://localhost:8080/ADS/gt/get/drug/events/apikey?rowLimit={id}
+    // https://api.fda.gov/drug/event.json
+    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY_ROWLIMIT_PARAM, method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey_ByRowParam(
+	    @RequestParam(value = "rowLimit", required = true) String rowLimit) {
+	logger.debug("Row limit: " + rowLimit);
+
+	RestClient restClient = new RestClient();
+	String queryString = "?limit=" + rowLimit;
+	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+		+ queryString;
+	ResponseEntity<AdverseDrugEvent> events = restClient
+		.getDrugEvents_apiKey(
+			externalURL,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+
+	logger.debug(events.toString());
 	return events;
     }
 
@@ -60,6 +85,8 @@ public class BaseController {
     public @ResponseBody
     ResponseEntity<AdverseDrugEvent> getAdverseDrugEventsAndStore_apiKey(
 	    @PathVariable String rowLimit) {
+	logger.debug("Row limit: " + rowLimit);
+
 	RestClient restClient = new RestClient();
 	String queryString = "?limit=" + rowLimit;
 	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
@@ -76,64 +103,68 @@ public class BaseController {
 	return events;
     }
 
-    private String storeEvents(AdverseDrugEvent restObject) {
-	StringBuffer strBuffer = new StringBuffer();
-	int bufferLength = strBuffer.length();
-	try {
-	    for (Results result : restObject.getResults()) {
-		myAdverseDrugEventDAO.save(new AdversDrugEventResultFlattened(
-			result));
-	    }
-	} catch (ConstraintViolationException ec) {
-	    strBuffer
-		    .append(" ConstraintViolationException saving the entity: AdverseDrugEvent");
-	} catch (RuntimeException e) {
-	    strBuffer
-		    .append(" RuntimeException saving the entity: AdverseDrugEvent");
-	} catch (Exception ex) {
-	    strBuffer.append(" Exception saving the entity: AdverseDrugEvent");
-	}
-	if (strBuffer.length() == bufferLength) {
-	    strBuffer.append("Created successfully: AdverseDrugEvent");
-	}
-	return strBuffer.toString();
+    // http://localhost:8080/ADS/gt/get/drug/events/and/store/apikey?rowLimit={id}
+    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_AND_STORE_CALL_WITH_API_KEY_ROWLIMIT_PARAM, method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<AdverseDrugEvent> getAdverseDrugEventsAndStore_apiKey_RowLimitByParam(
+	    @RequestParam(value = "rowLimit", required = true) String rowLimit) {
+	logger.debug("Row limit: " + rowLimit);
+
+	RestClient restClient = new RestClient();
+	String queryString = "?limit=" + rowLimit;
+	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+		+ queryString;
+	ResponseEntity<AdverseDrugEvent> events = restClient
+		.getDrugEvents_apiKey(
+			externalURL,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+
+	String success = storeEvents(events.getBody());
+	logger.info(success);
+
+	return events;
     }
 
-    // use spring tag lib to create spring form which binds the form fields to
-    // the same getter/setter names in the ModelAttribute object. Use 'entity'
-    // to bind in you JSP file
-
-    // List<AdversDrugEventResultFlattened> createDBEvent(
-    // @ModelAttribute("entity") AdversDrugEventResultFlattened entity) {
-
-    // http://localhost:8080/ADS/gt/create/db/event
-    @RequestMapping(value = RestURIConstants.CREATE_DB_EVENT, method = RequestMethod.POST)
-    public @ResponseBody
-    List<AdversDrugEventResultFlattened> createDBEvent(
-	    @RequestBody AdverseDrugEvent entity) {
-
-	logger.info(entity.toString());
-
+    private String storeEvents(AdverseDrugEvent entity) {
+	logger.debug(entity.toString());
+	
 	StringBuffer strBuffer = new StringBuffer();
 	int bufferLength = strBuffer.length();
 	try {
 	    for (Results result : entity.getResults()) {
-		myAdverseDrugEventDAO.save(new AdversDrugEventResultFlattened(
-			result));
+		List<AdversDrugEventResultFlattened> entityInDBList = myAdverseDrugEventDAO
+			.findEventBySafetyReportId(result.getSafetyreportid());
+		if (entityInDBList.size() == 0) {
+		    //didn't find it, so create it.
+		    myAdverseDrugEventDAO.save(new AdversDrugEventResultFlattened(
+				result));
+		} else {
+		    strBuffer
+			    .append(" ConstraintViolationException saving the entity Adverse Drug Event with safety report id: "
+				    + result.getSafetyreportid());
+		    logger.warn(" ConstraintViolationException saving the entity Adverse Drug Event with safety report id: "
+			    + result.getSafetyreportid());
+		}
+
 	    }
 	} catch (ConstraintViolationException ec) {
 	    strBuffer
-		    .append(" ConstraintViolationException updating the entity: AdversDrugEventResultFlattened");
+		    .append(" ConstraintViolationException saving the entity: AdverseDrugEvent");
+	    logger.error(" ConstraintViolationException saving the entity: AdverseDrugEvent");
 	} catch (RuntimeException e) {
 	    strBuffer
-		    .append(" RuntimeException updating the entity: AdversDrugEventResultFlattened");
+		    .append(" RuntimeException saving the entity: AdverseDrugEvent");
+	    logger.error(" RuntimeException saving the entity: AdverseDrugEvent");
+	} catch (Exception ex) {
+	    strBuffer.append(" Exception saving the entity: AdverseDrugEvent");
+	    logger.error(" Exception saving the entity: AdverseDrugEvent");
 	}
 	if (strBuffer.length() == bufferLength) {
-	    strBuffer
-		    .append("Created successfully: AdversDrugEventResultFlattened");
+	    strBuffer.append("Created successfully: AdverseDrugEvent");
+	    logger.debug("Created successfully: AdverseDrugEvent");
 	}
-	logger.info(strBuffer.toString());
-	return readDBEvents();
+	return strBuffer.toString();
     }
 
     // http://localhost:8080/ADS/gt/read/db/events
@@ -142,120 +173,232 @@ public class BaseController {
     List<AdversDrugEventResultFlattened> readDBEvents() {
 	List<AdversDrugEventResultFlattened> list = myAdverseDrugEventDAO
 		.findAll();
-	return list;
+
+	List<AdversDrugEventResultFlattened> listFlattened = new ArrayList<AdversDrugEventResultFlattened>();
+	for (AdversDrugEventResultFlattened item : list) {
+	    item.setPatient_reactions(item.flattenFromDB(item
+		    .getPatient_reactions()));
+	    listFlattened.add(item);
+	}
+	return listFlattened;
     }
 
     // http://localhost:8080/ADS/gt/read/db/event/{id}
     @RequestMapping(value = RestURIConstants.READ_DB_EVENT_BY_ID, method = RequestMethod.GET)
     public @ResponseBody
-    AdversDrugEventResultFlattened readDBEventById(@PathVariable String id) {
-	AdversDrugEventResultFlattened event = myAdverseDrugEventDAO
-		.findById(new Long(id).longValue());
-
-	return event;
-    }
-
-    // http://localhost:8080/ADS/gt/update/db/event/params/{id}
-    @RequestMapping(value = RestURIConstants.UPDATE_DB_EVENT_BY_ID, method = RequestMethod.POST)
-    public @ResponseBody
-    List<AdversDrugEventResultFlattened> updateDBEventById(
-	    @PathVariable long id,
-	    @RequestParam(value = "safetyreportid", required = true) String safetyreportid,
-	    @RequestParam(value = "senderorganization", required = true) String sender,
-	    @RequestParam(value = "serious", required = true) String serious,
-	    @RequestParam(value = "companynumb", required = true) String companynumb,
-	    @RequestParam(value = "reactionmeddrapt", required = true) String reactionmeddrapt) {
-
-	logger.info("safetyreportid=" + safetyreportid);
-	// StringBuffer strBuffer = new StringBuffer();
-	// int bufferLength = strBuffer.length();
-	// try {
-	// for (Results result : entity.getResults()) {
-	// myAdverseDrugEventDAO.merge(new AdversDrugEventResultFlattened(
-	// result));
-	// }
-	// } catch (RuntimeException e) {
-	// strBuffer
-	// .append("Error updating the entity: AdversDrugEventResultFlattened");
-	// }
-	// if (strBuffer.length() == bufferLength) {
-	// strBuffer
-	// .append("Updated successfully: AdversDrugEventResultFlattened");
-	// }
-	// logger.info(strBuffer.toString());
-
-	List<AdversDrugEventResultFlattened> dbReturnList = readDBEvents();
-	// Convert from flattened to external object format for JSON
-	// presentation to the browser
-	List<AdverseDrugEvent> adverseDrugEventList = new ArrayList<AdverseDrugEvent>();
-	for (AdversDrugEventResultFlattened flattenedItem : dbReturnList) {
-	    Results event = new Results();
-	    event.setCompanynumb(flattenedItem.getCompanynumb());
-
-	    // event.setPatient(patient);
-
+    AdversDrugEventResultFlattened readDBEventById(@PathVariable String event_id) {
+	logger.debug(event_id);
+	
+	StringBuffer strBuffer = new StringBuffer();
+	StatusMessage statusMessage = new StatusMessage();
+	Boolean idIsValid = new Boolean(true);
+	long eventIdLong = 0;
+	try {
+	    eventIdLong = new Long(event_id);
+	} catch (NumberFormatException nex) {
+	    idIsValid = new Boolean(false);
+	    strBuffer
+		    .append("Error deleting the entity: AdversDrugEventResultFlattened");
+	    statusMessage.setStatus(RestURIConstants.STATUS_MESSAGE_FAILURE);
+	    statusMessage
+		    .setStatusDetails("Error: Event ID must be a valid number");
+	    logger.debug("Error: Event ID is not a number. User entered: "
+		    + event_id);
 	}
-	return dbReturnList;
+	
+	if(idIsValid.booleanValue()){
+	    AdversDrugEventResultFlattened event = myAdverseDrugEventDAO
+			.findById(eventIdLong);
+
+		event.setPatient_reactions(event.flattenFromDB(event
+			.getPatient_reactions()));
+		
+		return event;
+	}
+	// TODO: throw status message exception if event is not found
+	return new AdversDrugEventResultFlattened();
     }
 
-    // http://localhost:8080/ADS/gt/update/db/event/{id}
-    @RequestMapping(value = RestURIConstants.UPDATE_DB_EVENT_BY_ID_AND_PARAMS, method = RequestMethod.POST)
+    @RequestMapping(value = RestURIConstants.READ_DB_EVENT_BY_ID_BY_PARAM, method = {
+	    RequestMethod.GET, RequestMethod.PUT })
     public @ResponseBody
-    List<AdversDrugEventResultFlattened> updateDBEventByIdParams(
-	    @PathVariable long id,
- @RequestBody AdverseDrugEvent entity) {
+    AdversDrugEventResultFlattened readDBEventByIdByParam(
+	    @RequestParam(value = "event_id", required = true) String event_id) {
+	logger.debug("Event ID: " + event_id);
+
+	StringBuffer strBuffer = new StringBuffer();
+	StatusMessage statusMessage = new StatusMessage();
+	Boolean idIsValid = new Boolean(true);
+	long eventIdLong = 0;
+	try {
+	    eventIdLong = new Long(event_id);
+	} catch (NumberFormatException nex) {
+	    idIsValid = new Boolean(false);
+	    strBuffer
+		    .append("Error deleting the entity: AdversDrugEventResultFlattened");
+	    statusMessage.setStatus(RestURIConstants.STATUS_MESSAGE_FAILURE);
+	    statusMessage
+		    .setStatusDetails("Error: Event ID must be a valid number");
+	    logger.debug("Error: Event ID is not a number. User entered: "
+		    + event_id);
+	}
+
+	if (idIsValid.booleanValue()) {
+	    AdversDrugEventResultFlattened event = myAdverseDrugEventDAO
+		    .findById(eventIdLong);
+
+	    event.setPatient_reactions(event.flattenFromDB(event
+		    .getPatient_reactions()));
+
+	    return event;
+	}
+	// TODO: throw status message exception if event is not found
+	return new AdversDrugEventResultFlattened();
+    }
+
+    // http://localhost:8080/ADS/gt/create/db/event
+    @RequestMapping(value = RestURIConstants.CREATE_DB_EVENT, method = RequestMethod.POST)
+    public @ResponseBody
+    StatusMessage createDBEvent(
+	    @RequestBody AdversDrugEventResultFlattened entity) {
+
+	logger.debug(entity.toString());
+
+	StringBuffer strBuffer = new StringBuffer();
+	StatusMessage statusMessage = new StatusMessage();
+	List<AdversDrugEventResultFlattened> entityInDBList = myAdverseDrugEventDAO
+		.findEventBySafetyReportId(entity.getSafetyreportid());
+	if (entityInDBList.size() == 0) {
+	    // didn't find it, so create it.
+	    int bufferLength = strBuffer.length();
+	    try {
+		myAdverseDrugEventDAO.save(entity);
+	    } catch (ConstraintViolationException ec) {
+		strBuffer
+			.append(" ConstraintViolationException updating the entity: AdversDrugEventResultFlattened");
+		statusMessage
+			.setStatus(RestURIConstants.STATUS_MESSAGE_FAILURE);
+		statusMessage
+			.setStatusDetails(RestURIConstants.STATUS_MESSAGE_DETAILS
+				+ "bc_c_001");
+		logger.error(" ConstraintViolationException updating the entity: AdversDrugEventResultFlattened: bc_c_001");
+	    } catch (RuntimeException e) {
+		strBuffer
+			.append(" RuntimeException updating the entity: AdversDrugEventResultFlattened");
+		statusMessage
+			.setStatus(RestURIConstants.STATUS_MESSAGE_FAILURE);
+		statusMessage
+			.setStatusDetails(RestURIConstants.STATUS_MESSAGE_DETAILS
+				+ "bc_c_002");
+		logger.error(" RuntimeException updating the entity: AdversDrugEventResultFlattened: bc_c_002");
+	    }
+	    if (strBuffer.length() == bufferLength) {
+		strBuffer
+			.append("Advers Drug Event record stored successfully");
+		statusMessage
+			.setStatus(RestURIConstants.STATUS_MESSAGE_SUCCESS);
+		statusMessage
+			.setStatusDetails("Advers Drug Event record stored successfully");
+	    }
+	    logger.info(strBuffer.toString() + ": id=" + entity.getEvent_id());
+
+	} else {
+	    strBuffer
+		    .append(" ConstraintViolationException saving the entity Adverse Drug Event with safety report id: "
+			    + entity.getSafetyreportid());
+	    logger.warn(" ConstraintViolationException saving the entity Adverse Drug Event with safety report id: "
+		    + entity.getSafetyreportid());
+	} // end else if
+
+	return statusMessage;
+    }
+
+    // http://localhost:8080/ADS/gt/update/db/event
+    @RequestMapping(value = RestURIConstants.UPDATE_DB_EVENT, method = RequestMethod.POST)
+    public @ResponseBody
+    StatusMessage updateDBEvent(
+	    @RequestBody AdversDrugEventResultFlattened entity) {
+
+	logger.debug(entity.toString());
+
+	StatusMessage statusMessage = new StatusMessage();
 	StringBuffer strBuffer = new StringBuffer();
 	int bufferLength = strBuffer.length();
 	try {
-	    for (Results result : entity.getResults()) {
-		myAdverseDrugEventDAO.merge(new AdversDrugEventResultFlattened(
-			result));
-	    }
+	    myAdverseDrugEventDAO.merge(entity);
 	} catch (RuntimeException e) {
 	    strBuffer
 		    .append("Error updating the entity: AdversDrugEventResultFlattened");
+	    statusMessage.setStatus(RestURIConstants.STATUS_MESSAGE_FAILURE);
+	    statusMessage
+		    .setStatusDetails(RestURIConstants.STATUS_MESSAGE_DETAILS
+			    + "bc_u_001");
+	    logger.error("Error updating the entity: AdversDrugEventResultFlattened bc_u_001");
 	}
 	if (strBuffer.length() == bufferLength) {
-	    strBuffer
-		    .append("Updated successfully: AdversDrugEventResultFlattened");
+	    strBuffer.append("Advers Drug Event record updated successfully");
+	    statusMessage.setStatus(RestURIConstants.STATUS_MESSAGE_SUCCESS);
+	    statusMessage
+		    .setStatusDetails("Advers Drug Event record stored successfully");
 	}
-	logger.info(strBuffer.toString());
+	logger.info(strBuffer.toString() + ": id=" + entity.getEvent_id());
 
-	List<AdversDrugEventResultFlattened> dbReturnList = readDBEvents();
-	// Convert from flattened to external object format for JSON
-	// presentation to the browser
-	List<AdverseDrugEvent> adverseDrugEventList = new ArrayList<AdverseDrugEvent>();
-	for (AdversDrugEventResultFlattened flattenedItem : dbReturnList) {
-	    Results event = new Results();
-	    event.setCompanynumb(flattenedItem.getCompanynumb());
-
-	    // event.setPatient(patient);
-
-	}
-	return dbReturnList;
+	return statusMessage;
     }
 
-    // http://localhost:8080/ADS/gt/delete/db/event/{id}
-    @RequestMapping(value = RestURIConstants.DELETE_DB_EVENT_BY_ID, method = {RequestMethod.GET, RequestMethod.POST})
+    // http://localhost:8080/ADS/gt/delete/db/event?event_id={id}
+    @RequestMapping(value = RestURIConstants.DELETE_DB_EVENT_BY_ID_PARAM, method = {
+	    RequestMethod.GET, RequestMethod.PUT })
     public @ResponseBody
-    List<AdversDrugEventResultFlattened> deleteDBEventById(@RequestParam(value = "event_id", required = false) String event_id, @RequestBody AdversDrugEventResultFlattened entity) {
-	logger.info("Event ID: " + event_id);
-	//logger.info("ID: " + id);
-	
+    StatusMessage deleteDBEventById(
+	    @RequestParam(value = "event_id", required = true) String event_id) {
+	logger.debug("Event ID: " + event_id);
+	StatusMessage statusMessage = new StatusMessage("Failure",
+		"the message");
 	StringBuffer strBuffer = new StringBuffer();
-	int bufferLength = strBuffer.length();
+	Boolean idIsValid = new Boolean(true);
+	long eventIdLong = 0;
 	try {
-	    myAdverseDrugEventDAO.delete(entity);
-	} catch (RuntimeException e) {
+	    eventIdLong = new Long(event_id);
+	} catch (NumberFormatException nex) {
+	    idIsValid = new Boolean(false);
 	    strBuffer
 		    .append("Error deleting the entity: AdversDrugEventResultFlattened");
+	    statusMessage.setStatus(RestURIConstants.STATUS_MESSAGE_FAILURE);
+	    statusMessage
+		    .setStatusDetails("Error: Event ID must be a valid number");
+	    logger.debug("Error: Event ID is not a number. User entered: "
+		    + event_id);
 	}
-	if (strBuffer.length() == bufferLength) {
-	    strBuffer
-		    .append("Deleted successfully: AdversDrugEventResultFlattened");
+
+	int bufferLength = strBuffer.length();
+
+	if (idIsValid.booleanValue()) {
+	    try {
+		AdversDrugEventResultFlattened entity = new AdversDrugEventResultFlattened();
+		entity.setEvent_id(eventIdLong);
+		myAdverseDrugEventDAO.delete(entity);
+	    } catch (RuntimeException e) {
+		strBuffer
+			.append("Error deleting the entity: AdversDrugEventResultFlattened");
+		statusMessage
+			.setStatus(RestURIConstants.STATUS_MESSAGE_FAILURE);
+		statusMessage
+			.setStatusDetails(RestURIConstants.STATUS_MESSAGE_DETAILS
+				+ "bc_d_001");
+		logger.error("Error deleting the entity: AdversDrugEventResultFlattened");
+	    }
+	    if (strBuffer.length() == bufferLength) {
+		strBuffer.append("Advers Drug Event deleted successfully");
+		statusMessage
+			.setStatus(RestURIConstants.STATUS_MESSAGE_SUCCESS);
+		statusMessage
+			.setStatusDetails("Advers Drug Event deleted successfully");
+	    }
 	}
-	logger.info(strBuffer.toString());
-	return readDBEvents();
+
+	logger.info(strBuffer.toString() + ": id=" + event_id);
+	return statusMessage;
     }
 
     // http://localhost:8080/ADS/gt/index

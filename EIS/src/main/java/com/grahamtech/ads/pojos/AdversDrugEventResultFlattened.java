@@ -1,11 +1,18 @@
 package com.grahamtech.ads.pojos;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Description: Flattened Adverse Drug Event result for prototype purposes.
@@ -23,18 +30,28 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
+    @JsonProperty
     private long event_id;
 
     @Column(name = "safetyreportid")
+    @JsonProperty
     private String safetyreportid;
     @Column(name = "senderorganization")
+    @JsonProperty
     private String senderorganization;
     @Column(name = "serious")
+    @JsonProperty
     private long serious;
     @Column(name = "companynumb")
+    @JsonProperty
     private String companynumb;
     @Column(name = "patient_reactions")
+    // @JsonIgnore
+    @JsonProperty(value = "patient_reactions")
     private String patient_reactions;
+
+    // @JsonProperty(value = "patient_reactions")
+    // private String[] patient_reactions_array;
 
     public AdversDrugEventResultFlattened() {
 	// default constructor
@@ -47,13 +64,13 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
 	this.setCompanynumb(companynumb);
 	this.setEvent_id(event_id);
 	this.setPatient_reactions(patient_reactions);
-	this.setSenderOrganization(sender);
+	this.setSenderorganization(sender);
 	this.setSerious(serious);
     }
 
     public AdversDrugEventResultFlattened(Results result) {
 	this.setSafetyreportid(result.getSafetyreportid());
-	this.setSenderOrganization(result.getSender().getSenderorganization());
+	this.setSenderorganization(result.getSender().getSenderorganization());
 	this.setCompanynumb(result.getCompanynumb());
 	this.setSerious(new Long(result.getSerious()).longValue());
 	this.setPatient_reactions(result.getPatient().getReactionArray());
@@ -75,11 +92,11 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
 	this.safetyreportid = safetyreportid;
     }
 
-    public String getSenderOrganization() {
+    public String getSenderorganization() {
 	return senderorganization;
     }
 
-    public void setSenderOrganization(String senderorganization) {
+    public void setSenderorganization(String senderorganization) {
 	this.senderorganization = senderorganization;
     }
 
@@ -105,6 +122,46 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
 
     public void setPatient_reactions(String patient_reactions) {
 	this.patient_reactions = patient_reactions;
+    }
+
+    public String flattenFromDB(String keyValuePairs) {
+	List<String> valuesList = new ArrayList<String>();
+	String[] reactionsArrayDot = keyValuePairs.split("\\,");
+	List<String> keyValueList = Arrays.asList(reactionsArrayDot);
+	for (String keyValue : keyValueList) {
+	    // String keyValueTrimmed = keyValue.trim();
+	    String keyValueTrimmed = keyValue.replaceAll("^\\s+", "")
+		    .replaceAll("\\s+$", "");
+	    if (keyValueTrimmed != null && !keyValueTrimmed.equals(" ")
+		    && !keyValueTrimmed.equals("")) {
+		String[] reactionsArraySplit = keyValue.split("\\:"); // reactionmeddrapt:
+		List<String> reactionsArraySplitList = Arrays
+			.asList(reactionsArraySplit);
+		for (String reaction : reactionsArraySplitList) {
+		    String vlaueTrimmed = reaction.replaceAll("^\\s+", "")
+			    .replaceAll("\\s+$", "");
+		    if (!vlaueTrimmed.equals("reactionmeddrapt")) {
+			valuesList.add(vlaueTrimmed);
+		    }
+		}// end for
+	    }// end if
+	}// end for
+
+	return createCommaSeparatedList(valuesList);
+    }
+
+    private String createCommaSeparatedList(List<String> theList) {
+	int count = 0;
+	StringBuilder sb = new StringBuilder();
+	for (String reaction : theList) {
+	    reaction.trim();
+	    if (count != 0) {
+		sb.append(", ");
+	    }
+	    sb.append(reaction);
+	    count++;
+	}
+	return sb.toString();
     }
 
     public static long getSerialversionuid() {
