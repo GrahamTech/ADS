@@ -18,8 +18,9 @@
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 		<xdoclet.version>1.2.1</xdoclet.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<webappDirectory.location>/Applications/apache-tomcat-7.0.62/webapps</webappDirectory.location>
-		<webappDirectory.location>/opt/apache-tomcat-7.0.59/webapps</webappDirectory.location>
+<!-- 		<webappDirectory.location>/Applications/apache-tomcat-7.0.62/webapps</webappDirectory.location> -->
+<!-- 		<webappDirectory.location>/opt/apache-tomcat-7.0.59/webapps</webappDirectory.location> -->
+		<webappDirectory.location>/Applications/apache-tomcat-8.0.23/webapps</webappDirectory.location>
 	</properties>
  
 		<dependencies>
