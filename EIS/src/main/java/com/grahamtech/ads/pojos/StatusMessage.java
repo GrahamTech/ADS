@@ -4,6 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * <h1>Agile Delivery Service</h1> Used to indicate the status of a request and
+ * a detailed message.
+ * 
+ * @author Rodney Morris
+ * @version 1.0
+ * @since 2015-06-24
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatusMessage implements java.io.Serializable {
 

@@ -11,18 +11,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Description: Flattened Adverse Drug Event result for prototype purposes.
+ * <h1>Agile Delivery Service</h1> Flattened Adverse Drug Event result for
+ * prototype storing purposes.
+ * <p>
+ * This Controller exposes the following REST URL
  * 
- * @author morrisrod
- * 
+ * @author Rodney Morris
+ * @version 1.0
+ * @since 2015-06-24
  */
 @Entity
 @Table(name = "adverseDrugEventResults")
-public class AdversDrugEventResultFlattened implements java.io.Serializable {
+public class AdverseDrugEventResultFlattened implements java.io.Serializable {
   // private static final Logger logger =
   // LoggerFactory.getLogger(Project.class);
 
@@ -53,14 +58,21 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
     // @JsonProperty(value = "patient_reactions")
     // private String[] patient_reactions_array;
 
-    public AdversDrugEventResultFlattened() {
+    public AdverseDrugEventResultFlattened() {
 	// default constructor
     }
 
-    public AdversDrugEventResultFlattened(long event_id, String safetyreportid,
+    public AdverseDrugEventResultFlattened(long event_id, String safetyreportid,
 	    String sender,
 	    long serious, String companynumb, String patient_reactions) {
+	this(sender, serious, companynumb, patient_reactions);
+	this.event_id = event_id;
 	this.safetyreportid = safetyreportid;
+    }
+
+    public AdverseDrugEventResultFlattened(String sender, long serious,
+	    String companynumb,
+	    String patient_reactions) {
 	this.setCompanynumb(companynumb);
 	this.setEvent_id(event_id);
 	this.setPatient_reactions(patient_reactions);
@@ -68,7 +80,7 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
 	this.setSerious(serious);
     }
 
-    public AdversDrugEventResultFlattened(Results result) {
+    public AdverseDrugEventResultFlattened(Results result) {
 	this.setSafetyreportid(result.getSafetyreportid());
 	this.setSenderorganization(result.getSender().getSenderorganization());
 	this.setCompanynumb(result.getCompanynumb());
@@ -167,6 +179,45 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
 
     public static long getSerialversionuid() {
 	return serialVersionUID;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result
+		+ ((companynumb == null) ? 0 : companynumb.hashCode());
+	result = prime * result + (int) (event_id ^ (event_id >>> 32));
+	return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (!(obj instanceof AdverseDrugEventResultFlattened))
+	    return false;
+	AdverseDrugEventResultFlattened other = (AdverseDrugEventResultFlattened) obj;
+	if (companynumb == null) {
+	    if (other.companynumb != null)
+		return false;
+	} else if (!companynumb.equals(other.companynumb))
+	    return false;
+	if (event_id != other.event_id)
+	    return false;
+	return true;
     }
 
 }

@@ -1,15 +1,6 @@
 package com.grahamtech.ads.pojos;
 
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
-//import javax.persistence.Transient;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.grahamtech.ads.pojos.Results;
@@ -17,8 +8,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-//@Entity
-//@Table(name = "adverse_drug_reactions")
+/**
+ * <h1>Agile Delivery Service</h1> Stores the JSON data returned from the
+ * Adverse Drug Event external REST call.
+ * <p>
+ * 
+ * @author Rodney Morris
+ * @version 1.0
+ * @since 2015-06-24
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdverseDrugEvent implements java.io.Serializable {
   // private static final Logger logger =
@@ -53,7 +51,7 @@ public class AdverseDrugEvent implements java.io.Serializable {
 	return strBuffer.toString();
     }
     
-    public AdverseDrugEvent flattenEventObjectDTO(AdversDrugEventResultFlattened flattenedObj){
+    public AdverseDrugEvent flattenEventObjectDTO(AdverseDrugEventResultFlattened flattenedObj){
 	AdverseDrugEvent fullObj = new AdverseDrugEvent();
 	fullObj.setMeta(new Meta("20150601"));
 	

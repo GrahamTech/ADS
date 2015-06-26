@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.grahamtech.ads.daos.MyAdverseDrugEventDAO;
-import com.grahamtech.ads.pojos.AdversDrugEventResultFlattened;
+import com.grahamtech.ads.pojos.AdverseDrugEventResultFlattened;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml" })
@@ -27,7 +27,7 @@ public class HibernateIntegrationTest {
 
     @Test
     public void findByIdTest() {
-	AdversDrugEventResultFlattened event = myAdverseDrugEventDAO
+	AdverseDrugEventResultFlattened event = myAdverseDrugEventDAO
 		.findById(new Long(1));
 	assertNotNull(event);
     }

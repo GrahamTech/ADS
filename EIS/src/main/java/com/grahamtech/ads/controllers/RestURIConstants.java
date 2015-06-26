@@ -16,7 +16,7 @@ public class RestURIConstants {
       "YQG9X0JzsVSlL7WE8vx9KNiXM3jpyZz1jbhqpTGu";
 
     public static final String READ_DB_EVENTS = "/read/db/events"; // GET
-    public static final String READ_DB_EVENT_BY_ID = "/read/db/event/{id}"; // GET
+    public static final String READ_DB_EVENT_BY_ID = "/read/db/event"; // GET
     public static final String READ_DB_EVENT_BY_ID_BY_PARAM = "/read/db/event"; // GET
 
     public static final String CREATE_DB_EVENT = "/create/db/event"; // POST
