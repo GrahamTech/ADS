@@ -6,27 +6,27 @@
         <a href="#/edit/{{nextItem}}" class="btn btn-right" style="background:#2955A1; color:#fff; padding:5px 10px; font-weight:bold;">&gt;</a>
     </div>
 	<form>
-    
+	
     <div class="container">
             <div class="row" style="margin:20px 0;">
                 <div class="col-sm-6">
-                <input type="hidden" name="eventId" value="{{results.event_id}}" />
+                <input type="hidden" name="eventId" ng-model="results[whichItem].event_id" value="{{results.event_id}}" />
                 <!--<input type="hidden" name="event_id" ng-value="event_id" /> -->
-                <b>Safety Report ID:</b> <input type="text" ng-model="results[whichItem].safetyreportid"/>
+                <b>Safety Report ID:</b> <input type="text" value="{{results[whichItem].safetyreportid"}}" ng-model="safetyreportid"> </input>
                 </div>
                 <div class="col-sm-6">
-                <b>Sender:</b> <input type="text" ng-model="results[whichItem].sender.senderorganization"/>
+                <b>Sender:</b> <input type="text" ng-model="senderorganization"/>
                 </div>
             </div>
             <div class="row" style="margin:20px 0;">
                 <div class="col-sm-6">
-                <b>Severity:</b> <input type="text" ng-model="results[whichItem].serious" />
+                <b>Severity:</b> <input type="text" ng-model="serious" />
                 </div>
                 <div class="col-sm-6">
-                <b>Company Number:</b><input type="text" ng-model="results[whichItem].companynumb"/>
+                <b>Company Number:</b><input type="text" ng-model="companynumb"/>
                 </div>
             </div>
-            <b>Associated Reactions </b> 
+            <b>Reactions:</b> <input type="text" ng-model="patient_reactions" /> 
 	</div>
   
     <p><input type="button" ng-click="edit()" id="btnAdd" value="Submit"/></p>

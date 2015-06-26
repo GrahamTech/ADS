@@ -1,5 +1,6 @@
 package com.grahamtech.ads.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,7 +10,8 @@ public class StatusMessage implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     @JsonProperty
     private String status;
-    @JsonProperty
+    @JsonIgnore
+    @JsonProperty(value="statusDetails")
     private String statusDetails;
 
     public StatusMessage() {

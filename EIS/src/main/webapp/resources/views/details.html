@@ -24,7 +24,11 @@
                 <b>Company Number:</b> {{results[whichItem].companynumb}}
                 </div>
       		</div>
-              <b>Associated Reactions </b> 
+            <b>Associated Reactions </b> 
+			<ul>
+			  <li ng-repeat="reaction in results[whichItem].patient.reaction"> {{reaction.reactionmeddrapt}}</li>
+	
+			</ul>
 	</div>
 
   

@@ -126,27 +126,28 @@ public class AdversDrugEventResultFlattened implements java.io.Serializable {
 
     public String flattenFromDB(String keyValuePairs) {
 	List<String> valuesList = new ArrayList<String>();
-	String[] reactionsArrayDot = keyValuePairs.split("\\,");
-	List<String> keyValueList = Arrays.asList(reactionsArrayDot);
-	for (String keyValue : keyValueList) {
-	    // String keyValueTrimmed = keyValue.trim();
-	    String keyValueTrimmed = keyValue.replaceAll("^\\s+", "")
-		    .replaceAll("\\s+$", "");
-	    if (keyValueTrimmed != null && !keyValueTrimmed.equals(" ")
-		    && !keyValueTrimmed.equals("")) {
-		String[] reactionsArraySplit = keyValue.split("\\:"); // reactionmeddrapt:
-		List<String> reactionsArraySplitList = Arrays
-			.asList(reactionsArraySplit);
-		for (String reaction : reactionsArraySplitList) {
-		    String vlaueTrimmed = reaction.replaceAll("^\\s+", "")
+	if(keyValuePairs != null){
+		String[] reactionsArrayDot = keyValuePairs.split("\\,");
+		List<String> keyValueList = Arrays.asList(reactionsArrayDot);
+		for (String keyValue : keyValueList) {
+		    // String keyValueTrimmed = keyValue.trim();
+		    String keyValueTrimmed = keyValue.replaceAll("^\\s+", "")
 			    .replaceAll("\\s+$", "");
-		    if (!vlaueTrimmed.equals("reactionmeddrapt")) {
-			valuesList.add(vlaueTrimmed);
-		    }
+		    if (keyValueTrimmed != null && !keyValueTrimmed.equals(" ")
+			    && !keyValueTrimmed.equals("")) {
+			String[] reactionsArraySplit = keyValue.split("\\:"); // reactionmeddrapt:
+			List<String> reactionsArraySplitList = Arrays
+				.asList(reactionsArraySplit);
+			for (String reaction : reactionsArraySplitList) {
+			    String vlaueTrimmed = reaction.replaceAll("^\\s+", "")
+				    .replaceAll("\\s+$", "");
+			    if (!vlaueTrimmed.equals("reactionmeddrapt")) {
+				valuesList.add(vlaueTrimmed);
+			    }
+			}// end for
+		    }// end if
 		}// end for
-	    }// end if
-	}// end for
-
+	}//end if not null
 	return createCommaSeparatedList(valuesList);
     }
 

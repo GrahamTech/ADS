@@ -11,9 +11,12 @@ public class Sender implements java.io.Serializable {
     private String senderorganization;
 
     public Sender() {
-
     }
 
+    public Sender(String senderorganization) {
+	this.senderorganization = senderorganization;
+    }
+    
     @Override
     public String toString() {
 	return "Sender [senderorganization=" + this.getSenderorganization()

@@ -22,7 +22,7 @@ public class RestURIConstants {
     public static final String CREATE_DB_EVENT = "/create/db/event"; // POST
     public static final String UPDATE_DB_EVENT = "/update/db/event"; // POST
     public static final String DELETE_DB_EVENT_BY_ID = "/delete/db/event";
-    public static final String DELETE_DB_EVENT_BY_ID_PARAM = "/delete/db/event/{id}"; // GET
+    public static final String DELETE_DB_EVENT_BY_ID_PARAM = "/delete/db/event"; // GET
 										// or
 										// PUT
 

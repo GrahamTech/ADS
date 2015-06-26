@@ -59,7 +59,7 @@ editControllers.controller('editController',
 		var report = {};
 		report["event_id"] = $scope.event_id;
 		report["safetyreportid"] = $scope.safetyreportid;
-		report["sender"] = $scope.sender;
+		report["senderorganization"] = $scope.sender;
 		report["serious"] = $scope.serious;
 		report["companynumb"] = $scope.companynumb;
 		report["reaction"] = $scope.reaction;

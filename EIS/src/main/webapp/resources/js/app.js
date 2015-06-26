@@ -16,7 +16,7 @@ myApp.config(['$routeProvider', function($routeProvider) {
   }).
   when('/add', {
     templateUrl: 'views/add.html',
-    controller: 'ListController'
+    controller: 'AddController'
   }).
   when('/edit/:itemId', {
     templateUrl: 'views/edit.html',

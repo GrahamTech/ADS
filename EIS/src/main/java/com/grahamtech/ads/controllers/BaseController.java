@@ -1,6 +1,7 @@
 package com.grahamtech.ads.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,47 +38,47 @@ public class BaseController {
 
     // http://localhost:8080/ADS/gt/get/drug/events/apikey/3
     // https://api.fda.gov/drug/event.json
-    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY, method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey(
-	    @PathVariable String rowLimit) {
-	logger.debug("Row limit: " + rowLimit);
-
-	RestClient restClient = new RestClient();
-	String queryString = "?limit=" + rowLimit;
-	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
-		+ queryString;
-	ResponseEntity<AdverseDrugEvent> events = restClient
-		.getDrugEvents_apiKey(
-			externalURL,
-		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
-		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
-
-	logger.debug(events.toString());
-	return events;
-    }
+//    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY, method = RequestMethod.GET)
+//    public @ResponseBody
+//    ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey(
+//	    @PathVariable String rowLimit) {
+//	logger.debug("Row limit: " + rowLimit);
+//
+//	RestClient restClient = new RestClient();
+//	String queryString = "?limit=" + rowLimit;
+//	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+//		+ queryString;
+//	ResponseEntity<AdverseDrugEvent> events = restClient
+//		.getDrugEvents_apiKey(
+//			externalURL,
+//		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
+//		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+//
+//	logger.debug(events.toString());
+//	return events;
+//    }
 
     // http://localhost:8080/ADS/gt/get/drug/events/apikey?rowLimit={id}
     // https://api.fda.gov/drug/event.json
-    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY_ROWLIMIT_PARAM, method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey_ByRowParam(
-	    @RequestParam(value = "rowLimit", required = true) String rowLimit) {
-	logger.debug("Row limit: " + rowLimit);
-
-	RestClient restClient = new RestClient();
-	String queryString = "?limit=" + rowLimit;
-	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
-		+ queryString;
-	ResponseEntity<AdverseDrugEvent> events = restClient
-		.getDrugEvents_apiKey(
-			externalURL,
-			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
-			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
-
-	logger.debug(events.toString());
-	return events;
-    }
+//    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY_ROWLIMIT_PARAM, method = RequestMethod.GET)
+//    public @ResponseBody
+//    ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey_ByRowParam(
+//	    @RequestParam(value = "rowLimit", required = true) String rowLimit) {
+//	logger.debug("Row limit: " + rowLimit);
+//
+//	RestClient restClient = new RestClient();
+//	String queryString = "?limit=" + rowLimit;
+//	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+//		+ queryString;
+//	ResponseEntity<AdverseDrugEvent> events = restClient
+//		.getDrugEvents_apiKey(
+//			externalURL,
+//			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
+//			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+//
+//	logger.debug(events.toString());
+//	return events;
+//    }
 
     // http://localhost:8080/ADS/gt/get/drug/events/and/store/apikey/3
     // https://api.fda.gov/drug/event.json
@@ -104,27 +105,27 @@ public class BaseController {
     }
 
     // http://localhost:8080/ADS/gt/get/drug/events/and/store/apikey?rowLimit={id}
-    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_AND_STORE_CALL_WITH_API_KEY_ROWLIMIT_PARAM, method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity<AdverseDrugEvent> getAdverseDrugEventsAndStore_apiKey_RowLimitByParam(
-	    @RequestParam(value = "rowLimit", required = true) String rowLimit) {
-	logger.debug("Row limit: " + rowLimit);
-
-	RestClient restClient = new RestClient();
-	String queryString = "?limit=" + rowLimit;
-	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
-		+ queryString;
-	ResponseEntity<AdverseDrugEvent> events = restClient
-		.getDrugEvents_apiKey(
-			externalURL,
-			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
-			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
-
-	String success = storeEvents(events.getBody());
-	logger.info(success);
-
-	return events;
-    }
+//    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_AND_STORE_CALL_WITH_API_KEY_ROWLIMIT_PARAM, method = RequestMethod.GET)
+//    public @ResponseBody
+//    ResponseEntity<AdverseDrugEvent> getAdverseDrugEventsAndStore_apiKey_RowLimitByParam(
+//	    @RequestParam(value = "rowLimit", required = true) String rowLimit) {
+//	logger.debug("Row limit: " + rowLimit);
+//
+//	RestClient restClient = new RestClient();
+//	String queryString = "?limit=" + rowLimit;
+//	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+//		+ queryString;
+//	ResponseEntity<AdverseDrugEvent> events = restClient
+//		.getDrugEvents_apiKey(
+//			externalURL,
+//			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
+//			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+//
+//	String success = storeEvents(events.getBody());
+//	logger.info(success);
+//
+//	return events;
+//    }
 
     private String storeEvents(AdverseDrugEvent entity) {
 	logger.debug(entity.toString());
@@ -168,7 +169,7 @@ public class BaseController {
     }
 
     // http://localhost:8080/ADS/gt/read/db/events
-    @RequestMapping(value = RestURIConstants.READ_DB_EVENTS, method = RequestMethod.GET)
+    /*@RequestMapping(value = RestURIConstants.READ_DB_EVENTS, method = RequestMethod.GET)
     public @ResponseBody
     List<AdversDrugEventResultFlattened> readDBEvents() {
 	List<AdversDrugEventResultFlattened> list = myAdverseDrugEventDAO
@@ -181,12 +182,34 @@ public class BaseController {
 	    listFlattened.add(item);
 	}
 	return listFlattened;
-    }
+    }*/
 
+    @RequestMapping(value = RestURIConstants.READ_DB_EVENTS, method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<AdverseDrugEvent> readDBEvents() {
+	List<AdversDrugEventResultFlattened> list = myAdverseDrugEventDAO
+		.findAll();
+
+	List<AdverseDrugEvent> listEvents = new ArrayList<AdverseDrugEvent>();
+	for (AdversDrugEventResultFlattened item : list) {
+	    item.setPatient_reactions(item.flattenFromDB(item
+		    .getPatient_reactions()));
+	    AdverseDrugEvent adverseDrugEvent = new AdverseDrugEvent();
+	    adverseDrugEvent = adverseDrugEvent.flattenEventObjectDTO(item);
+	    
+	    listEvents.add(adverseDrugEvent);
+	}
+	
+	AdverseDrugEvent adverseDrugEvent = new AdverseDrugEvent();
+	adverseDrugEvent = adverseDrugEvent.combineDBEvents(listEvents);
+	ResponseEntity<AdverseDrugEvent> responseEntity = new ResponseEntity<AdverseDrugEvent> (adverseDrugEvent, HttpStatus.OK);
+	return responseEntity;
+    }
+    
     // http://localhost:8080/ADS/gt/read/db/event/{id}
     @RequestMapping(value = RestURIConstants.READ_DB_EVENT_BY_ID, method = RequestMethod.GET)
     public @ResponseBody
-    AdversDrugEventResultFlattened readDBEventById(@PathVariable String event_id) {
+    AdverseDrugEvent readDBEventById(@PathVariable String event_id) {
 	logger.debug(event_id);
 	
 	StringBuffer strBuffer = new StringBuffer();
@@ -213,10 +236,13 @@ public class BaseController {
 		event.setPatient_reactions(event.flattenFromDB(event
 			.getPatient_reactions()));
 		
-		return event;
+		AdverseDrugEvent adverseDrugEvent = new AdverseDrugEvent();
+		    adverseDrugEvent.flattenEventObjectDTO(event);
+		    
+		return adverseDrugEvent;
 	}
 	// TODO: throw status message exception if event is not found
-	return new AdversDrugEventResultFlattened();
+	return new AdverseDrugEvent();
     }
 
     @RequestMapping(value = RestURIConstants.READ_DB_EVENT_BY_ID_BY_PARAM, method = {
