@@ -273,6 +273,23 @@ public class BaseController {
     }
 
     /**
+     * Returns a Adverse Drug Events stored in the local data store
+     * http://localhost:8080/ADS/gt/read/db/event/{id}
+     * 
+     * @param event_id
+     *            The id in the local data store to retrieve.
+     * @return ResponseEntity<AdverseDrugEvent> Indicates an Http Status message
+     *         and returns the local DB event via JSON.
+     * @see AdverseDrugEvent
+     */
+    @RequestMapping(value = RestURIConstants.READ_DB_EVENT_BY_ID_PATH_VARIABLE, method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<AdverseDrugEvent> readDBEventByIdPathVariabl(
+	    @PathVariable String event_id) {
+	return this.readDBEventById(new Long(event_id).longValue());
+    }
+
+    /**
      * Creates an Adverse Drug Events in the local data store and returns an
      * indication of success or failure.
      * http://localhost:8080/ADS/gt/create/db/event
@@ -405,7 +422,7 @@ public class BaseController {
      *         message returned via JSON.
      * @see StatusMessage
      */
-    @RequestMapping(value = RestURIConstants.DELETE_DB_EVENT_BY_ID_PARAM, method = {
+    @RequestMapping(value = RestURIConstants.DELETE_DB_EVENT_BY_ID, method = {
 	    RequestMethod.GET, RequestMethod.PUT })
     public @ResponseBody
     StatusMessage deleteDBEventById(
@@ -457,6 +474,24 @@ public class BaseController {
 
 	logger.info(strBuffer.toString() + ": id=" + event_id);
 	return statusMessage;
+    }
+
+    /**
+     * Deletes an Adverse Drug Events in the local data store and returns an
+     * indication of success or failure.
+     * http://localhost:8080/ADS/gt/delete/db/event/{event_id}
+     * 
+     * @param event_id
+     *            The id to remove from the local data store
+     * @return StatusMessage Indicates the status of the change and a detailed
+     *         message returned via JSON.
+     * @see StatusMessage
+     */
+    @RequestMapping(value = RestURIConstants.DELETE_DB_EVENT_BY_ID_PATH_VARIABLE, method = {
+	    RequestMethod.GET, RequestMethod.PUT })
+    public @ResponseBody
+    StatusMessage deleteDBEventByIdPathVariable(@PathVariable String event_id) {
+	return this.deleteDBEventById(event_id);
     }
 
     // http://localhost:8080/ADS/gt/index
