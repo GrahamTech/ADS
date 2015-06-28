@@ -386,7 +386,7 @@ public class BaseController {
 		    .findEventBySafetyReportId(entity.getSafetyreportid());
 	    for (AdverseDrugEventResultFlattened event : eventsList) {
 		event.setCompanynumb(entity.getCompanynumb());
-		event.setPatient_reactions(entity.getPatient_reactions());
+		//event.setPatient_reactions(entity.getPatient_reactions());
 		event.setSenderorganization(entity.getSenderorganization());
 		event.setSerious(entity.getSerious());
 		myAdverseDrugEventDAO.update(event);

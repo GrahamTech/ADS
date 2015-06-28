@@ -24,11 +24,23 @@
                 <b>Company Number:</b> {{results[whichItem].companynumb}}
                 </div>
       		</div>
-            <b>Associated Reactions </b> 
-			<ul>
-			  <li ng-repeat="reaction in results[whichItem].patient.reaction"> {{reaction.reactionmeddrapt}}</li>
-	
-			</ul>
+           
+            <table class="table table-striped" style="width:40%; margin-top:2%;">
+                <thead>
+                    <tr>
+                        <th>Associated Reactions</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="reaction in results[whichItem].patient.reaction">
+                        <td >{{reaction.reactionmeddrapt}}</td>
+                        <td><a href="#">edit</a></td>
+                        <td><input type="button" id="btnAdd" value="Delete"/></td>
+                    </tr>
+                </tbody>
+            </table>     
+			
 	</div>
 
   
