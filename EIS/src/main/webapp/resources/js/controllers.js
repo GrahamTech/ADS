@@ -5,16 +5,20 @@ reportControllers.factory('reportService', ['$http', function($http){
 		getAll: function (){
 			return $http.get('http://localhost:8080/ADS/gt/read/db/events');
 		},
+		getRecord: function (){
+			return $http.get('http://localhost:8080/ADS/gt/read/db/event');
+		},
 		removeReport: function (report){
 			var currentId = report.event_id;
 			if(currentId != null && parseInt(currentId, 10) > 0){
 				if(window.confirm('Are you sure you want to delete this record?')){
+					window.location.href = '#/list'
 					return $http({
 						url: 'http://localhost:8080/ADS/gt/delete/db/event',
 						method: 'GET',
 						params: {event_id : currentId}
 						//may only need one or the other (data is passing event_id as well)
-					})
+					})	
 				}
 			}
 		},
@@ -32,7 +36,7 @@ reportControllers.factory('reportService', ['$http', function($http){
 		.then(function(response){
 			if(response !== 'undefined'
 				&& typeof (response) == 'object') {
-				window.location.href = '/report'
+				window.location.href = '#/list'
 			}
 		},
 			function (response){
@@ -105,7 +109,7 @@ reportControllers.controller('AddController',
 ]);
 
 reportControllers.controller('DetailsController', ['$scope', '$http','$routeParams', function($scope, $http, $routeParams) {
-  $http.get('js/ade.json').success(function(data) {
+  $http.get('http://localhost:8080/ADS/gt/read/db/events').success(function(data) {
     $scope.results = data.results;
     $scope.whichItem = $routeParams.itemId;
 
@@ -125,11 +129,16 @@ reportControllers.controller('DetailsController', ['$scope', '$http','$routePara
 }]);
 
 reportControllers.controller('EditController', ['$scope', '$http','$routeParams','reportService', function($scope, $http, $routeParams, reportService) {
-  $http.get('http://localhost:8080/ADS/gt/read/db/events').success(function(data) {
+  $http.get('http://localhost:8080/ADS/gt/read/db/event?event_id=' + $routeParams.itemId).success(function(data) {
     $scope.results = data.results;
-    $scope.whichItem = $routeParams.itemId;
-    
-    
+    //$scope.whichItem = $routeParams.itemId;
+    console.log($scope.results[0].event_id);
+    $scope.event_id = $scope.results[0].event_id;
+    $scope.safetyreportid = $scope.results[0].safetyreportid;
+    $scope.senderorganization = $scope.results[0].sender.senderorganization;
+    $scope.serious = $scope.results[0].serious;
+    $scope.companynumb = $scope.results[0].companynumb;
+    $scope.patient_reactions = $scope.results[0].patient_reactions;
 
     if ($routeParams.itemId > 0) {
       $scope.prevItem = Number($routeParams.itemId)-1;
@@ -165,6 +174,19 @@ reportControllers.controller('ListController', ['$scope', '$http','$window','rep
 		$scope.redirect = function(report){
 				$window.location.href = '/edit/' + report.Id;
 			}
+		
+		$scope.getReport = function(report){
+			$http.get('http://localhost:8080/ADS/gt/get/drug/events/and/store/apikey/' + $scope.rowsRequest).success(function(data) {
+				reportService.getAll().success(function(data1){
+					
+					$scope.reports = data1.results;
+					console.log('got some records' + $scope.reports[0].safetyreportid);
+					$window.location.href = 'http://localhost:8080/ADS/grahamtech/index.html#/details';
+					
+				});
+				
+			});
+		}
 		$scope.remove = function(report){
 			reportService.removeReport(report).success(function(data){
 				
@@ -174,13 +196,13 @@ reportControllers.controller('ListController', ['$scope', '$http','$window','rep
 					reportService.getAll().success(function(data1){
 						
 						$scope.reports = data1.results;
-						$window.location.href = '#/list';
+						console.log('got some records' + $scope.reports[0].safetyreportid);
+						$window.location.href = 'http://localhost:8080/ADS/grahamtech/index.html#/details';
+						
 					});
 				}
 			});
 		}
-		
-		console.log($scope.results);
-	    //$scope.reportOrder = 'results.safetyreportid';
+	
 	  });
 	}]);
