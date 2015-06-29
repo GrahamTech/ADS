@@ -2,7 +2,7 @@
 
 ### Description: ###
 
-A sample project to demonstrate how the Agile Development Web Services prototype was designed and implemented.  This document contains information on our Approach, Hosting Environment, Architecture and Install instructions on how to deploy the prototype on another. 
+Demonstrate the Agile Development Web Services prototype's designed and implemented.  This document contains information on our Approach, Hosting Environment, Architecture and Install instructions on how to deploy the prototype on another. 
 
 ### Approach: ###
 
