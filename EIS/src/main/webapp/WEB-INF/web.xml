@@ -35,6 +35,6 @@
 	</listener>
 	
 	<welcome-file-list>
-	    <welcome-file>/grahatech/index.html</welcome-file>
+	    <welcome-file>/grahamtech/index.html</welcome-file>
 	</welcome-file-list>
 </web-app>
