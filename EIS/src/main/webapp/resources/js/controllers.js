@@ -12,12 +12,13 @@ reportControllers.factory('reportService', ['$http', function($http){
 			var currentId = report.event_id;
 			if(currentId != null && parseInt(currentId, 10) > 0){
 				if(window.confirm('Are you sure you want to delete this record?')){
+					window.location.href = '#/list'
 					return $http({
 						url: 'http://localhost:8080/ADS/gt/delete/db/event',
 						method: 'GET',
 						params: {event_id : currentId}
 						//may only need one or the other (data is passing event_id as well)
-					})
+					})	
 				}
 			}
 		},
@@ -35,7 +36,7 @@ reportControllers.factory('reportService', ['$http', function($http){
 		.then(function(response){
 			if(response !== 'undefined'
 				&& typeof (response) == 'object') {
-				window.location.href = '/list'
+				window.location.href = '#/list'
 			}
 		},
 			function (response){
