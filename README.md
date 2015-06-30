@@ -1,4 +1,4 @@
-Prototype URL: [click here](http://ec2-52-4-97-82.compute-1.amazonaws.com/ADS/grahamtech/index.html#/list)
+Prototype URL: [click here](http://ec2-52-4-97-82.compute-1.amazonaws.com/ADS/grahamtech/index.html)
 # Graham Technologies (GT) | Agile Development Services (ADS) Prototype #
 
 ### Description: ###
@@ -11,7 +11,7 @@ GT utilized an iterative Agile Development Process (SCRUM) to design and impleme
 
 Our team worked together to decompose traceable User Stories/requirements into executable development team tasks, which were assigned to different team members to satisfy the requirements of the prototype. Below are the high-level steps within our process executed to implement the system:
 
-1.	Upload System requirements to TeamForge. Decompose the requirements into Themes/Epics, User Stories, and Tasks.  Please see UserStories.docx document for a list of all System Requirements.
+1.	Upload System requirements to TeamForge. Decompose the requirements into Themes/Epics, User Stories, and Tasks.  Please see AgileManagementApproach.docx document for a list of all System Requirements.
 2.	Created a backlog that contained all of the Tasks required to satisfy the requirements.  Please see ADSTaskList.xslx for the tasks identified for the product backlog.
 3.	Host daily stand-up meetings to discuss progress of assigned tasks. 
 4.	Worked in 3-day sprints to complete tasks identified in product backlog.
