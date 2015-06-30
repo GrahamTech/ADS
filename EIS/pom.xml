@@ -18,8 +18,9 @@
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 		<xdoclet.version>1.2.1</xdoclet.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<webappDirectory.location>/opt/apache-tomcat-7.0.59/webapps</webappDirectory.location>
-		<tomcat.webapp.directory>${env.TOMCAT_HOME}/webapps</tomcat.webapp.directory>
+<!-- 		<webappDirectory.location>/Applications/apache-tomcat-7.0.62/webapps</webappDirectory.location> -->
+<!-- 		<webappDirectory.location>/opt/apache-tomcat-7.0.59/webapps</webappDirectory.location> -->
+		<webappDirectory.location>/Applications/apache-tomcat-8.0.23/webapps</webappDirectory.location>
 	</properties>
  
 		<dependencies>
@@ -413,9 +414,10 @@
 				    <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
 				    <!-- /opt/apache-tomcat-7.0.59/webapps -->
 				    <!-- ${env.TOMCAT_HOME}/webapps -->
-				    <!-- ${tomcat.webapp.directory} -->
+				    <!-- ${webappDirectory.location} -->
+				    
 				    <!-- this will always be relative to the pom file unless you us an absolut path. Even when using an absolute path within an environment variable, it still just appends the absolute path the the relative path. -->
-					<outputDirectory>/opt/apache-tomcat-7.0.59/webapps</outputDirectory>
+					<outputDirectory>${webappDirectory.location}</outputDirectory>
 				</configuration>
 			</plugin>
 <!-- 			<plugin> -->

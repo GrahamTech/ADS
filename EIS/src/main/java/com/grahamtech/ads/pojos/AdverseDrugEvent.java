@@ -1,20 +1,22 @@
 package com.grahamtech.ads.pojos;
 
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
-//import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.grahamtech.ads.pojos.Results;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-//@Entity
-//@Table(name = "adverse_drug_reactions")
+/**
+ * <h1>Agile Delivery Service</h1> Stores the JSON data returned from the
+ * Adverse Drug Event external REST call.
+ * <p>
+ * 
+ * @author Rodney Morris
+ * @version 1.0
+ * @since 2015-06-24
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdverseDrugEvent implements java.io.Serializable {
   // private static final Logger logger =
@@ -47,6 +49,54 @@ public class AdverseDrugEvent implements java.io.Serializable {
 	    strBuffer.append(token.toString());
 	}
 	return strBuffer.toString();
+    }
+    
+    public AdverseDrugEvent flattenEventObjectDTO(AdverseDrugEventResultFlattened flattenedObj){
+	AdverseDrugEvent fullObj = new AdverseDrugEvent();
+	fullObj.setMeta(new Meta("20150601"));
+	
+	Results result = new Results();
+	result.setEvent_id(flattenedObj.getEvent_id());
+	result.setCompanynumb(flattenedObj.getCompanynumb());
+	result.setSafetyreportid(flattenedObj.getSafetyreportid());
+	result.setSender(new Sender(flattenedObj.getSenderorganization()));
+	result.setSerious(new Long(flattenedObj.getSerious()).toString());
+	
+	List<Reaction> reactionsList = new ArrayList<Reaction>();
+	String[] reactionsStringArray = flattenedObj.getPatient_reactions().split("\\,");
+	for(String token : reactionsStringArray){
+	    String keyValueTrimmed = token.replaceAll("^\\s+", "")
+		    .replaceAll("\\s+$", "");
+	    if(!keyValueTrimmed.equals("") && !keyValueTrimmed.equals(" ")){
+		Reaction reaction = new Reaction(keyValueTrimmed);
+		reactionsList.add(reaction);
+	    }
+	}
+	
+	Reaction[] reactionArray = new Reaction[reactionsList.size()];
+	reactionsList.toArray(reactionArray); // fill the array
+	
+	result.setPatient(new Patient(reactionArray));
+	Results[] resultsArray = new Results[1];
+	resultsArray[0] = result;
+	fullObj.setResults(resultsArray);
+	
+	return fullObj;
+    }
+    
+    public AdverseDrugEvent combineDBEvents(List<AdverseDrugEvent> listEvents){
+	AdverseDrugEvent adverseDrugEvent = new AdverseDrugEvent();
+	Results[] resultsArray = new Results[listEvents.size()];
+	int counter = 0;
+	for(AdverseDrugEvent event : listEvents){
+	    Results[] results = event.getResults();
+	    for(Results result : results){
+		resultsArray[counter] = result;
+		counter++;
+	    }
+	}
+	adverseDrugEvent.setResults(resultsArray);
+	return adverseDrugEvent;
     }
 
     public Results[] getResults() {

@@ -12,6 +12,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Results implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    @JsonProperty
+    private long event_id;
     // @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     // @Column(name = "event_id")
@@ -54,13 +57,13 @@ public class Results implements java.io.Serializable {
  + this.getPatient().toString() + "]";
     }
 
-    // public long getEvent_id() {
-    // return event_id;
-    // }
-    //
-    // public void setEvent_id(long event_id) {
-    // this.event_id = event_id;
-    // }
+     public long getEvent_id() {
+     return event_id;
+     }
+    
+     public void setEvent_id(long event_id) {
+     this.event_id = event_id;
+     }
 
     public String getSafetyreportid() {
 	return safetyreportid;

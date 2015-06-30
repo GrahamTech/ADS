@@ -19,7 +19,16 @@ import java.nio.charset.Charset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
+/**
+ * <h1>Agile Delivery Service</h1> The tests to determines if the external REST
+ * service is available to be able to populate our internal database. Read one
+ * record and ensure connectivity.
+ * <p>
+ * 
+ * @author Rodney Morris
+ * @version 1.0
+ * @since 2015-06-24
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml" })
 @WebAppConfiguration
@@ -37,7 +46,7 @@ public class WebApplicationContextBaseControllerTest {
 	    MediaType.APPLICATION_JSON.getType(),
 	    MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
-    private static final String BASE_CONTROLLER_URI = "/gt/get/drug/events/apikey/3";
+    private static final String BASE_CONTROLLER_URI = "/gt/get/drug/events/apikey/1";
 
     // Add WebApplicationContext field here.
 
@@ -51,7 +60,6 @@ public class WebApplicationContextBaseControllerTest {
 
     @Before
     public void setUp() {
-	// Mockito.reset(myAdverseDrugEventDAOMock);
 	mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
 		.build();
     }

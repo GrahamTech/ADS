@@ -6,7 +6,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS adsdb.adverseDrugEventResults;
 CREATE TABLE adsdb.adverseDrugEventResults (
   event_id int(11) NOT NULL AUTO_INCREMENT,
-  safetyreportid varchar(150) NOT NULL,
+  safetyreportid varchar(150) NOT NULL UNIQUE,
   senderorganization varchar(150) DEFAULT '',
   last_modified_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   serious int(11),

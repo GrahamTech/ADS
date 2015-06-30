@@ -6,7 +6,7 @@ editControllers.factory('editService', ['$http', '$window', function($http, $win
 			var currentReportId = this.getReportId();
 			if(currentReportId != null){
 				return $http.get('/app/getData',
-				{params: {reportId: currentReportId}});
+				{params: {event_id: currentReportId}});
 			}
 		},
 		getReportId: function(){
@@ -17,11 +17,12 @@ editControllers.factory('editService', ['$http', '$window', function($http, $win
 				return reportId;
 			}
 		},
-		postReportData: function (reportToedit){
+		postReport: function (reportToedit){
 			reportToedit.Id = this.getReportId();
 			$http({
 				url: 'updateReport',
 				method: "POST",
+				params: {event_id : report.event_id},
 				data: reportToedit
 				
 			})	
@@ -46,15 +47,23 @@ editControllers.controller('editController',
 	
 	editService.getData().success(function(data){
 		$scope.report = data;
-		$scope.firstName = data.firstName;
-		$scope.lastName = data.lastName;
+		$scope.event_id = data.event_id;
+		$scope.safetyreportid = data.safetyreportid;
+		$scope.sender = data.sender;
+		$scope.serious = data.serious;
+		$scope.companynumb = data.companynumb;
+		$scope.reaction = data.reaction;
 	});
 	
 	$scope.edit = function(){
 		var report = {};
-		report["firstName"] = $scope.firstName;
-		report["lastName"] = $scope.lastName;
-		editService.postReportData(report);
+		report["event_id"] = $scope.event_id;
+		report["safetyreportid"] = $scope.safetyreportid;
+		report["senderorganization"] = $scope.sender;
+		report["serious"] = $scope.serious;
+		report["companynumb"] = $scope.companynumb;
+		report["reaction"] = $scope.reaction;
+		editService.postReport(report);
 	}
 	
 	
