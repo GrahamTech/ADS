@@ -65,12 +65,18 @@ public class AdverseDrugEventResultFlattened implements java.io.Serializable {
     public AdverseDrugEventResultFlattened(long event_id, String safetyreportid,
 	    String sender,
 	    long serious, String companynumb, String patient_reactions) {
-	this(sender, serious, companynumb, patient_reactions);
+	this(safetyreportid, sender, serious, companynumb, patient_reactions);
 	this.event_id = event_id;
+    }
+
+    public AdverseDrugEventResultFlattened(String safetyreportid,
+	    String sender, long serious, String companynumb,
+	    String patient_reactions) {
+	this(sender, serious, companynumb, patient_reactions);
 	this.safetyreportid = safetyreportid;
     }
 
-    public AdverseDrugEventResultFlattened(String sender, long serious,
+    private AdverseDrugEventResultFlattened(String sender, long serious,
 	    String companynumb,
 	    String patient_reactions) {
 	this.setCompanynumb(companynumb);
