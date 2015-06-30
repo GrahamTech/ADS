@@ -32,8 +32,6 @@ import org.slf4j.LoggerFactory;
  * and exit point for incoming and outgoing requests. This controller dispatches
  * requests to the internal processing functions of ADS and forwards responses
  * to the appropriate view.
- * <p>
- * This Controller exposes the following REST URL
  * 
  * @author Rodney Morris
  * @version 1.0
@@ -51,25 +49,25 @@ public class BaseController {
     // TODO: Re-factor: clean-up commented code.
     // http://localhost:8080/ADS/gt/get/drug/events/apikey/3
     // https://api.fda.gov/drug/event.json
-//    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY, method = RequestMethod.GET)
-//    public @ResponseBody
-//    ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey(
-//	    @PathVariable String rowLimit) {
-//	logger.debug("Row limit: " + rowLimit);
-//
-//	RestClient restClient = new RestClient();
-//	String queryString = "?limit=" + rowLimit;
-//	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
-//		+ queryString;
-//	ResponseEntity<AdverseDrugEvent> events = restClient
-//		.getDrugEvents_apiKey(
-//			externalURL,
-//		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
-//		RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
-//
-//	logger.debug(events.toString());
-//	return events;
-//    }
+    @RequestMapping(value = RestURIConstants.GET_DRUG_EVENTS_CALL_WITH_API_KEY, method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<AdverseDrugEvent> getAdverseDrugEvents_apiKey(
+	    @PathVariable String rowLimit) {
+	logger.debug("Row limit: " + rowLimit);
+
+	RestClient restClient = new RestClient();
+	String queryString = "?limit=" + rowLimit;
+	String externalURL = RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_EXTERNAL_URL
+		+ queryString;
+	ResponseEntity<AdverseDrugEvent> events = restClient
+		.getDrugEvents_apiKey(
+			externalURL,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
+			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
+
+	logger.debug(events.toString());
+	return events;
+    }
 
     // http://localhost:8080/ADS/gt/get/drug/events/apikey?rowLimit={id}
     // https://api.fda.gov/drug/event.json
@@ -122,6 +120,7 @@ public class BaseController {
 			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY_HEADER,
 			RestURIConstants.ADVERSE_DRUG_EVENT_REPORTS_API_KEY);
 
+	logger.info(events.getStatusCode().toString());
 	String success = storeEvents(events.getBody());
 	logger.info(success);
 
