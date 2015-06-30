@@ -1,42 +1,45 @@
-# Graham Technologies | Agile Development Services Prototype Application #
+Prototype URL: [click here](http://ec2-52-4-97-82.compute-1.amazonaws.com/ADS/grahamtech/index.html#/list)
+# Graham Technologies (GT) | Agile Development Services (ADS) Prototype #
 
 ### Description: ###
 
-Demonstrate the Agile Development Web Services prototype's designed and implemented.  This document contains information on our Approach, Hosting Environment, Architecture and Install instructions on how to deploy the prototype on another. 
+The ADS project demonstrates our Agile designed and implemented capabilities.  This document contains information on our Approach, Hosting Environment, Architecture and Install instructions.
 
 ### Approach: ###
 
-Graham Technologies utilized an iterative Agile Development Process (SCRUM) to design and implement a prototype to satisfy the requirements outlined in the Agile Delivery Services (ADS) Statement of Work. Our team consisted of the following individuals: William Graham as the Technical Architect & Team Lead, Rodney Morris as a Backend Developer, Frank Goodman as a Front End Web Developer and Brian Thompson as a DevOps Engineer.  
+GT utilized an iterative Agile Development Process (SCRUM) to design and implement a prototype to satisfy the requirements outlined in the ADS Statement of Work. Our team consisted of the following individuals: William Graham as the Technical Architect & Team Lead, Rodney Morris as a Backend Developer, Frank Goodman as a Frontend Web Developer and Brian Thompson as a DevOps Engineer.  
 
-Our team worked together to decompose traceable User Stories/requirements into executable development team tasks, which were assigned to different team members to satisfy the requirements of the prototype. Below are the high level steps within our process that were taken to implement the system:
+Our team worked together to decompose traceable User Stories/requirements into executable development team tasks, which were assigned to different team members to satisfy the requirements of the prototype. Below are the high-level steps within our process executed to implement the system:
 
-1.	Upload System requirements to TeamForge. Decompose the requirements into Themes/Epics & User Stories. Write User Stories in the form: As a <personae> I want <function> so that I can <context>.  Please see UserStories.docx document for a list of all System Requirements.
-2.	Created a backlog that contained all of the tasks required to satisfy the requirements.  Please see ADSTaskList.xslx for the tasks identified for the product backlog.
+1.	Upload System requirements to TeamForge. Decompose the requirements into Themes/Epics, User Stories, and Tasks.  Please see UserStories.docx document for a list of all System Requirements.
+2.	Created a backlog that contained all of the Tasks required to satisfy the requirements.  Please see ADSTaskList.xslx for the tasks identified for the product backlog.
 3.	Host daily stand-up meetings to discuss progress of assigned tasks. 
 4.	Worked in 3-day sprints to complete tasks identified in product backlog.
 5.	Deploy source code after each sprint and demonstrate functionality.
 
 ### Hosting Environment Information & Software: ###
 
-- Platform As a Service (PAAS):  Amazon Web Services Elastic Computing (EC2) – Provides flexible hosting environment.
+- Platform As a Service (PAAS):  Amazon Web Services Elastic Computing (EC2) – flexible hosting environment.
 - Operating System Ubuntu 14.03 LTS - Open source operating system 
-- [Apache Tomcat 7.0.52](http://ec2-52-4-97-82.compute-1.amazonaws.com/probe)  psiprobe - Open source software implementation
-- Java 1.7 Open JDK 1.7.079-b14 - Contains Java Runtime Environment.
+- [Apache Tomcat 7.0.52](http://ec2-52-4-97-82.compute-1.amazonaws.com/probe) psiprobe - Open source software hosting implementation
+- Java 1.7 Open JDK 1.7.079-b14 - Java Runtime Environment.
 - [Jenkins 1.6.17](http://ec2-52-4-97-82.compute-1.amazonaws.com:8080/login?from=%2F) – Continuous Integration to automate deployment and testing.
 - Jenkins Login: 
 
 	username: William_Graham / password: d#DU#N59V(Sc
 
-- [Monit v 5.6](http://ec2-52-4-97-82.compute-1.amazonaws.com:2812/) - Monitors activities on the Environment.
-- Maven build tool v 3.2.5 - Build and deploy projects. 
+- [Monit v 5.6](http://ec2-52-4-97-82.compute-1.amazonaws.com:2812/) - Monitors environment activities.
+- Maven build tool v 3.2.5 - Builds and deploys projects. 
 - [Git 1.9.1](https://github.com/GrahamTech/ADS) - Source Code Repository.
-- MySQL – Open Source Database to store data retrieved from external web service.
+- MySQL – Open Source Database to process data.
 
 ### Architecture: ###
 
-Graham Technologies utilized a modern technology stack, which consisted of several open source technologies that were leveraged to build a layered architecture (Presentation, Service, Data).  The Presentation layer was implemented using Angular, JQuery and bootstrap.  The Service layer was implemented using the Spring Open Source Framework and Rest Based Web Services.  The Data Layer was implemented using the Hibernate open source framework and the Data Access pattern to store data into a MySQL database. 
+Graham Technologies utilized a modern technology stack, which consisted of several open source technologies that were leveraged to build a layered architecture (Presentation, Service, Data).  The Presentation layer was implemented using AngularJS, JQuery and bootstrap.  The Service layer was implemented using the Spring Open Source Framework and Rest Based Web Services.  The Data Layer was implemented using the Hibernate open source framework and the Data Access pattern to store data into a MySQL database. 
 
 #### REST API ####
+
+Within the ADS URL Context --
 
 Url           |Verb          | Description
 --------------|------------- | -------------
