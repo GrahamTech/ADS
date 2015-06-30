@@ -3,7 +3,7 @@ Prototype URL: [click here](http://ec2-52-4-97-82.compute-1.amazonaws.com/ADS/gr
 
 ### Description: ###
 
-The ADS project demonstrates our Agile designed and implemented capabilities.  This document contains information on our Approach, Hosting Environment, Architecture and Install instructions.
+The ADS project demonstrates our Agile capabilities which adhere to the U.S. Digital Services Playbook.  This document contains information on our Approach, Hosting Environment, Architecture and Install instructions.
 
 ### Approach: ###
 
