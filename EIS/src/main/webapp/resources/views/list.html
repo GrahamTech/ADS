@@ -1,17 +1,27 @@
-<section class="reportList">
-
+<section class="reportList" >
+	<div class="text-center loader" ng-show="loading">
+		<div class="spinner row text-center"> <img alt="loader" src="images/spiffygif_72x72.gif"></div>
+		<div class="row">
+		<h2>Please wait as we retrieve your records from the external web service.</h2>
+		</div>
+	</div>
     <blockquote class="blockq adLable"> Agile Development Demonstration</blockquote>
     
     <p>This demonstration shows our ability to implement an agile development workflow leveraging open source packages and cloud services.
     Features of this application include adding, deleting, viewing and modifying records initially pulled from an external web service. 
      </p>
-        <p style="margin-top:20px; font-weight:bold;">Please enter the amount of rows to retrieve</p>
+        <p style="margin-top:20px; font-weight:bold;">Please select the amount of rows you would like to retrieve</p>
         <div class="container">
             <div class="row" style="margin:20px 0;">
-        		<div class="col-sm-2">
-			        <input type="text" ng-model="rowsRequest"/>
+        		<div class="col-sm-1">
+					<select style="padding:5px;" ng-model="rowsRequest" convert-to-number>
+					  <option value="5">5</option>
+					  <option value="10">10</option>
+					  <option value="15">15</option>
+					  <option value="20">20</option>
+					</select>
 			  	</div>
-			  	<div class="col-sm-10">
+			  	<div class="col-sm-111">
 			        <input type="button" ng-click="getReport()" style="margin-bottom:20px;" class="btn btn-success" value="Retrieve External Records"/>
 				</div>
 			</div>

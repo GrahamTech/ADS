@@ -3,22 +3,25 @@ var reportControllers = angular.module('reportControllers', ['ngAnimate']);
 reportControllers.factory('reportService', ['$http', function($http){
 	return{
 		getAll: function (){
-			return $http.get('http://localhost:8080/ADS/gt/read/db/events');
+			//return $http.get('http://localhost:8080/ADS/gt/read/db/events');
+			 return $http.get('/ADS/gt/read/db/events');
 		},
 		getRecord: function (){
-			return $http.get('http://localhost:8080/ADS/gt/read/db/event');
+			//return $http.get('http://localhost:8080/ADS/gt/read/db/event');
+			 return $http.get('/ADS/gt/read/db/event');
+			
 		},
 		removeReport: function (report){
 			var currentId = report.event_id;
 			if(currentId != null && parseInt(currentId, 10) > 0){
 				if(window.confirm('Are you sure you want to delete this record?')){
-					window.location.href = '#/list'
 					return $http({
-						url: 'http://localhost:8080/ADS/gt/delete/db/event',
+						//url: 'http://localhost:8080/ADS/gt/delete/db/event',
+						url: '/ADS/gt/delete/db/event',
 						method: 'GET',
 						params: {event_id : currentId}
 						//may only need one or the other (data is passing event_id as well)
-					})	
+					})
 				}
 			}
 		},
@@ -27,7 +30,8 @@ reportControllers.factory('reportService', ['$http', function($http){
 			current_id = reportToedit.event_id;
 			console.log(current_id + 'before post');
 			$http({
-				url: 'http://localhost:8080/ADS/gt/update/db/event',
+				//url: 'http://localhost:8080/ADS/gt/update/db/event',
+				url: '/ADS/gt/update/db/event',
 				method: "POST",
 				params: {event_id : current_id},
 				data: reportToedit
@@ -47,7 +51,8 @@ reportControllers.factory('reportService', ['$http', function($http){
 		},
 		saveReport: function (report){
 			$http({
-				url: 'http://localhost:8080/ADS/gt/create/db/event',
+				//url: 'http://localhost:8080/ADS/gt/create/db/event',
+				url: '/ADS/gt/create/db/event',
 				method: "POST",
 				data: report
 				
@@ -109,7 +114,8 @@ reportControllers.controller('AddController',
 ]);
 
 reportControllers.controller('DetailsController', ['$scope', '$http','$routeParams', function($scope, $http, $routeParams) {
-  $http.get('http://localhost:8080/ADS/gt/read/db/events').success(function(data) {
+  //$http.get('http://localhost:8080/ADS/gt/read/db/events').success(function(data) {
+	$http.get('/ADS/gt/read/db/events').success(function(data) {
     $scope.results = data.results;
     $scope.whichItem = $routeParams.itemId;
 
@@ -129,7 +135,8 @@ reportControllers.controller('DetailsController', ['$scope', '$http','$routePara
 }]);
 
 reportControllers.controller('EditController', ['$scope', '$http','$routeParams','reportService', function($scope, $http, $routeParams, reportService) {
-  $http.get('http://localhost:8080/ADS/gt/read/db/event?event_id=' + $routeParams.itemId).success(function(data) {
+  //$http.get('http://localhost:8080/ADS/gt/read/db/event?event_id=' + $routeParams.itemId).success(function(data) {
+	$http.get('/ADS/gt/read/db/event?event_id=' + $routeParams.itemId).success(function(data) {
     $scope.results = data.results;
     //$scope.whichItem = $routeParams.itemId;
     console.log($scope.results[0].event_id);
@@ -168,20 +175,30 @@ reportControllers.controller('EditController', ['$scope', '$http','$routeParams'
 
 
 reportControllers.controller('ListController', ['$scope', '$http','$window','reportService', function($scope, $http,$window, reportService) {
-	  $http.get('http://localhost:8080/ADS/gt/read/db/events').success(function(data) {
-		
+	$scope.$on('LOAD',function(){$scope.loading='true'});
+	$scope.$on('UNLOAD',function(){$scope.loading='false'});
+	$scope.$emit('LOAD')  
+	//$http.get('http://localhost:8080/ADS/gt/read/db/events').success(function(data) {
+	$http.get('/ADS/gt/read/db/events').success(function(data) {
+	
 	    $scope.results = data.results;
+	    $scope.rowsRequest = 5;
+	    $scope.$emit('UNLOAD')  
 		$scope.redirect = function(report){
 				$window.location.href = '/edit/' + report.Id;
 			}
 		
 		$scope.getReport = function(report){
-			$http.get('http://localhost:8080/ADS/gt/get/drug/events/and/store/apikey/' + $scope.rowsRequest).success(function(data) {
-				reportService.getAll().success(function(data1){
+			$scope.$emit('LOAD')  
+			//$http.get('http://localhost:8080/ADS/gt/get/drug/events/and/store/apikey/' + $scope.rowsRequest).success(function(data) {
+			$http.get('/ADS/gt/get/drug/events/and/store/apikey/' + $scope.rowsRequest).success(function(data) {	
+			reportService.getAll().success(function(data1){
 					
 					$scope.reports = data1.results;
+					$scope.$emit('UNLOAD') 
 					console.log('got some records' + $scope.reports[0].safetyreportid);
-					$window.location.href = 'http://localhost:8080/ADS/grahamtech/index.html#/details';
+					//$window.location.href = 'http://localhost:8080/ADS/grahamtech/index.html#/details';
+					 $window.location.href = '/ADS/grahamtech/index.html#/details';
 					
 				});
 				
@@ -197,12 +214,14 @@ reportControllers.controller('ListController', ['$scope', '$http','$window','rep
 						
 						$scope.reports = data1.results;
 						console.log('got some records' + $scope.reports[0].safetyreportid);
-						$window.location.href = 'http://localhost:8080/ADS/grahamtech/index.html#/details';
+						//$window.location.href = 'http://localhost:8080/ADS/grahamtech/index.html#/details';
+						$window.location.href = '/ADS/grahamtech/index.html#/details';
+						
 						
 					});
 				}
 			});
 		}
 	
-	  });
+	  })
 	}]);

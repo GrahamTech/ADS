@@ -19,6 +19,32 @@ body{
     background-size: cover;
 	
 }
+.loader{
+	width:400px;
+    height:400px;
+    background:#fff;
+    padding:50px 40px;
+    border: 2px solid #ccc;
+    position:fixed;
+    top:50%;
+    left:50%;
+    margin-top:-150px;
+    margin-left:-150px;
+    background-image: url(images/grahamLoaderBG.png);
+    z-index:1000;
+}
+
+.spinner{
+	background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    opacity: .7; 
+    height: 72px; 
+    width: 72px; 
+    background: url("images/spiffygif_72x72.gif");
+}
+
+
 .top-header p{
     color:#999999; 
     line-height: 3;
