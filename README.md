@@ -1,4 +1,4 @@
-Prototype URL: [click here](http://ec2-52-4-97-82.compute-1.amazonaws.com/ADS/grahamtech/index.html)
+Prototype URL: [click here](http://ec2-54-174-149-143.compute-1.amazonaws.com/ADS/grahamtech/index.html)
 # Graham Technologies (GT) | Agile Development Services (ADS) Prototype #
 
 ### Description: ###
@@ -21,14 +21,14 @@ Our team worked together to decompose traceable User Stories/requirements into e
 
 - Platform As a Service (PAAS):  Amazon Web Services Elastic Computing (EC2) – flexible hosting environment.
 - Operating System Ubuntu 14.03 LTS - Open source operating system 
-- [Apache Tomcat 7.0.52](http://ec2-52-4-97-82.compute-1.amazonaws.com/probe) psiprobe - Open source software hosting implementation
+- [Apache Tomcat 7.0.52](http://ec2-54-174-149-143.compute-1.amazonaws.com/probe) psiprobe - Open source software hosting implementation
 - Java 1.7 Open JDK 1.7.079-b14 - Java Runtime Environment.
-- [Jenkins 1.6.17](http://ec2-52-4-97-82.compute-1.amazonaws.com:8080/login?from=%2F) – Continuous Integration to automate deployment and testing.
+- [Jenkins 1.6.17](http://ec2-54-174-149-143.compute-1.amazonaws.com:8080/login?from=%2F) – Continuous Integration to automate deployment and testing.
 - Jenkins Login: 
 
 	username: William_Graham / password: d#DU#N59V(Sc
 
-- [Monit v 5.6](http://ec2-52-4-97-82.compute-1.amazonaws.com:2812/) - Monitors environment activities.
+- [Monit v 5.6](http://ec2-54-174-149-143.compute-1.amazonaws.com:2812/) - Monitors environment activities.
 - Maven build tool v 3.2.5 - Builds and deploys projects. 
 - [Git 1.9.1](https://github.com/GrahamTech/ADS) - Source Code Repository.
 - MySQL – Open Source Database to process data.
