@@ -9,17 +9,13 @@ The ADS project demonstrates our Agile capabilities which adhere to the U.S. Dig
 
 GT utilized an iterative Agile Development Process (SCRUM) to design and implement a prototype to satisfy the requirements outlined in the ADS Statement of Work. Our team consisted of the following individuals: William Graham as the Technical Architect & Team Lead, Rodney Morris as a Backend Developer, Frank Goodman as a Frontend Web Developer and Brian Thompson as a DevOps Engineer.  
 
-Our team worked together to decompose traceable User Stories/requirements into executable development team tasks, which were assigned to different team members to satisfy the requirements of the prototype. Below are the high-level steps within our process executed to implement the system:
+Technical Architect was responsible for leading a team of 3 Software Engineers to design and develop the ADS prototype.  Our Technical Architect controls prototype quality using 1) SourceForge - controls the allocation and prioritization of backlog items to be implementation and ultimately whether each sprint demo task item passes its Definition of Done and is allowed to be promoted or returned to the backlog for re-prioritization, and 2) GitHub - accepts or denies pull requests from the development team for moving code through the cycle of development to integration and/or master; and ultimately tags master for release.
 
-1.	Upload System requirements to TeamForge. Decompose the requirements into Themes/Epics, User Stories, and Tasks.  Please see AgileManagementApproach.docx document for a list of all System Requirements.
-2.	Created a backlog that contained all of the Tasks required to satisfy the requirements.  Please see ADSTaskList.xslx for the tasks identified for the product backlog.
-3.	Host daily stand-up meetings to discuss progress of assigned tasks. 
-4.	Worked in 3-day sprints to complete tasks identified in product backlog.
-5.	Deploy source code after each sprint and demonstrate functionality.
+Our team worked together to decompose traceable User Stories/requirements into executable development team tasks, which were assigned to different team members to satisfy the requirements of the prototype. More details on our Agile approach can be found in the AgileManagementApproach document under the supporting Documentation folder in GitHub.
 
-### Hosting Environment Information & Software: ###
+### Hosting Environment Information & Open Source Software: ###
 
-- Platform As a Service (PAAS):  Amazon Web Services Elastic Computing (EC2) – flexible hosting environment.
+- Platform As a Service (PAAS):  Amazon Web Services Elastic Computing (EC2) – AWS was chose to provide a flexible hosting environment.  Our EC2 instance is a virtual machine which  can be saved to an ami, and the ami can be exported to various Virtual Machine formats such to enable our virtualized prototype to be moved to different containers. 
 - Operating System Ubuntu 14.03 LTS - Open source operating system 
 - [Apache Tomcat 7.0.52](http://ec2-54-174-149-143.compute-1.amazonaws.com/probe) psiprobe - Open source software hosting implementation
 - Java 1.7 Open JDK 1.7.079-b14 - Java Runtime Environment.
@@ -30,25 +26,21 @@ Our team worked together to decompose traceable User Stories/requirements into e
 
 - [Monit v 5.6](http://ec2-54-174-149-143.compute-1.amazonaws.com:2812/) - Monitors environment activities.
 - Maven build tool v 3.2.5 - Builds and deploys projects. 
-- [Git 1.9.1](https://github.com/GrahamTech/ADS) - Source Code Repository.
-- MySQL – Open Source Database to process data.
+- [Git 1.9.1](https://github.com/GrahamTech/ADS) - Source Code Repository and Configuration Management.
+- MySQL – Open Source Database to store data.
 
 ### Architecture: ###
 
 Graham Technologies utilized a modern technology stack, which consisted of several open source technologies that were leveraged to build a layered architecture (Presentation, Service, Data).  The Presentation layer was implemented using AngularJS, JQuery and bootstrap.  The Service layer was implemented using the Spring Open Source Framework and Rest Based Web Services.  The Data Layer was implemented using the Hibernate open source framework and the Data Access pattern to store data into a MySQL database. 
 
+
 #### REST API ####
+Our WebServcies API can be found in GitHub in a file named REST_API.xlsx under the Supporting_Documents folder.
 
-Within the ADS URL Context --
+#### Unit Testing & Continuous Automation  ####
+To ensure quality our team implemented using the Junit and Maven Surefire Frameworks.  All executed test reports can be reviewed on our Jenkins instance.  The URL to view the test results is http://ec2-52-4-97-82.compute-1.amazonaws.com:8080/job/ADS_prototype-integration/19/console.
 
-Url           |Verb          | Description
---------------|------------- | -------------
-gt/get/drug/events/and/store/apikey?rowLimit={id} |	GET	| 	Retrieves Adverse Drug Events from an external REST provider, parses the returned JSON, stores a subset of the data into the ADS data store, and then returns a list of events stored within the ADS data store in JSON form 
-gt/read/db/events |	GET	| Retrieves all events from the ADS data store and returns it via JSON
-gt/read/db/event?event_id={id} |	GET	| Uses the {id} number value passed on the request URL into ADS from the requester to fetch and return the specified event from the ADS data store via JSON
-gt/delete/db/event?event_id={id} |	DELETE	| Uses the {id} number value passed on the request URL into ADS from the requester to delete an event from the ADS data store. A Status Message JSON is returned to the requestor with a code indicating success or failure, alongside message details
-gt/create/db/event |	POST	| Creates an event in the ADS data store using the contents passed to ADS within the request body
-gt/update/db/event |	POST	| Updates an event in the ADS data store using the contents passed to ADS within the request body
+Our team installed and configured Jenkins on our integration server.  Jenkins will detect any changes that are checked in to the integration branch within Git and generate a new build on the integration server and execute unit test to verify the quality of the latest build. The results of our latest build can be found at  URL:  http://ec2-52-4-97-82.compute-1.amazonaws.com:8080/job/ADS_prototype-integration/19/console
 
 ### Installation Instructions: ###
 
