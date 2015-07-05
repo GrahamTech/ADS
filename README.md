@@ -48,7 +48,7 @@ Our team installed and configured Jenkins on our integration server.  Jenkins wi
 
 1.	Install Java – sudo apt-get install openjdk-7-jdk
 2.	Install Tomcat - sudo apt-get install tomcat7-user
-3.	Install additional Tomcat functionality - sudo tomcat7-instance-create my-instance
+3.	Install additional Tomcat functionality - sudo tomcat7-instance-create my-instance :
   a. Update ~/.bashrc: CATALINA_HOME=<tomcat_dir> 
 4.	Start Tomcat - sudo /etc/init.d/tomcat-dev (start|stop|restart)
 5.	Download Maven to /opt directory - 'sudo wget http://mirror.nexcess.net/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz'
