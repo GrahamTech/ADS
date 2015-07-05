@@ -19,10 +19,11 @@
 	<mvc:annotation-driven/>
 	<mvc:resources mapping="/grahamtech/**" location="/resources/" />
     
+    <!-- 
     <mvc:interceptors>
         <bean class="com.grahamtech.ads.utilities.BaseControllerInterceptor" />
     </mvc:interceptors>
-	
+    -->	
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
