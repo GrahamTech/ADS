@@ -50,7 +50,7 @@ Our team installed and configured Jenkins on our integration server.  Jenkins wi
 2.	Install Tomcat - sudo apt-get install tomcat7-user
 3.	Install additional Tomcat functionality - sudo tomcat7-instance-create my-instance
   - Update ~/.bashrc CATALINA_HOME={tomcat_dir} 
-  - Start Tomcat - my-instance/bin/start.sh
+  - Start Tomcat - my-instance/bin/startup.sh
 4.	Download Maven to /opt directory - 'sudo wget http://mirror.nexcess.net/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz'
 5.	Unpack maven 'sudo tar -xvf  apache-maven-3.2.5-bin.tar.gz' and then link the mvn executable to the /usr/local/bin' directory
 6.	Pull Source code GitHub(Master) https://github.com/GrahamTech/ADS
