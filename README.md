@@ -1,4 +1,4 @@
-Prototype URL: [click here](http://ec2-54-174-149-143.compute-1.amazonaws.com/ADS/grahamtech/index.html)
+Prototype URL: [click here](http://ec2-54-174-252-181.compute-1.amazonaws.com/ADS/grahamtech/index.html)
 # Graham Technologies (GT) | Agile Development Services (ADS) Prototype #
 
 ### Description: ###
@@ -19,12 +19,12 @@ Our team decomposed traceable User Stories/requirements into executable developm
 
 - AWS Login: User: William_Graham Password: d#DU#N59V(Sc
 - Operating System Ubuntu 14.03 LTS - Open source operating system 
-- [Apache Tomcat 7.0.52](http://ec2-54-174-149-143.compute-1.amazonaws.com/probe)
+- [Apache Tomcat 7.0.52](http://ec2-54-174-252-181.compute-1.amazonaws.com/probe)
 - Apache Login: William_Graham Password: p@ssw0rd 
 - Java 1.7 Open JDK 1.7.079-b14 - Java Runtime Environment.
-- Jenkins 1.6.17 Continuous Integration to automate deployment and testing. URL: (http://ec2-54-174-149-143.compute-1.amazonaws.com:8080)
+- Jenkins 1.6.17 Continuous Integration to automate deployment and testing. URL: (http://ec2-54-174-252-181.compute-1.amazonaws.com:8080)
 - Jenkins Login: User: William_Graham Password: d#DU#N59V(Sc
-- Monit v 5.6 - Monitors environment activities. URL: (http://ec2-54-174-149-143.compute-1.amazonaws.com:2812/)
+- Monit v 5.6 - Monitors environment activities. URL: (http://ec2-54-174-252-181.compute-1.amazonaws.com:2812/)
 - Maven build tool v 3.2.5 - Builds and deploys projects. 
 - Git 1.9.1 - Source Code Repository and Configuration Management (Master branch is stable). URL:(https://github.com/GrahamTech/ADS)
 - MySQL – Open Source Database to store data.
@@ -40,9 +40,9 @@ Graham Technologies utilized a modern technology stack which consisted of severa
 Our WebServcies API can be found under the Supporting_Documents folder.
 
 #### Unit Testing & Continuous Automation  ####
-To ensure quality our team developed unit tests using the Junit Framework.  All executed test reports can be reviewed on our Jenkins instance at (http://ec2-54-174-149-143.compute-1.amazonaws.com:8080/view/All/builds).
+To ensure quality our team developed unit tests using the Junit Framework.  All executed test reports can be reviewed on our Jenkins instance at (http://ec2-54-174-252-181.compute-1.amazonaws.com:8080/view/All/builds).
 
-Our team installed and configured Jenkins on our integration server.  Jenkins will detect any changes that are checked in to the integration branch within Git and generate a new build on the integration server. The results of our latest build can be found at  URL:(http://ec2-54-174-149-143.compute-1.amazonaws.com:8080/view/All/builds).  
+Our team installed and configured Jenkins on our integration server.  Jenkins will detect any changes that are checked in to the integration branch within Git and generate a new build on the integration server. The results of our latest build can be found at  URL:(http://ec2-54-174-252-181.compute-1.amazonaws.com:8080/view/All/builds).  
 
 ### Installation Instructions: ###
 
