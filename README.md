@@ -49,19 +49,19 @@ Our team installed and configured Jenkins on our integration server.  Jenkins wi
 1.	Install Java – sudo apt-get install openjdk-7-jdk
 2.	Install Tomcat - sudo apt-get install tomcat7-user
 3.	Install additional Tomcat functionality - sudo tomcat7-instance-create my-instance
-  a. Update ~/.bashrc: CATALINA_HOME=<tomcat_dir> 
-4.	Start Tomcat - sudo /etc/init.d/tomcat-dev (start|stop|restart)
-5.	Download Maven to /opt directory - 'sudo wget http://mirror.nexcess.net/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz'
-6.	Unpack maven 'sudo tar -xvf  apache-maven-3.2.5-bin.tar.gz' and then link the mvn executable to the /usr/local/bin' directory
-7.	Pull Source code GitHub(Master) https://github.com/GrahamTech/ADS
-8.	Update pom.xml file in root directory {build folder} variable to point to TOMCAT_HOME:
+  - Update ~/.bashrc CATALINA_HOME={tomcat_dir} 
+  - Start Tomcat - my-instance/bin/startup.sh
+4.	Download Maven to /opt directory - 'sudo wget http://mirror.nexcess.net/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz'
+5.	Unpack maven 'sudo tar -xvf  apache-maven-3.2.5-bin.tar.gz' and then link the mvn executable to the /usr/local/bin' directory
+6.	Pull Source code GitHub(Master) https://github.com/GrahamTech/ADS
+7.	Update pom.xml file in root directory {build folder} variable to point to TOMCAT_HOME:
   a.	<webappDirectory.location>{build folder}/webapp</webappDirectory.location>
   b.	<outputDirectory>{build folder}/target</outputDirectory>
-9.	Install and Create a MySQL database:
+8.	Install and Create a MySQL database:
   a.	Download and Install MySQL
   b.	Start MySQL
   c.	<mysql>: create database adsdb;
   d.	SET PASSWORD FOR 'root'@'localhost'=PASSWORD('$Password001');
   e.	<mysql>SOURCE {ads.sql path}/ads.sql
-10.	Build and Deploy - mvn  -DskipTests=true package
-11. Deploy to Container (Reference Container_Installation_Instructions.docx)
+9.	Build and Deploy - mvn  -DskipTests=true package
+10. Deploy to Container (Reference Container_Installation_Instructions.docx)
